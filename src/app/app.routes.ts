@@ -15,7 +15,7 @@ const appRouest: Routes = [
     ]},
     {path: 'login', component: LoginComponent},
     // {path: '', redirectTo: '/factura', pathMatch: 'full'}, // si la ruta esta vacía entonces redireccionar a /factura
-    {path: '**', component: NopagefoundComponent}
+    {path: '**', component: NopagefoundComponent}// si se trata de ingresar a una ruta que no existe 
 ];
 // exportar las rutas
 export const APP_ROUTES = RouterModule.forRoot(appRouest, { useHash: true});
