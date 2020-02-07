@@ -1,18 +1,27 @@
+import { NgModule } from '@angular/core';
+import { SharedModule } from '../shared/shared.module';
 import { PagesComponent } from './pages.component';
 import { FacturaComponent } from './factura/factura.component';
 import { ProductoComponent } from './producto/producto.component';
-import { NgModule } from '@angular/core';
+import { PAGES_ROUTES } from './pages.routes';
 
 
 @NgModule({
-    declarations:[
+    declarations: [
+        PagesComponent,
         ProductoComponent,
         FacturaComponent,
     ],
-    exports:[
+    exports: [
         ProductoComponent,
         FacturaComponent
+    ],
+    imports: [
+        SharedModule,
+        PAGES_ROUTES
     ]
 })
 
-export class PagesModule {}
+export class PagesModule { }
+
+// comentario de prueba
