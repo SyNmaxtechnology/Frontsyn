@@ -27,79 +27,84 @@
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="emisor_nombre">Nombre</label>
-                <input type="text" class="form-control" id="emisor_nombre" placeholder="Nombre del Emisor">
+                <input [(ngModel)]="objEmisor.emisor_nombre" name="emisor_nombre" type="text" class="form-control" id="emisor_nombre" placeholder="Nombre del Emisor">
             </div>
             <div class="form-group col-md-6">
                 <label for="emisor_nombre">Nombre Comercial</label>
-                <input type="text" class="form-control" id="emisor_nombrecomercial" placeholder="Nombre Comercial del Emisor">
+                <input [(ngModel)]="objEmisor.emisor_nombrecomercial" name="nombrecomercial" type="text" class="form-control" id="emisor_nombrecomercial" placeholder="Nombre Comercial del Emisor">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="emisor_nombre">Tipo de Identificación</label>
-                <select id="emisor_tipo_identificacion" class="form-control">
-                        <option>Seleccione</option>
-                    </select>
+                <select id="emisor_tipo_identificacion" class="form-control" [(ngModel)]="objEmisor.tipoIdentificacion" name="tipoIdentificacion">
+                    <option selected disabled>--Seleccione--</option>
+                    <option *ngFor="let tipo of tipoIdentificacion" [ngValue]="tipo.codigo">{{tipo.descripcion}}</option>
+                </select>
             </div>
             <div class="form-group col-md-6">
                 <label for="emisor_nombre">Cédula Emisor</label>
-                <input type="text" class="form-control" id="emisor_cedula" placeholder="Cédula Emisor">
+                <input [(ngModel)]="objEmisor.emisor_cedula" name="emisor_cedula" type="text" class="form-control" id="emisor_cedula" placeholder="Cédula Emisor">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="">Provincia</label>
-                <select id="provincia" class="form-control">
-                        <option>Seleccione</option>
-                    </select>
+                <select [(ngModel)]="objEmisor.provincia" name="provincia" class="form-control" (change)="obtenerCantones(objEmisor.provincia)">
+                        <option selected disabled>--Seleccione--</option>
+                        <option *ngFor="let provincia of listaProvincias" [ngValue]="provincia.provincia">{{provincia.nPro}}</option>
+                </select>
             </div>
             <div class="form-group col-md-6">
                 <label for="">Canton</label>
-                <select id="canton" class="form-control">
-                        <option>Seleccione</option>
+                <select [(ngModel)]="objEmisor.canton" name="canton=" class="form-control" (change)="obtenerDistritos(objEmisor.provincia,objEmisor.canton)">
+                    <option selected disabled>--Seleccione--</option>
+                    <option *ngFor="let canton of listaCantones" [ngValue]="canton.canton">{{canton.nCan}}</option>
                     </select>
             </div>
             <div class="form-group col-md-6">
                 <label for="">Distrito</label>
-                <select id="distrito" class="form-control">
+                <select [(ngModel)]="objEmisor.distrito" name="distrito=" id="distrito" class="form-control" (change)="obtenerBarrios(objEmisor.provincia,objEmisor.canton,objEmisor.distrito)">
                         <option>Seleccione</option>
+                        <option *ngFor="let distrito of listaDistritos" [ngValue]="distrito.distrito">{{distrito.nDis}}</option>
                     </select>
             </div>
             <div class="form-group col-md-6">
                 <label for="">Barrio</label>
-                <select id="barrio" class="form-control">
-                        <option>Seleccione</option>
-                    </select>
+                <select [(ngModel)]="objEmisor.barrio" name="barrio" id="barrio" class="form-control">
+                    <option>Seleccione</option>
+                    <option *ngFor="let barrio of listaBarrios" [ngValue]="barrio.codigo">{{barrio.nHac}}</option>
+                </select>
             </div>
         </div>
 
         <div class="form-group">
             <label for="otras_senas">Otras Señas</label>
-            <input type="text" class="form-control" id="otras_senas" placeholder="Otras señas emisor">
+            <input [(ngModel)]="objEmisor.otras_senas" name="otras_senas" type="text" class="form-control" id="otras_senas" placeholder="Otras señas emisor">
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="tel_codigopais">Codigo País</label>
-                <input type="text" class="form-control" id="tel_codigopais" placeholder="Código país">
+                <input [(ngModel)]="objEmisor.tel_codigo_pais" name="tel_codigo_pais" type="text" class="form-control" id="tel_codigopais" placeholder="Código país">
             </div>
             <div class="form-group col-md-6">
                 <label for="numtel">Número de Teléfono</label>
-                <input type="text" class="form-control" id="numtelcomercial" placeholder="Número de telefono">
+                <input [(ngModel)]="objEmisor.num_telefono" name="num_telefono" type="text" class="form-control" id="numtelcomercial" placeholder="Número de telefono">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="fax_codigopais">Código País</label>
-                <input type="text" class="form-control" id="fax_codigopais" placeholder="Código país">
+                <input [(ngModel)]="objEmisor.fax_codigo_pais" name="fax_codigo_pais" type="text" class="form-control" id="fax_codigopais" placeholder="Código país">
             </div>
             <div class="form-group col-md-6">
                 <label for="fax_numtel">Número de Fax</label>
-                <input type="text" class="form-control" id="fax_numtelcomercial" placeholder="Número de Fax">
+                <input [(ngModel)]="objEmisor.fax_num_telefono" name="fax_num_telefono" type="text" class="form-control" id="fax_numtelcomercial" placeholder="Número de Fax">
             </div>
         </div>
         <div class="form-group">
             <label for="correo_emisor">Correo Electrónico</label>
-            <input type="email" class="form-control" id="correo_emisor" placeholder="Correo Electrónico">
+            <input [(ngModel)]="objEmisor.correo" name="correo" type="email" class="form-control" id="correo_emisor" placeholder="Correo Electrónico">
         </div>
         <div class=" form-row ">
             <div class="form-group col-md-6 ">
@@ -171,6 +176,6 @@
                 <input type="text" class="form-control" id="contraseñaP12" placeholder="Contraseña archivo p12">
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Guardar</button>
+        <button type="submit" class="btn btn-primary" (click)="nuevoEmisor($event, objEmisor)">Guardar</button>
     </form>
 </div>

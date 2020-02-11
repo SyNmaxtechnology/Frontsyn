@@ -4,15 +4,14 @@ import { PagesComponent } from './pages.component';
 import { FacturaComponent } from './factura/factura.component';
 import { ProductoComponent } from './producto/producto.component';
 import { PAGES_ROUTES } from './pages.routes';
-import { EmisorComponent } from './emisor/emisor.component';
+
 console.log(SharedModule);
 
 @NgModule({
     declarations: [
         PagesComponent,
         ProductoComponent,
-        FacturaComponent,
-        EmisorComponent,
+        FacturaComponent
     ],
     exports: [
         ProductoComponent,
@@ -25,5 +24,3 @@ console.log(SharedModule);
 })
 
 export class PagesModule { }
-
-// comentario de prueba
