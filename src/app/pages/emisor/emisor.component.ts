@@ -58,12 +58,27 @@ export class EmisorComponent implements OnInit {
   nuevoEmisor(e, obj) {
    // formatear informacion a formData para enviar el archivo p12 del emisor
       e.preventDefault();
-      let formData = new FormData();
-      console.log(obj);
+
       const File = document.getElementById('file_p12'); // con esa linea voy a subir la
-      const {files} = File;
-      if (files.length === 0 ) {
-        alert('No ha subido el archivo p12');
+      if (File.value.length === 0) { //validar que algo se ha subido
+        alert("No ha cargado ningun archivo");
+        return;
+      } else { // aqui entra al if de validar el tipo de archivo
+
+         if (File.files[0].type === 'application/x-pkcs12') { // si el archivo es de tipo p12 pasa
+          const formData = new FormData();
+          formData.append("emisor_nombre",obj.emisor_nombre);
+          formData.append("emisor_nombrecomercial",obj.emisor_nombrecomercial);
+          formData.append("file_p12",File.files[0]);
+
+
+          EmisorService.guardarEmisor(formData)
+            .then(response => console.log(response))
+            .catch(err => console.log(err));
+         } else {
+          console.log("Archivo no permitido");
+          return;
+         }
       }
   }
 

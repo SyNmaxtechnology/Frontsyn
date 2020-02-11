@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import clienteAxios from '../../config/axios';
+import { resolve } from 'url';
 
 @Injectable({
   providedIn: 'root'
@@ -114,17 +115,16 @@ export class EmisorService {
 
   static guardarEmisor(obj) {
 
-    clienteAxios.post('/emisor', obj, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    }).then(data => {
-
-    })
-    .catch(err => {
-
+    return new Promise((resolve, reject) => {
+      clienteAxios.post('/emisor', obj, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(data => {
+        resolve(data);
+      }).catch(err => {
+        reject(err);
+      });
     });
   }
-
-
 }
