@@ -67,11 +67,29 @@ export class EmisorComponent implements OnInit {
 
          if (File.files[0].type === 'application/x-pkcs12') { // si el archivo es de tipo p12 pasa
           const formData = new FormData();
-          formData.append("emisor_nombre",obj.emisor_nombre);
-          formData.append("emisor_nombrecomercial",obj.emisor_nombrecomercial);
-          formData.append("file_p12",File.files[0]);
+          let numero_emisor = '';
 
-
+          if (obj.emisor_cedula.length === 9){
+            numero_emisor = '000' + obj.emisor_cedula;
+          }
+          if (obj.emisor_cedula.length === 10){
+            numero_emisor = '00' + obj.emisor_cedula;
+          }
+          if (obj.emisor_cedula.length === 11){
+            numero_emisor = '0' + obj.emisor_cedula;
+          }
+          if (obj.emisor_cedula.length === 12){
+            numero_emisor = obj.emisor_cedula;
+          }
+          formData.append('emisor_nombre', obj.emisor_nombre);
+          formData.append('emisor_nombrecomercial', obj.emisor_nombrecomercial);
+          formData.append('emisor_tipo_identificacion', obj.tipoIdentificacion);
+          formData.append('cedula_emisor', obj.emisor_cedula);
+          formData.append('file_p12', File.files[0]);
+          formData.append('numero_emisor', numero_emisor);
+          formData.append('emisor_barrio', obj.barrio);
+          formData.append('emisor_otras_senas', obj.otras_senas);
+          
           EmisorService.guardarEmisor(formData)
             .then(response => console.log(response))
             .catch(err => console.log(err));
