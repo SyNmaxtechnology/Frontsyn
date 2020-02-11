@@ -22,32 +22,29 @@ export class EmisorComponent implements OnInit {
     num_telefono: '',
     fax_codigo_pais: '',
     fax_num_telefono: '',
-    correo: ''
+    correo: '',
+    casamatriz: '',
+    puntoventa: '',
+    codigo_servicio: '',
+    tipo_codigo_servicio: '',
+    client_id: '',
+    API_TOKEN: '',
+    API: '',
+    numero_resolucion: '',
+    fecha_resolucion: '',
+    user_hacienda: '',
+    password_hacienda: '',
+    file_p12: '',
+    contrasenaP12: ''
   };
 
-  tipoIdentificacion = [
-    {
-      codigo: '01',
-      descripcion: 'Física'
-    },
-    {
-      codigo: '02',
-      descripcion: 'Jurídica'
-    },
-    {
-      codigo: '03',
-      descripcion: 'DIMEX'
-    },
-    {
-      codigo: '04',
-      descripcion: 'NITE'
-    }
-  ];
-
+  tipoIdentificacion = EmisorService.tipoIdentificacion();
+  tipoServicio = EmisorService.tipoServicio();
   listaProvincias: any = [];
   listaCantones: any = [];
   listaDistritos: any = [];
   listaBarrios: any = [];
+  listaActividades: any = [];
 
   constructor() {
     this.obtenerProvincias();
@@ -63,12 +60,19 @@ export class EmisorComponent implements OnInit {
       e.preventDefault();
       let formData = new FormData();
       console.log(obj);
+      const File = document.getElementById('file_p12'); // con esa linea voy a subir la
+      const {files} = File;
+      if (files.length === 0 ) {
+        alert('No ha subido el archivo p12');
+      }
   }
 
   obtenerProvincias() {
     // tslint:disable-next-line: semicolon
     EmisorService.obtenerProvincias()
       .then(response => {
+        console.log(response);
+
         this.listaProvincias = response;
       })
       .catch(err => console.error(err));
@@ -110,6 +114,11 @@ export class EmisorComponent implements OnInit {
   }
 
   obtenerActividades() {
-    EmisorService.cargarCodigosActividad();
+    EmisorService.cargarCodigosActividad()
+      .then(actividades => {
+
+        this.listaActividades = actividades;
+      })
+      .catch(err => console.error(err));
   }
 }

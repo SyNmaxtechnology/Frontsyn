@@ -60,12 +60,58 @@ export class EmisorService {
           return response.json();
       })
       .then(actividades => {
-        console.log(actividades)
         resolve(actividades);
       })
       .catch(err => reject(err));
     });
   }
+  static tipoServicio() {
+    return [
+      {
+        codigo: '01',
+        tipo_codigo: 'Código del producto del vendedor'
+      },
+      {
+        codigo: '02',
+        tipo_codigo: 'Código del producto del comprador'
+      },
+      {
+        codigo: '03',
+        tipo_codigo: 'Código del producto asignado por la industria'
+      },
+      {
+        codigo: '04',
+        tipo_codigo: 'Código uso interno'
+      },
+      {
+        codigo: '99',
+        tipo_codigo: 'Otros'
+      }
+    ];
+  }
+
+  static tipoIdentificacion() {
+
+    return [
+      {
+        codigo: '01',
+        descripcion: 'Física'
+      },
+      {
+        codigo: '02',
+        descripcion: 'Jurídica'
+      },
+      {
+        codigo: '03',
+        descripcion: 'DIMEX'
+      },
+      {
+        codigo: '04',
+        descripcion: 'NITE'
+      }
+    ];
+  }
+
   static guardarEmisor(obj) {
 
     clienteAxios.post('/emisor', obj, {
