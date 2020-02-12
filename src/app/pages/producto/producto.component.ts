@@ -18,6 +18,7 @@ export class ProductoComponent implements OnInit {
 
   objProducto = {
     descripcion: '',
+    codigo_barra: '',
     precio_producto: '',
     costo_unitario: '',
     unidad_medida: '',
@@ -37,6 +38,28 @@ export class ProductoComponent implements OnInit {
   ngOnInit() {
   }
 
+  nuevoProducto(e, obj) {
+    e.preventDefault();
+
+    let tipoServicio = '';
+    let codigo = '';
+    if (this.productoService.UnidadesMedidaServicios().includes(obj.unidad_medida)) {
+      codigo = 'Servicio';
+      tipoServicio = '01';
+    } else {
+      codigo = 'Mercancía';
+      tipoServicio = '02';
+    }
+
+    obj.tipo_servicio = tipoServicio;
+    obj.codigo_servicio = codigo;
+
+    this.productoService.nuevoProducto(obj)
+      .subscribe(response =>  {
+        console.log(response);
+      },
+      err => console.error(err));
+  }
 
   obtenerImpuestos() {
     this.productoService.obtenerImpuestos()
@@ -62,7 +85,7 @@ export class ProductoComponent implements OnInit {
     },
     err => console.error(err));
   }
-  
+
   obtenerUnidadesMedida(){
     this.productoService.obtenerUnidadesMedida()
       .subscribe(response => {

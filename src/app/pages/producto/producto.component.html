@@ -2,56 +2,64 @@
 <div class="col-12">
     <form method="POST">
         <div class="form-row">
-            <div class="form-group col-md-12">
+            <div class="form-group col-md-6">
                 <label for="descripcion">Descripción</label>
-                <input type="text" name="descripcion" id="descripcion" class="form-control">
+                <input [(ngModel)]="objProducto.descripcion" name="descripcion" type="text" id="descripcion" class="form-control">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="descripcion">Código Barra</label>
+                <input [(ngModel)]="objProducto.codigo_barra" name="codigo_barra" type="text" id="codigo_barra" class="form-control">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="descripcion">Precio unitario</label>
-                <input type="number" name="porcentaje" id="porcentaje" class="form-control">
+                <input [(ngModel)]="objProducto.precio_producto" name="precio_producto" type="number" id="precio_producto" class="form-control">
             </div>
             <div class="form-group col-md-6">
                 <label for="descripcion">Costo Unitario</label>
-                <input type="text" name="codigo" id="codigo" class="form-control">
+                <input [(ngModel)]="objProducto.costo_unitario" name="costo_unitario" type="number" id="costo_unitario" class="form-control">
             </div>
         </div>
+
+        <!--Precio final para hacer el calculo con el impuesto-->
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="descripcion">Unidad Medida</label>
-                <select name="unidad_medida" id="unidad_medida" class="form-control">
+                <select [(ngModel)]="objProducto.unidad_medida" name="unidad_medida" id="unidad_medida" class="form-control">
                     <option disabled selected>--Seleccione--</option>
                     <option *ngFor="let unidad of listaUnidadesMedida" [ngValue]="unidad.simbolo">{{unidad.descripcion}}</option>
                 </select>
             </div>
             <div class="form-group col-md-6">
                 <label for="descripcion">Unidad Medida Comercial</label>
-                <input type="text" name="unidad_medida_comercial" id="unidad_medida_comercial" class="form-control">
+                <input [(ngModel)]="objProducto.unidad_medida_comercial" name="unidad_medida_comercial" type="text" id="unidad_medida_comercial" class="form-control">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-4">
                 <label for="descripcion">Descuento</label>
-                <select name="unidad_medida" id="unidad_medida" class="form-control">
+                <select [(ngModel)]="objProducto.iddescuento" name="iddescuento" id="iddescuento" class="form-control">
                     <option disabled selected>--Seleccione--</option>
+                    <option *ngFor="let descuento of listaDescuentos" [ngValue]="descuento.id">{{descuento.descripcion}}</option>
                 </select>
             </div>
+            <!---->
             <div class="form-group col-md-4">
                 <label for="descripcion">Categoría</label>
-                <select name="unidad_medida" id="unidad_medida" class="form-control">
+                <select [(ngModel)]="objProducto.idcategoria" name="idcategoria" id="idcategoria" class="form-control">
                     <option disabled selected>--Seleccione--</option>
                     <option *ngFor="let categoria of listaCategorias" [ngValue]="categoria.id">{{categoria.descripcion}}</option>
                 </select>
             </div>
             <div class="form-group col-md-4">
                 <label for="descripcion">Impuesto</label>
-                <select name="unidad_medida" id="unidad_medida" class="form-control">
+                <select [(ngModel)]="objProducto.tipo_impuesto" name="tipo_impuesto" id="tipo_impuesto" class="form-control">
                     <option disabled selected>--Seleccione--</option>
                     <option *ngFor="let impuesto of listaImpuestos" [ngValue]="impuesto.id">{{impuesto.descripcion}}</option>
                 </select>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Guardar</button>
+        <button type="submit" class="btn btn-primary" (click)="nuevoProducto($event,objProducto)">Guardar</button>
     </form>
 </div>

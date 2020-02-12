@@ -9,6 +9,10 @@ export class ProductoService {
 
   constructor(private http: HttpClient) { }
 
+  UnidadesMedidaServicios() {
+    return  ['Al', 'Alc', 'Cm', 'I', 'Os', 'Sp', 'Spe', 'St', 'd', 'h', 's'];
+  }
+
   obtenerCategorias() {
     return this.http.get(baseURL() + '/categorias');
   }
@@ -23,7 +27,8 @@ export class ProductoService {
     return this.http.get(baseURL() + '/unidades');
   }
 
-  nuevoProducto() {
+  nuevoProducto(producto: object) {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post(baseURL() + '/producto', producto, {headers});
   }
 }
