@@ -58,13 +58,14 @@ export class EmisorComponent implements OnInit {
   nuevoEmisor(e, obj) {
    // formatear informacion a formData para enviar el archivo p12 del emisor
       e.preventDefault();
-
-      const File = document.getElementById('file_p12'); // con esa linea voy a subir la
+        //<HTMLInputElement> ESTO CASTEA EL DATO DE ENTRADA COMO SI FUERA LEER UN CAMPO DE HTML EN 
+        //JAVASCRIPT PURO
+      const File = (<HTMLInputElement>document.getElementById('file_p12')); // con esa linea voy a subir la
       if (File.value.length === 0) { //validar que algo se ha subido
         alert("No ha cargado ningun archivo");
         return;
       } else { // aqui entra al if de validar el tipo de archivo
-
+        
          if (File.files[0].type === 'application/x-pkcs12') { // si el archivo es de tipo p12 pasa
           const formData = new FormData();
           let numero_emisor = '';
@@ -85,10 +86,28 @@ export class EmisorComponent implements OnInit {
           formData.append('emisor_nombrecomercial', obj.emisor_nombrecomercial);
           formData.append('emisor_tipo_identificacion', obj.tipoIdentificacion);
           formData.append('cedula_emisor', obj.emisor_cedula);
-          formData.append('file_p12', File.files[0]);
           formData.append('numero_emisor', numero_emisor);
           formData.append('emisor_barrio', obj.barrio);
           formData.append('emisor_otras_senas', obj.otras_senas);
+          formData.append("emisor_telefono_codigopais",obj.tel_codigo_pais);
+          formData.append("emisor_telefono_numtelefono",obj.num_telefono);
+          formData.append("emisor_fax_codigopais",obj.fax_codigo_pais);
+          formData.append("emisor_fax_numtelefono",obj.fax_num_telefono);
+          formData.append("emisor_correo",obj.correo);
+          formData.append('file_p12', File.files[0]);
+          formData.append("pin_p12",obj.contrasenaP12);
+          formData.append("key_username_hacienda",obj.user_hacienda);
+          formData.append("key_password_hacienda",obj.password_hacienda);
+          formData.append("casaMatriz",obj.casamatriz);
+          formData.append("puntoVenta",obj.puntoventa);
+          formData.append("codigo_actividad",'99999');
+          formData.append("tipo_codigo_servicio",'01');
+          formData.append("codigo_servicio",obj.codigo_servicio);
+          formData.append("Client_ID",obj.client_id);
+          formData.append("API",obj.API);
+          formData.append("TOKEN_API",obj.API_TOKEN);
+          formData.append("numeroresolucion",obj.numero_resolucion);
+          formData.append("fecharesolucion",obj.fecha_resolucion);
           
           EmisorService.guardarEmisor(formData)
             .then(response => console.log(response))
