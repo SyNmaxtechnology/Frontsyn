@@ -116,57 +116,65 @@
                 <input [(ngModel)]="objEmisor.puntoventa" name="puntoventa" type="text " class="form-control" id="puntoventa" placeholder="Punto Venta ">
             </div>
         </div>
-        <div class="form-group ">
-            <label for="codigo_actividad">Codigo Actividad</label>
-            <select [(ngModel)]="objEmisor.codigo_servicio" name="codigo_servicio" id="codigo_actividad" class="form-control">
-                <option>Seleccione</option>
-                <option *ngFor="let servicio of tipoServicio" [ngValue]="servicio.codigo">{{servicio.tipo_codigo}}</option>
-            </select>
-        </div>
-        <div class="form-row ">
-            <div class="form-group col-md-4 ">
-                <label for="client_id">Client ID</label>
-                <input [(ngModel)]="objEmisor.client_id" name="client_id" type="text " class="form-control " id="client_id" placeholder="Client ID ">
-            </div>
-            <div class="form-group col-md-4 ">
-                <label for="API_TOKEN">API TOKEN</label>
-                <input [(ngModel)]="objEmisor.API_TOKEN" name="API_TOKEN" type="text" class="form-control " id="API_TOKEN" placeholder="API TOKEN ">
-            </div>
-            <div class="form-group col-md-4">
-                <label for="API">API</label>
-                <input [(ngModel)]="objEmisor.API" name="API" type="text" class="form-control" id="API" placeholder="API">
-            </div>
-        </div>
-        <div class="form-row ">
-            <div class="form-group col-md-6 ">
-                <label for="numero_resolucion">Número de resolución</label>
-                <input [(ngModel)]="objEmisor.numero_resolucion" name="numero_resolucion" type="text" class="form-control" id="numero_resolucion" placeholder="Número resolución">
-            </div>
-            <div class="form-group col-md-6 ">
-                <label for="fecha_resolucion">Fecha resolución</label>
-                <input [(ngModel)]="objEmisor.fecha_resolucion" name="fecha_resolucion" type="text " class="form-control " id="fecha_resolucion" placeholder="Fecha resolución">
-            </div>
-        </div>
         <div class="form-row">
             <div class="form-group col-md-6">
-                <label for="user_hacienda">Usuario Hacienda</label>
-                <input [(ngModel)]="objEmisor.user_hacienda" name="user_hacienda" type="text" class="form-control" id="user_hacienda" placeholder="Usuario Hacienda">
+                <label for="codigo_actividad">Codigo Actividad</label>
+                <select [(ngModel)]="objEmisor.codigo_actividad" name="codigo_actividad" id="codigo_actividad" class="form-control">
+                    <option>Seleccione</option>
+                </select>
             </div>
             <div class="form-group col-md-6">
-                <label for="password_hacienda">Contraseña</label>
+                <label for="codigo_actividad ">Tipo Codigo Servicio</label>
+                <select [(ngModel)]="objEmisor.codigo_servicio " name="codigo_servicio " id="codigo_actividad " class="form-control ">
+                    <option>Seleccione</option>
+                    <option *ngFor="let servicio of tipoServicio " [ngValue]="servicio.codigo ">{{servicio.tipo_codigo}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row ">
+            <div class="form-group col-md-4 ">
+                <label for="client_id ">Client ID</label>
+                <input [(ngModel)]="objEmisor.client_id " name="client_id " type="text " class="form-control " id="client_id " placeholder="Client ID ">
+            </div>
+            <div class="form-group col-md-4 ">
+                <label for="API_TOKEN ">API TOKEN</label>
+                <input [(ngModel)]="objEmisor.API_TOKEN " name="API_TOKEN " type="text " class="form-control " id="API_TOKEN " placeholder="API TOKEN ">
+            </div>
+            <div class="form-group col-md-4 ">
+                <label for="API ">API</label>
+                <input [(ngModel)]="objEmisor.API " name="API " type="text " class="form-control " id="API " placeholder="API ">
+            </div>
+        </div>
+        <div class="form-row ">
+            <div class="form-group col-md-6 ">
+                <label for="numero_resolucion ">Número de resolución</label>
+                <input [(ngModel)]="objEmisor.numero_resolucion " name="numero_resolucion " type="text " class="form-control " id="numero_resolucion " placeholder="Número resolución ">
+            </div>
+            <div class="form-group col-md-6 ">
+                <label for="fecha_resolucion ">Fecha resolución</label>
+                <input [(ngModel)]="objEmisor.fecha_resolucion " name="fecha_resolucion " type="text " class="form-control " id="fecha_resolucion " placeholder="Fecha resolución ">
+            </div>
+        </div>
+        <div class="form-row ">
+            <div class="form-group col-md-6 ">
+                <label for="user_hacienda ">Usuario Hacienda</label>
+                <input [(ngModel)]="objEmisor.user_hacienda " name="user_hacienda " type="text" class="form-control" id="user_hacienda " placeholder="Usuario Hacienda ">
+            </div>
+            <div class="form-group col-md-6 ">
+                <label for="password_hacienda ">Contraseña</label>
                 <input [(ngModel)]="objEmisor.password_hacienda" name="password_hacienda" type="password" class="form-control" id="password_hacienda" placeholder="Password Hacienda">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
-                <label for="">Archivo P12</label>
+                <label for=" ">Archivo P12</label>
                 <input [(ngModel)]="objEmisor.file_p12" name="file_p12" type="file" class="form-control-file" id="file_p12">
             </div>
-            <div class="form-group col-md-6">
-                <label for="">Contraseña</label>
-                <input [(ngModel)]="objEmisor.contrasenaP12" name="contrasenaP12" type="password" class="form-control" id="contrasenaP12" placeholder="Contraseña archivo p12">
+            <div class="form-group col-md-6 ">
+                <label for=" ">Contraseña</label>
+                <input [(ngModel)]="objEmisor.contrasenaP12 " name="contrasenaP12 " type="password" class="form-control" id="contrasenaP12" placeholder="Contraseña archivo p12">
             </div>
         </div>
-        <button type="submit" class="btn btn-primary" (click)="nuevoEmisor($event, objEmisor)">Guardar</button>
+        <button type="submit " class="btn btn-primary " (click)="nuevoEmisor($event, objEmisor) ">Guardar</button>
     </form>
 </div>

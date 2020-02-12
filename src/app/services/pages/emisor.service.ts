@@ -1,72 +1,52 @@
 import { Injectable } from '@angular/core';
-import clienteAxios from '../../config/axios';
-import { resolve } from 'url';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {baseURL} from '../../config/config';
+import { Observable } from 'rxjs';
+
+// emisor
+
+export interface EmisorGetResponse {
+  mensaje: String;
+}
 
 @Injectable({
   providedIn: 'root'
-}) // emisor
+})
 
 export class EmisorService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  static obtenerProvincias() {
-    return new Promise((resolve, reject) => {
-      clienteAxios.get('/provincias')
-        .then(provincias => {
-          resolve(provincias.data.provincias);
-        })
-      .catch(err => reject(err));
-    });
+  obtenerProvincias() {
+    return this.http.get(baseURL() + '/provincias');
   }
 
-  static obtenerCantones(idprovincia) {
-    return new Promise((resolve, reject) => {
-      clienteAxios.get('/cantones/' + idprovincia)
-        .then(cantones => {
-          resolve(cantones.data.cantones);
-        })
-      .catch(err => reject(err));
-    });
+  obtenerCantones(idprovincia) {
+    return this.http.get(baseURL() + '/cantones/' + idprovincia  ); //
   }
-  static obtenerDistritos(obj) {
-    return new Promise((resolve, reject) => {
-      const url = '/distritos/' + obj.idcanton.trim() + '&' + obj.idprovincia;
-      clienteAxios.get(url)
-        .then(distritos => {
-          resolve(distritos.data.distritos);
-        })
-      .catch(err => reject(err));
-    });
+  obtenerDistritos(obj) {
+    const url = '/distritos/' + obj.idcanton.trim() + '&' + obj.idprovincia;
+    return this.http.get(baseURL() + url);
   }
-  static obtenerBarrios(obj) {
-    return new Promise((resolve, reject) =>  {
-
-      const {idcanton, idprovincia, iddistrito} = obj;
-      const url = '/barrios/' + idcanton + '&' + idprovincia + '&' + iddistrito;
-
-      clienteAxios.get(url)
-        .then(barrios =>  {
-          resolve(barrios.data.barrios);
-        })
-        .catch(err => reject(err));
-    });
+  obtenerBarrios(obj) {
+    const {idcanton, idprovincia, iddistrito} = obj;
+    const url = '/barrios/' + idcanton + '&' + idprovincia + '&' + iddistrito;
+    return this.http.get(baseURL() + url);
   }
 
-  static cargarCodigosActividad() {
-    return new Promise((resolve, reject) =>  {
-      const url = 'https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/actividades_por_codigo.json';
-      fetch(url)
-        .then(response => {
-          return response.json();
-      })
-      .then(actividades => {
-        resolve(actividades);
-      })
-      .catch(err => reject(err));
-    });
+  cargarCodigosActividad() {
+
+    const url = 'https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/actividades_por_codigo.json';
+    return this.http.get(url);
   }
-  static tipoServicio() {
+
+  guardarEmisor(emisor: object) {
+
+    const headers = new HttpHeaders().set('Content-type', 'application/json');
+    return this.http.post(baseURL() + '/emisor', emisor, {  });
+
+  }
+  tipoServicio() {
     return [
       {
         codigo: '01',
@@ -91,7 +71,7 @@ export class EmisorService {
     ];
   }
 
-  static tipoIdentificacion() {
+  tipoIdentificacion() {
 
     return [
       {
@@ -111,20 +91,5 @@ export class EmisorService {
         descripcion: 'NITE'
       }
     ];
-  }
-
-  static guardarEmisor(obj) {
-
-    return new Promise((resolve, reject) => {
-      clienteAxios.post('/emisor', obj, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }).then(data => {
-        resolve(data);
-      }).catch(err => {
-        reject(err);
-      });
-    });
   }
 }

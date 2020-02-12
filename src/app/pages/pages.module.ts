@@ -5,13 +5,16 @@ import { FacturaComponent } from './factura/factura.component';
 import { ProductoComponent } from './producto/producto.component';
 import { PAGES_ROUTES } from './pages.routes';
 
+
+
 console.log(SharedModule);
 
 @NgModule({
     declarations: [
         PagesComponent,
         ProductoComponent,
-        FacturaComponent
+        FacturaComponent,
+
     ],
     exports: [
         ProductoComponent,

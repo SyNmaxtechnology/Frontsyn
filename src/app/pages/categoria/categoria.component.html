@@ -1,0 +1,12 @@
+<h1>Categoría</h1>
+<div class="col-12">
+    <form method="POST">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="descripcion">Descripción</label>
+                <input [(ngModel)]="objCategoria.descripcion" type="text" name="descripcion" id="descripcion" class="form-control">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" (click)="nuevaCategoria($event, objCategoria)">Guardar</button>
+    </form>
+</div>
