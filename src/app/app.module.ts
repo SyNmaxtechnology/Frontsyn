@@ -14,6 +14,7 @@ import { EmisorComponent } from './pages/emisor/emisor.component';
 import { DescuentoComponent } from './pages/descuento/descuento.component';
 import { CategoriaComponent } from './pages/categoria/categoria.component';
 import { ImpuestoComponent } from './pages/impuesto/impuesto.component';
+import { ProductoComponent } from './pages/producto/producto.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { ImpuestoComponent } from './pages/impuesto/impuesto.component';
     EmisorComponent,
     DescuentoComponent,
     CategoriaComponent,
-    ImpuestoComponent
+    ImpuestoComponent,
+    ProductoComponent
   ],
   imports: [// todos los modulos que se importen en este componente, se deben pasar a el array imports
     BrowserModule,
