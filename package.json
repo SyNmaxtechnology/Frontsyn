@@ -21,6 +21,7 @@
     "@angular/router": "~8.2.14",
     "axios": "^0.19.2",
     "rxjs": "~6.4.0",
+    "sweetalert2": "^9.7.2",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
   },
