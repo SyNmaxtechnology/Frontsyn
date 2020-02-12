@@ -12,7 +12,8 @@ export class CategoriaComponent implements OnInit {
   constructor(private categoriaService: CategoriaService) { }
 
   objCategoria = {
-    descripcion: ''
+    descripcion: '',
+    codigo: ''
   };
 
   ngOnInit() {
