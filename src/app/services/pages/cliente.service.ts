@@ -32,6 +32,10 @@ export class ClienteService {
 
   }
 
+  buscarCliente(query: string){
+    return this.http.get(baseURL() +'/cliente/' + query);
+  }
+
   tipoIdentificacion() {
 
     return [

@@ -44,6 +44,26 @@ export class ClienteComponent implements OnInit {
   ngOnInit() {
   }
 
+  buscarCliente(e,texto){
+
+    e.preventDefault();
+
+    if(texto === ''){
+      return;
+    } else {
+    this.clienteService.buscarCliente(texto)
+      .subscribe(response => {
+        console.log(response);
+      },
+      err => {
+        if(err.status === 404){
+         
+          Swal.fire('Buscar Cliente', err.error.message, 'error');
+        }
+      });
+    }
+  }
+
   nuevoCliente(e,obj){
     e.preventDefault();
     this.objCliente.cliente_barrio.toString().trim();
