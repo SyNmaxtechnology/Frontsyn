@@ -21,6 +21,7 @@ export class ProductoComponent implements OnInit {
     descripcion: '',
     codigo_barra: '',
     precio_producto: '',
+    precio_final: '',
     costo_unitario: '',
     unidad_medida: '',
     unidad_medida_comercial: '',
@@ -41,7 +42,35 @@ export class ProductoComponent implements OnInit {
   ngOnInit() {
   }
 
-  buscarProducto(e, texto){
+  obtenerPrecioFinal(precio, idSelect) {
+
+    const selectImpuesto = (document.getElementById(idSelect) as HTMLSelectElement);
+    const selectedValue = selectImpuesto.value;
+    const idImpuesto = selectedValue.split(':')[0];
+
+    if ( typeof idImpuesto !== 'undefined' && idImpuesto != null && precio !== '') {
+      let precioFinal = 0;
+      let porcentajeAplicado = 0;
+      let valorImpuesto = 0;
+      for (const impuesto in this.listaImpuestos) {
+        if (this.listaImpuestos[impuesto].id == idImpuesto) {
+          if (this.listaImpuestos[impuesto].porcentaje_impuesto > 10) {
+            porcentajeAplicado = parseFloat('0.0' + this.listaImpuestos[impuesto].porcentaje_impuesto.toString());
+          } else {
+            porcentajeAplicado = parseFloat('0.' + this.listaImpuestos[impuesto].porcentaje_impuesto.toString());
+          }
+          valorImpuesto = precio * porcentajeAplicado;
+          precioFinal = precio + valorImpuesto;
+
+          const inputPrecioFinal = (document.getElementById('precio_final') as HTMLInputElement);
+          inputPrecioFinal.value = String(precioFinal.toFixed(2));
+        }
+      }
+    } else {
+      return;
+    }
+  }
+  buscarProducto(e, texto) {
     e.preventDefault();
 
     console.log(texto);
@@ -67,6 +96,8 @@ export class ProductoComponent implements OnInit {
       .subscribe(response =>  {
 
         Swal.fire('Nuevo Producto', response.message, 'success');
+        const formProducto = (document.getElementById('form_producto')  as HTMLFormElement);
+        formProducto.reset();
       },
       err => console.error(err));
   }

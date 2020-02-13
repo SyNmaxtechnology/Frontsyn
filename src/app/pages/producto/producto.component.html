@@ -7,7 +7,7 @@
                 <input [(ngModel)]="query" name="query" type="text" id="query" class="form-control" placeholder="Buscar por código de barra o nombre de producto">
             </div>
             <div class="form-group col-md-3">
-                <button type="submit" class="btn btn-primary" (click)="buscarProducto($event,query)" >Buscar</button>
+                <button type="submit" class="btn btn-primary" (click)="buscarProducto($event,query)">Buscar</button>
             </div>
         </div>
     </form>
@@ -29,7 +29,7 @@
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="descripcion">Precio unitario</label>
-                <input [(ngModel)]="objProducto.precio_producto" name="precio_producto" type="number" id="precio_producto" class="form-control">
+                <input [(ngModel)]="objProducto.precio_producto" name="precio_producto" type="number" id="precio_producto" (keyup)="obtenerPrecioFinal(objProducto.precio_producto,'tipo_impuesto')" class="form-control">
             </div>
             <div class="form-group col-md-6">
                 <label for="descripcion">Costo Unitario</label>
@@ -69,10 +69,16 @@
             </div>
             <div class="form-group col-md-4">
                 <label for="descripcion">Impuesto</label>
-                <select [(ngModel)]="objProducto.tipo_impuesto" name="tipo_impuesto" id="tipo_impuesto" class="form-control">
+                <select [(ngModel)]="objProducto.tipo_impuesto" name="tipo_impuesto" id="tipo_impuesto" class="form-control" (change)="obtenerPrecioFinal(objProducto.precio_producto,'tipo_impuesto')">
                     <option disabled selected>--Seleccione--</option>
                     <option *ngFor="let impuesto of listaImpuestos" [ngValue]="impuesto.id">{{impuesto.descripcion}}</option>
                 </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="descripcion">Precio final</label>
+                <input [(ngModel)]="objProducto.precio_final" name="precio_final" type="number" id="precio_final" class="form-control" readonly>
             </div>
         </div>
         <button type="submit" class="btn btn-primary" (click)="nuevoProducto($event,objProducto)">Guardar</button>
