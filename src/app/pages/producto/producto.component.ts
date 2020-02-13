@@ -64,6 +64,7 @@ export class ProductoComponent implements OnInit {
 
           const inputPrecioFinal = (document.getElementById('precio_final') as HTMLInputElement);
           inputPrecioFinal.value = String(precioFinal.toFixed(2));
+          this.objProducto.precio_final = inputPrecioFinal.value.toString();
         }
       }
     } else {
@@ -74,6 +75,60 @@ export class ProductoComponent implements OnInit {
     e.preventDefault();
 
     console.log(texto);
+    if (texto.length === 0) {
+       return;
+    } else {
+    this.productoService.obtenerProducto(texto)
+      .subscribe(response =>  {
+        console.log(response);
+
+        const nombre = (document.getElementById('descripcion') as HTMLInputElement);
+        nombre.value= response.descripcion;
+        const codigoBarra = (document.getElementById('codigo_barra') as HTMLInputElement);
+        codigoBarra.value = response.codigobarra_producto;
+        const precio = (document.getElementById('precio_producto') as HTMLInputElement);
+        precio.value = response.precio_producto;
+        const costo = (document.getElementById('costo_unitario') as HTMLInputElement);
+        costo.value= response.costo_unitario;
+        const unidad_medida_comercial = (document.getElementById('unidad_medida_comercial') as HTMLInputElement);
+        unidad_medida_comercial.value =  response.unidad_medida_comercial;
+        const precio_final = (document.getElementById('precio_final') as HTMLInputElement);
+        precio_final.value = response.precio_final;
+        const selectUnidadMedida = (document.getElementById('unidad_medida') as HTMLSelectElement);
+        const selectDescuento = (document.getElementById('iddescuento') as HTMLSelectElement);
+        const selectCategoria = (document.getElementById('idcategoria') as HTMLSelectElement);
+        const selectImpuesto = (document.getElementById('tipo_impuesto') as HTMLSelectElement);
+
+        for (const i in this.listaUnidadesMedida) {
+          if (this.listaUnidadesMedida[i].simbolo == response.unidad_medida){
+            selectUnidadMedida.options[i].selected = true;
+          }
+        }
+        for (const i in this.listaDescuentos) {
+          if (this.listaDescuentos[i].id == response.iddescuento){
+            selectDescuento.options[i].selected = true;
+          }
+        }
+        for (const i in this.listaCategorias) {
+          if (this.listaCategorias[i].id == response.idcategoria){
+            selectCategoria.options[i].selected = true;
+          }
+        }
+        for (const i in this.listaImpuestos) {
+          console.log(this.listaImpuestos[i].id);
+          
+          if (this.listaImpuestos[i].id == response.idImpuesto){
+            selectImpuesto.options[i].selected = true;
+          }
+        }
+      },
+      err => {
+        console.error(err)
+        if(err.status) {
+          Swal.fire('Buscar Producto', 'No hay resultados', 'error' );
+        }
+      });
+    }
   }
 
   nuevoProducto(e, obj) {

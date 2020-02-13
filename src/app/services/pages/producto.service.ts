@@ -31,4 +31,8 @@ export class ProductoService {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post(baseURL() + '/producto', producto, {headers});
   }
+
+  obtenerProducto(query: string) {
+    return this.http.get(baseURL() + '/producto/' + query);
+  }
 }
