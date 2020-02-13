@@ -15,6 +15,7 @@ import { DescuentoComponent } from './pages/descuento/descuento.component';
 import { CategoriaComponent } from './pages/categoria/categoria.component';
 import { ImpuestoComponent } from './pages/impuesto/impuesto.component';
 import { ProductoComponent } from './pages/producto/producto.component';
+import { ClienteComponent } from './pages/cliente/cliente.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { ProductoComponent } from './pages/producto/producto.component';
     DescuentoComponent,
     CategoriaComponent,
     ImpuestoComponent,
-    ProductoComponent
+    ProductoComponent,
+    ClienteComponent
   ],
   imports: [// todos los modulos que se importen en este componente, se deben pasar a el array imports
     BrowserModule,

@@ -35,47 +35,50 @@ export class ProductoComponent implements OnInit {
 
   query = '';
 
-  listaDescuentos: object = [];
-  listaCategorias: object = [];
-  listaImpuestos: object = [];
-  listaUnidadesMedida: object = [];
+  listaDescuentos: any = [];
+  listaCategorias: any = [];
+  listaImpuestos: any = [];
+  listaUnidadesMedida: any = [];
 
   ngOnInit() {
   }
 
-  obtenerPrecioFinal(precio, idSelect) {
+  obtenerPrecioFinal(idPrecio, idSelect) {
 
-    const selectImpuesto = (document.getElementById(idSelect) as HTMLSelectElement);
-    const selectedValue = selectImpuesto.value;
-    const idImpuesto = selectedValue.split(':')[0];
-
-    if ( typeof idImpuesto !== 'undefined' && idImpuesto != null && precio !== '') {
-      let precioFinal = 0;
-      let porcentajeAplicado = 0;
-      let valorImpuesto = 0;
-      for (const impuesto in this.listaImpuestos) {
-        if (this.listaImpuestos[impuesto].id == idImpuesto) {
-          if (this.listaImpuestos[impuesto].porcentaje_impuesto < 10) {
-            porcentajeAplicado = parseFloat('0.0' + this.listaImpuestos[impuesto].porcentaje_impuesto.toString());
-          } else {
-            porcentajeAplicado = parseFloat('0.' + this.listaImpuestos[impuesto].porcentaje_impuesto.toString());
+    try {
+      const selectImpuesto = (document.getElementById(idSelect) as HTMLSelectElement);
+      const selectedValue = selectImpuesto.value;
+      const idImpuesto = selectedValue.split(':')[0];
+      const precio = (document.getElementById(idPrecio) as HTMLInputElement).value;
+      
+      if ( typeof idImpuesto !== 'undefined' && idImpuesto != null && precio !== '') {
+        let precioFinal = 0;
+        let porcentajeAplicado = 0;
+        let valorImpuesto = 0;
+        for (const impuesto in this.listaImpuestos) {
+          if (this.listaImpuestos[impuesto].id == idImpuesto) {
+            if (this.listaImpuestos[impuesto].porcentaje_impuesto < 10) {
+              porcentajeAplicado = parseFloat('0.0' + this.listaImpuestos[impuesto].porcentaje_impuesto.toString());
+            } else {
+              porcentajeAplicado = parseFloat('0.' + this.listaImpuestos[impuesto].porcentaje_impuesto.toString());
+            }
+            valorImpuesto = parseFloat(precio) * porcentajeAplicado;
+            precioFinal = parseFloat(precio) + valorImpuesto;
+  
+            const inputPrecioFinal = (document.getElementById('precio_final') as HTMLInputElement);
+            inputPrecioFinal.value = String(precioFinal.toFixed(2));
+            this.objProducto.precio_final = inputPrecioFinal.value.toString();
           }
-          valorImpuesto = precio * porcentajeAplicado;
-          precioFinal = precio + valorImpuesto;
-
-          const inputPrecioFinal = (document.getElementById('precio_final') as HTMLInputElement);
-          inputPrecioFinal.value = String(precioFinal.toFixed(2));
-          this.objProducto.precio_final = inputPrecioFinal.value.toString();
         }
+      } else {
+        return;
       }
-    } else {
-      return;
+    } catch (error) {
+      console.log(error);
     }
   }
   buscarProducto(e, texto) {
     e.preventDefault();
-
-    console.log(texto);
     if (texto.length === 0) {
        return;
     } else {
@@ -100,25 +103,30 @@ export class ProductoComponent implements OnInit {
                 const selectDescuento = (document.getElementById('iddescuento') as HTMLSelectElement);
                 const selectCategoria = (document.getElementById('idcategoria') as HTMLSelectElement);
                 const selectImpuesto = (document.getElementById('tipo_impuesto') as HTMLSelectElement);
-        
-                for (const i in this.listaUnidadesMedida) {
-                  if (this.listaUnidadesMedida[i].simbolo == response.unidad_medida){
-                    selectUnidadMedida.options[i].selected = true;
+
+                console.log(response);
+              
+                for (const i in this.listaUnidadesMedida) { 
+                  if(this.listaUnidadesMedida[i].simbolo == response.unidad_medida){
+                    selectUnidadMedida.selectedIndex= Number(i); 
                   }
                 }
-                for (const i in this.listaDescuentos) {
-                  if (this.listaDescuentos[i].id == response.iddescuento){
-                    selectDescuento.options[i].selected = true;
+
+                for(const i in this.listaCategorias){
+                  if(this.listaCategorias[i].id == response.idcategoria){
+                    selectCategoria.selectedIndex = Number(i);
                   }
                 }
-                for (const i in this.listaCategorias) {
-                  if (this.listaCategorias[i].id == response.idcategoria){
-                    selectCategoria.options[i].selected = true;
+
+                for(const i in this.listaImpuestos){
+                  if(this.listaImpuestos[i].id == response.tipo_impuesto){
+                    selectImpuesto.selectedIndex = Number(i);
                   }
                 }
-                for (const i in this.listaImpuestos) {
-                  if (this.listaImpuestos[i].id == response.idImpuesto){
-                    selectImpuesto.options[i].selected = true;
+
+                for(const i in this.listaDescuentos){
+                  if(this.listaDescuentos[i].id == response.iddescuento){
+                    selectDescuento.selectedIndex = Number(i);
                   }
                 }
       },

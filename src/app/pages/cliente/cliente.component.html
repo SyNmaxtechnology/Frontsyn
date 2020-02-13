@@ -1,0 +1,109 @@
+<h1>Cliente</h1>
+<br>
+<div class="col-12">
+    <form method="POST" id="form_buscar_cliente">
+        <div class="form-row" id="buscador_cliente">
+            <div class="form-group col-md-8">
+                <input [(ngModel)]="query" name="query" type="text" id="query" class="form-control" placeholder="Buscar por cédula o nombre de cliente">
+            </div>
+            <div class="form-group col-md-3">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+        </div>
+    </form>
+</div>
+<br>
+<br>
+<div class="col-12">
+    <form method="POST">
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="cliente_nombre">Nombre</label>
+                <input [(ngModel)]="objCliente.cliente_nombre" type="text" name="cliente_nombre" id="cliente_nombre" class="form-control">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="cliente_nombre_comercial">Nombre Comercial</label>
+                <input [(ngModel)]="objCliente.cliente_nombre_comercial" type="text" name="cliente_nombre_comercial" id="cliente_nombre_comercial" class="form-control">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="cliente_tipo_identificacion">Tipo Identificación</label>
+                <select [(ngModel)]="objCliente.cliente_tipo_identificacion" id="cliente_tipo_identificacion" name="cliente_tipo_identificacion" class="form-control">
+                    <option *ngFor="let tipo of tipoIdentificacion" [ngValue]="tipo.codigo">{{tipo.descripcion}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="cedula_cliente">Cédula Cliente</label>
+                <input [(ngModel)]="objCliente.cedula_cliente" type="text" name="cedula_cliente" id="cedula_cliente" class="form-control">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="identificacion_extranjero">Identifación Extranjero</label>
+                <input [(ngModel)]="objCliente.identificacion_extranjero" type="text" name="identificacion_extranjero" id="identificacion_extranjero" class="form-control">
+            </div>
+
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="provincia">Provincia</label>
+                <select [(ngModel)]="objCliente.provincia" id="provincia" name="provincia" class="form-control" (change)="obtenerCantones(objCliente.provincia)">
+                    <option *ngFor="let provincia of listaProvincias" [ngValue]="provincia.provincia">{{provincia.nPro}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="canton">Cantón</label>
+                <select [(ngModel)]="objCliente.canton" id="canton" name="canton" class="form-control" (change)="obtenerDistritos(objCliente.provincia,objCliente.canton)">
+                    <option *ngFor="let canton of listaCantones" [ngValue]="canton.canton">{{canton.nCan}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="distrito">Distrito</label>
+                <select [(ngModel)]="objCliente.distrito" id="distrito" name="distrito" class="form-control" (change)="obtenerBarrios(objCliente.provincia,objCliente.canton, objCliente.distrito)">
+                    <option *ngFor="let distrito of listaDistritos" [ngValue]="distrito.distrito">{{distrito.nDis}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="barrio">Barrio</label>
+                <select [(ngModel)]="objCliente.cliente_barrio" id="barrio" name="barrio" class="form-control">
+                    <option *ngFor="let barrio of listaBarrios" [ngValue]="barrio.codigo">{{barrio.nHac}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="otras_senas">Otrase Señas</label>
+                <input [(ngModel)]="objCliente.otras_senas" type="text" name="otras_senas" id="otras_senas" class="form-control">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="otras_senas_extranjero">Otrase Señas Extranjero</label>
+                <input [(ngModel)]="objCliente.otras_senas_extranjero" type="text" name="otras_senas_extranjero" id="otras_senas_extranjero" class="form-control">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="cliente_telefono_codigopais">Código País</label>
+                <input type="text" [(ngModel)]="objCliente.cliente_telefono_codigopais" name="cliente_telefono_codigopais" id="cliente_telefono_codigopais" class="form-control">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="cliente_telefono_numtelefono">Teléfono</label>
+                <input [(ngModel)]="objCliente.cliente_telefono_numtelefono" type="text" name="cliente_telefono_numtelefono" id="cliente_telefono_numtelefono" class="form-control">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="cliente_fax_codigopais">Código País</label>
+                <input [(ngModel)]="objCliente.cliente_fax_codigopais" type="text" name="cliente_fax_codigopais" id="cliente_fax_codigopais" class="form-control">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="cliente_fax_numtelefono">Fax</label>
+                <input [(ngModel)]="objCliente.cliente_fax_numtelefono" type="text" name="cliente_fax_numtelefono" id="cliente_fax_numtelefono" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="cliente_correo">Correo</label>
+            <input [(ngModel)]="objCliente.cliente_correo" type="text" name="cliente_correo" id="cliente_correo" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary" (click)="nuevoCliente($event,objCliente)">Guardar</button>
+    </form>
+</div>

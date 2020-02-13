@@ -29,7 +29,7 @@
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="descripcion">Precio unitario</label>
-                <input [(ngModel)]="objProducto.precio_producto" name="precio_producto" type="number" id="precio_producto" (keyup)="obtenerPrecioFinal(objProducto.precio_producto,'tipo_impuesto')" class="form-control">
+                <input [(ngModel)]="objProducto.precio_producto" name="precio_producto" type="number" id="precio_producto" (keyup)="obtenerPrecioFinal('precio_producto','tipo_impuesto')" class="form-control">
             </div>
             <div class="form-group col-md-6">
                 <label for="descripcion">Costo Unitario</label>
@@ -42,7 +42,7 @@
             <div class="form-group col-md-6">
                 <label for="descripcion">Unidad Medida</label>
                 <select [(ngModel)]="objProducto.unidad_medida" name="unidad_medida" id="unidad_medida" class="form-control">
-                    <option disabled selected>--Seleccione--</option>
+                    
                     <option *ngFor="let unidad of listaUnidadesMedida" [ngValue]="unidad.simbolo">{{unidad.descripcion}}</option>
                 </select>
             </div>
@@ -55,7 +55,7 @@
             <div class="form-group col-md-4">
                 <label for="descripcion">Descuento</label>
                 <select [(ngModel)]="objProducto.iddescuento" name="iddescuento" id="iddescuento" class="form-control">
-                    <option disabled selected>--Seleccione--</option>
+                    
                     <option *ngFor="let descuento of listaDescuentos" [ngValue]="descuento.id">{{descuento.descripcion}}</option>
                 </select>
             </div>
@@ -63,14 +63,14 @@
             <div class="form-group col-md-4">
                 <label for="descripcion">Categoría</label>
                 <select [(ngModel)]="objProducto.idcategoria" name="idcategoria" id="idcategoria" class="form-control">
-                    <option disabled selected>--Seleccione--</option>
+                    
                     <option *ngFor="let categoria of listaCategorias" [ngValue]="categoria.id">{{categoria.descripcion}}</option>
                 </select>
             </div>
             <div class="form-group col-md-4">
                 <label for="descripcion">Impuesto</label>
-                <select [(ngModel)]="objProducto.tipo_impuesto" name="tipo_impuesto" id="tipo_impuesto" class="form-control" (change)="obtenerPrecioFinal(objProducto.precio_producto,'tipo_impuesto')">
-                    <option disabled selected>--Seleccione--</option>
+                <select [(ngModel)]="objProducto.tipo_impuesto" name="tipo_impuesto" id="tipo_impuesto" class="form-control" (change)="obtenerPrecioFinal('precio_producto','tipo_impuesto')">
+                    
                     <option *ngFor="let impuesto of listaImpuestos" [ngValue]="impuesto.id">{{impuesto.descripcion}}</option>
                 </select>
             </div>

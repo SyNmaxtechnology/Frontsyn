@@ -6,6 +6,7 @@ import { EmisorComponent } from './emisor/emisor.component';
 import { DescuentoComponent } from './descuento/descuento.component';
 import {CategoriaComponent} from './categoria/categoria.component';
 import { ImpuestoComponent } from './impuesto/impuesto.component';
+import { ClienteComponent } from './cliente/cliente.component';
 
 
 const pagesRoutes: Routes = [
@@ -17,6 +18,7 @@ const pagesRoutes: Routes = [
         {path: 'descuento', component: DescuentoComponent},
         {path: 'categoria', component: CategoriaComponent},
         {path: 'impuesto', component: ImpuestoComponent},
+        {path: 'cliente', component: ClienteComponent},
         {path: '', redirectTo: '/factura', pathMatch: 'full'}, // si la ruta esta vacía entonces redireccionar a /factura
     ]}
 ];
