@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductoService } from '../../services/pages/producto.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-producto',
   templateUrl: './producto.component.html',
-  styles: []
+  styleUrls: ['./producto.component.css']
 })
 export class ProductoComponent implements OnInit {
 
@@ -30,12 +31,20 @@ export class ProductoComponent implements OnInit {
     iddescuento: ''
   };
 
+  query = '';
+
   listaDescuentos: object = [];
   listaCategorias: object = [];
   listaImpuestos: object = [];
   listaUnidadesMedida: object = [];
 
   ngOnInit() {
+  }
+
+  buscarProducto(e, texto){
+    e.preventDefault();
+
+    console.log(texto);
   }
 
   nuevoProducto(e, obj) {
@@ -56,7 +65,8 @@ export class ProductoComponent implements OnInit {
 
     this.productoService.nuevoProducto(obj)
       .subscribe(response =>  {
-        console.log(response);
+
+        Swal.fire('Nuevo Producto', response.message, 'success');
       },
       err => console.error(err));
   }
