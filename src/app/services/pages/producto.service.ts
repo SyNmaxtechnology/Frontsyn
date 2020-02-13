@@ -32,6 +32,11 @@ export class ProductoService {
     return this.http.post(baseURL() + '/producto', producto, {headers});
   }
 
+  actualizarProducto(obj: any) {
+    const { id} = obj;
+    return this.http.put(baseURL() + '/producto/' + id, obj);
+  }
+
   obtenerProducto(query: string) {
     return this.http.get(baseURL() + '/producto/' + query);
   }

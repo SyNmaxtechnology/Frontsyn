@@ -18,6 +18,7 @@ export class ProductoComponent implements OnInit {
   }
 
   objProducto = {
+    id: '',
     descripcion: '',
     codigo_barra: '',
     precio_producto: '',
@@ -54,7 +55,7 @@ export class ProductoComponent implements OnInit {
       let valorImpuesto = 0;
       for (const impuesto in this.listaImpuestos) {
         if (this.listaImpuestos[impuesto].id == idImpuesto) {
-          if (this.listaImpuestos[impuesto].porcentaje_impuesto > 10) {
+          if (this.listaImpuestos[impuesto].porcentaje_impuesto < 10) {
             porcentajeAplicado = parseFloat('0.0' + this.listaImpuestos[impuesto].porcentaje_impuesto.toString());
           } else {
             porcentajeAplicado = parseFloat('0.' + this.listaImpuestos[impuesto].porcentaje_impuesto.toString());
@@ -80,54 +81,61 @@ export class ProductoComponent implements OnInit {
     } else {
     this.productoService.obtenerProducto(texto)
       .subscribe(response =>  {
-        console.log(response);
-
-        const nombre = (document.getElementById('descripcion') as HTMLInputElement);
-        nombre.value= response.descripcion;
-        const codigoBarra = (document.getElementById('codigo_barra') as HTMLInputElement);
-        codigoBarra.value = response.codigobarra_producto;
-        const precio = (document.getElementById('precio_producto') as HTMLInputElement);
-        precio.value = response.precio_producto;
-        const costo = (document.getElementById('costo_unitario') as HTMLInputElement);
-        costo.value= response.costo_unitario;
-        const unidad_medida_comercial = (document.getElementById('unidad_medida_comercial') as HTMLInputElement);
-        unidad_medida_comercial.value =  response.unidad_medida_comercial;
-        const precio_final = (document.getElementById('precio_final') as HTMLInputElement);
-        precio_final.value = response.precio_final;
-        const selectUnidadMedida = (document.getElementById('unidad_medida') as HTMLSelectElement);
-        const selectDescuento = (document.getElementById('iddescuento') as HTMLSelectElement);
-        const selectCategoria = (document.getElementById('idcategoria') as HTMLSelectElement);
-        const selectImpuesto = (document.getElementById('tipo_impuesto') as HTMLSelectElement);
-
-        for (const i in this.listaUnidadesMedida) {
-          if (this.listaUnidadesMedida[i].simbolo == response.unidad_medida){
-            selectUnidadMedida.options[i].selected = true;
-          }
-        }
-        for (const i in this.listaDescuentos) {
-          if (this.listaDescuentos[i].id == response.iddescuento){
-            selectDescuento.options[i].selected = true;
-          }
-        }
-        for (const i in this.listaCategorias) {
-          if (this.listaCategorias[i].id == response.idcategoria){
-            selectCategoria.options[i].selected = true;
-          }
-        }
-        for (const i in this.listaImpuestos) {
-          console.log(this.listaImpuestos[i].id);
-          
-          if (this.listaImpuestos[i].id == response.idImpuesto){
-            selectImpuesto.options[i].selected = true;
-          }
-        }
+                console.log(response);
+                this.objProducto.id = response.idproducto;
+                (document.getElementById('query') as HTMLInputElement).value = '';
+                const nombre = (document.getElementById('descripcion') as HTMLInputElement);
+                nombre.value= response.descripcion;
+                const codigoBarra = (document.getElementById('codigo_barra') as HTMLInputElement);
+                codigoBarra.value = response.codigobarra_producto;
+                const precio = (document.getElementById('precio_producto') as HTMLInputElement);
+                precio.value = response.precio_producto;
+                const costo = (document.getElementById('costo_unitario') as HTMLInputElement);
+                costo.value= response.costo_unitario;
+                const unidad_medida_comercial = (document.getElementById('unidad_medida_comercial') as HTMLInputElement);
+                unidad_medida_comercial.value =  response.unidad_medida_comercial;
+                const precio_final = (document.getElementById('precio_final') as HTMLInputElement);
+                precio_final.value = response.precio_final;
+                const selectUnidadMedida = (document.getElementById('unidad_medida') as HTMLSelectElement);
+                const selectDescuento = (document.getElementById('iddescuento') as HTMLSelectElement);
+                const selectCategoria = (document.getElementById('idcategoria') as HTMLSelectElement);
+                const selectImpuesto = (document.getElementById('tipo_impuesto') as HTMLSelectElement);
+        
+                for (const i in this.listaUnidadesMedida) {
+                  if (this.listaUnidadesMedida[i].simbolo == response.unidad_medida){
+                    selectUnidadMedida.options[i].selected = true;
+                  }
+                }
+                for (const i in this.listaDescuentos) {
+                  if (this.listaDescuentos[i].id == response.iddescuento){
+                    selectDescuento.options[i].selected = true;
+                  }
+                }
+                for (const i in this.listaCategorias) {
+                  if (this.listaCategorias[i].id == response.idcategoria){
+                    selectCategoria.options[i].selected = true;
+                  }
+                }
+                for (const i in this.listaImpuestos) {
+                  if (this.listaImpuestos[i].id == response.idImpuesto){
+                    selectImpuesto.options[i].selected = true;
+                  }
+                }
       },
       err => {
-        console.error(err)
-        if(err.status) {
-          Swal.fire('Buscar Producto', 'No hay resultados', 'error' );
+        console.error(err);
+        if (err.status) {
+            Swal.fire('Buscar Producto', 'No hay resultados', 'error' );
         }
       });
+    }
+  }
+  
+  procesarDatosProducto(e, obj){
+    if (this.objProducto.id === ''){
+      this.nuevoProducto(e,obj);
+    } else {
+      this.actualizarProducto(e,obj);
     }
   }
 
@@ -146,11 +154,67 @@ export class ProductoComponent implements OnInit {
 
     obj.tipo_servicio = tipoServicio;
     obj.codigo_servicio = codigo;
+  
+
 
     this.productoService.nuevoProducto(obj)
       .subscribe(response =>  {
 
         Swal.fire('Nuevo Producto', response.message, 'success');
+        const formProducto = (document.getElementById('form_producto')  as HTMLFormElement);
+        formProducto.reset();
+      },
+      err => console.error(err));
+  }
+
+  actualizarProducto(e, obj){
+    e.preventDefault();
+
+    console.log(obj);
+    const nombre = (document.getElementById('descripcion') as HTMLInputElement);
+    const codigoBarra = (document.getElementById('codigo_barra') as HTMLInputElement);
+    const precio = (document.getElementById('precio_producto') as HTMLInputElement);
+    const costo = (document.getElementById('costo_unitario') as HTMLInputElement);
+    const unidad_medida_comercial = (document.getElementById('unidad_medida_comercial') as HTMLInputElement);
+    const precio_final = (document.getElementById('precio_final') as HTMLInputElement);
+    const selectUnidadMedida = (document.getElementById('unidad_medida') as HTMLSelectElement);
+    const selectDescuento = (document.getElementById('iddescuento') as HTMLSelectElement);
+    const selectCategoria = (document.getElementById('idcategoria') as HTMLSelectElement);
+    const selectImpuesto = (document.getElementById('tipo_impuesto') as HTMLSelectElement);
+
+    let tipoServicio = '';
+    let codigo = '';
+    if (this.productoService.UnidadesMedidaServicios().includes(obj.unidad_medida)) {
+      codigo = 'Servicio';
+      tipoServicio = '01';
+    } else {
+      codigo = 'Mercancía';
+      tipoServicio = '02';
+    }
+
+    for(let i in this.listaUnidadesMedida){
+      if(selectUnidadMedida.selectedIndex.toString() == i){
+        obj.unidad_medida = this.listaUnidadesMedida[i].simbolo;
+      }
+    }
+    obj.descripcion = nombre.value;
+    obj.codigo_barra = codigoBarra.value;
+    obj.costo_unitario = costo.value;
+    obj.precio_producto = precio.value;
+    obj.unidad_medida_comercial = unidad_medida_comercial.value;
+    //obj.unidad_medida = selectUnidadMedida.value;
+    obj.tipo_servicio = tipoServicio;
+    obj.codigo_servicio = codigo;
+    obj.tipo_impuesto= selectImpuesto.value.split(':')[0];
+    obj.idcategoria= selectCategoria.value.split(':')[0];
+    obj.iddescuento= selectDescuento.value.split(':')[0];
+    obj.precio_final = precio_final.value.split(':')[0];
+
+    this.productoService.actualizarProducto(obj)
+      .subscribe(response =>  {
+
+        this.objProducto.id = '';
+        Swal.fire('Actualizar Producto', response.message, 'success');
         const formProducto = (document.getElementById('form_producto')  as HTMLFormElement);
         formProducto.reset();
       },
