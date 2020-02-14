@@ -46,6 +46,10 @@ export class EmisorService {
     return this.http.post(baseURL() + '/emisor', emisor, {  });
 
   }
+
+  buscarEmisor(query: string){
+   return this.http.get(baseURL() + '/emisor/' + query); 
+  }
   tipoServicio() {
     return [
       {

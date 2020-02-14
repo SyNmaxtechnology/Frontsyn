@@ -42,7 +42,7 @@ export class ProductoComponent implements OnInit {
 
   ngOnInit() {
   }
-  
+
   obtenerPrecioFinal(idPrecio, idSelect) {
 
     try {
@@ -50,7 +50,7 @@ export class ProductoComponent implements OnInit {
       const selectedValue = selectImpuesto.value;
       const idImpuesto = selectedValue.split(':')[0];
       const precio = (document.getElementById(idPrecio) as HTMLInputElement).value;
-      
+
       if ( typeof idImpuesto !== 'undefined' && idImpuesto != null && precio !== '') {
         let precioFinal = 0;
         let porcentajeAplicado = 0;
@@ -64,7 +64,7 @@ export class ProductoComponent implements OnInit {
             }
             valorImpuesto = parseFloat(precio) * porcentajeAplicado;
             precioFinal = parseFloat(precio) + valorImpuesto;
-  
+
             const inputPrecioFinal = (document.getElementById('precio_final') as HTMLInputElement);
             inputPrecioFinal.value = String(precioFinal.toFixed(2));
             this.objProducto.precio_final = inputPrecioFinal.value.toString();
@@ -84,29 +84,27 @@ export class ProductoComponent implements OnInit {
     } else {
     this.productoService.obtenerProducto(texto)
       .subscribe(response =>  {
+                
                 console.log(response);
-                this.objProducto.id = response.idproducto;
-                (document.getElementById('query') as HTMLInputElement).value = '';
-                const nombre = (document.getElementById('descripcion') as HTMLInputElement);
-                nombre.value= response.descripcion;
-                const codigoBarra = (document.getElementById('codigo_barra') as HTMLInputElement);
-                codigoBarra.value = response.codigobarra_producto;
-                const precio = (document.getElementById('precio_producto') as HTMLInputElement);
-                precio.value = response.precio_producto;
-                const costo = (document.getElementById('costo_unitario') as HTMLInputElement);
-                costo.value= response.costo_unitario;
-                const unidad_medida_comercial = (document.getElementById('unidad_medida_comercial') as HTMLInputElement);
-                unidad_medida_comercial.value =  response.unidad_medida_comercial;
-                const precio_final = (document.getElementById('precio_final') as HTMLInputElement);
-                precio_final.value = response.precio_final;
-                const selectUnidadMedida = (document.getElementById('unidad_medida') as HTMLSelectElement);
-                const selectDescuento = (document.getElementById('iddescuento') as HTMLSelectElement);
-                const selectCategoria = (document.getElementById('idcategoria') as HTMLSelectElement);
-                const selectImpuesto = (document.getElementById('tipo_impuesto') as HTMLSelectElement);
 
-                console.log(response);
-              
-                for (const i in this.listaUnidadesMedida) { 
+                (document.getElementById('query') as HTMLInputElement).value = '';
+                this.objProducto.id = response.idproducto;
+                this.objProducto.descripcion = response.descripcion;
+                this.objProducto.codigo_barra = response.codigobarra_producto;
+                this.objProducto.precio_producto = response.precio_producto;
+                this.objProducto.costo_unitario = response.costo_unitario;
+                this.objProducto.unidad_medida_comercial = response.unidad_medida_comercial;
+                this.objProducto.precio_final = response.precio_final;
+                this.objProducto.iddescuento = response.iddescuento;
+                this.objProducto.idcategoria = response.idcategoria; 
+                this.objProducto.tipo_impuesto = response.tipo_impuesto;
+                this.objProducto.unidad_medida = response.unidad_medida;
+                this.obtenerDescuentos();
+                this.obtenerImpuestos();
+                this.obtenerUnidadesMedida();
+                this.obtenerCategorias();
+
+                /*for (const i in this.listaUnidadesMedida) { 
                   if(this.listaUnidadesMedida[i].simbolo == response.unidad_medida){
                     selectUnidadMedida.selectedIndex= Number(i); 
                   }
@@ -128,7 +126,7 @@ export class ProductoComponent implements OnInit {
                   if(this.listaDescuentos[i].id == response.iddescuento){
                     selectDescuento.selectedIndex = Number(i);
                   }
-                }
+                }*/
       },
       err => {
         console.error(err);
@@ -213,11 +211,11 @@ export class ProductoComponent implements OnInit {
     //obj.unidad_medida = selectUnidadMedida.value;
     obj.tipo_servicio = tipoServicio;
     obj.codigo_servicio = codigo;
-    obj.tipo_impuesto= selectImpuesto.value.split(':')[0];
-    obj.idcategoria= selectCategoria.value.split(':')[0];
-    obj.iddescuento= selectDescuento.value.split(':')[0];
-    obj.precio_final = precio_final.value.split(':')[0];
-
+    obj.tipo_impuesto= selectImpuesto.value.split(': ')[1];
+    obj.idcategoria= selectCategoria.value.split(': ')[1];
+    obj.iddescuento= selectDescuento.value.split(': ')[1];
+    obj.precio_final = precio_final.value;
+  console.log(obj);
     this.productoService.actualizarProducto(obj)
       .subscribe(response =>  {
 

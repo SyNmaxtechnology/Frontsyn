@@ -1,4 +1,18 @@
 <h1>Emisor</h1>
+<div class="col-12">
+    <form method="POST" id="form_buscar_cliente">
+        <div class="form-row" id="buscador_cliente">
+            <div class="form-group col-md-8">
+                <input [(ngModel)]="query" name="query" type="text" id="query" class="form-control" placeholder="Buscar por cédula o nombre del emisor">
+            </div>
+            <div class="form-group col-md-3">
+                <button type="submit" class="btn btn-primary" (click)="buscarEmisor($event,query)">Buscar</button>
+            </div>
+        </div>
+    </form>
+</div>
+<br>
+<br>
 <!--<div class="wrap">
     <ul class="tabs">
         <li><a href="#tab1"><span class="fa fa-home"></span><span class="tab-text">Información Personal</span></a></li>
@@ -50,7 +64,7 @@
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="">Provincia</label>
-                <select [(ngModel)]="objEmisor.provincia" name="provincia" class="form-control" (change)="obtenerCantones(objEmisor.provincia)">
+                <select [(ngModel)]="objEmisor.provincia" name="provincia" class="form-control" (change)="obtenerCantones()">
                         <option selected disabled>--Seleccione--</option>
                         <option *ngFor="let provincia of listaProvincias" [ngValue]="provincia.provincia">{{provincia.nPro}}</option>
                 </select>

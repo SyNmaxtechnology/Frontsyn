@@ -16,7 +16,7 @@ export class EmisorComponent implements OnInit {
     this.tipoIdentificacion = emisorService.tipoIdentificacion();
     this.tipoServicio = emisorService.tipoServicio();
   }
-
+  query = '';
   objEmisor = {
     emisor_nombre: '',
     emisor_nombrecomercial: '',
@@ -60,6 +60,51 @@ export class EmisorComponent implements OnInit {
 
   ngOnInit() {
 
+  }
+
+  buscarEmisor(e, texto){
+    e.preventDefault();
+
+    if(texto === ''){
+      return;
+    } else {
+      this.emisorService.buscarEmisor(texto)
+        .subscribe(response => {
+          console.log(response.emisor);
+          this.objEmisor.emisor_nombre = response.emisor[0].emisor_nombre;
+          this.objEmisor.emisor_nombrecomercial = response.emisor[0].emisor_nombrecomercial;
+          this.objEmisor.tipoIdentificacion = response.emisor[0].emisor_tipo_identificacion;
+          this.objEmisor.emisor_cedula = response.emisor[0].cedula_emisor;
+          this.objEmisor.provincia = response.emisor[0].provincia;
+          this.objEmisor.canton = response.emisor[0].canton;
+          this.objEmisor.distrito = response.emisor[0].distrito;
+          this.objEmisor.barrio = response.emisor[0].codigo;
+          this.objEmisor.otras_senas = response.emisor[0].emisor_otras_senas;
+          this.objEmisor.tel_codigo_pais = response.emisor[0].emisor_telefono_codigopais;
+          this.objEmisor.num_telefono = response.emisor[0].emisor_telefono_numtelefono;
+          this.objEmisor.fax_codigo_pais = response.emisor[0].emisor_fax_codigopais;
+          this.objEmisor.fax_num_telefono = response.emisor[0].emisor_fax_numtelefono;
+          this.objEmisor.correo = response.emisor[0].emisor_correo;
+          this.objEmisor.casamatriz = response.emisor[0].casaMatriz;
+          this.objEmisor.puntoventa = response.emisor[0].puntoVenta;
+          this.objEmisor.contrasenaP12 = response.emisor[0].pin_p12;
+          this.objEmisor.user_hacienda = response.emisor[0].key_username_hacienda;
+          this.objEmisor.password_hacienda = response.emisor[0].key_password_hacienda;
+          this.objEmisor.codigo_actividad = response.emisor[0].codigo_actividad;
+          this.objEmisor.codigo_servicio = response.emisor[0].tipo_codigo_servicio;
+          this.objEmisor.API = response.emisor[0].API;
+          this.objEmisor.API_TOKEN = response.emisor[0].TOKEN_API;
+          this.objEmisor.client_id = response.emisor[0].Client_ID;
+          this.obtenerProvincias();
+          this.obtenerCantones();
+          this.obtenerDistritos(this.objEmisor.provincia.trim(),this.objEmisor.canton.trim());
+          this.obtenerBarrios(this.objEmisor.provincia.trim(),this.objEmisor.canton.trim(),this.objEmisor.distrito.trim());
+        
+        },
+        err =>{
+          console.error(err);
+        })
+    }
   }
 
   nuevoEmisor(e, obj) {
@@ -137,9 +182,9 @@ export class EmisorComponent implements OnInit {
       })
   }
 
-  obtenerCantones(id) {
-    const idprovincia = id.toString().split(':')[0];
-    this.emisorService.obtenerCantones(idprovincia)
+  obtenerCantones() {
+    const idprovincia = this.objEmisor.provincia;
+    this.emisorService.obtenerCantones(idprovincia.trim())
     .subscribe(response =>  {
       this.listaCantones = response.cantones;
     });

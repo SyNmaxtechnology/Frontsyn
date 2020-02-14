@@ -239,12 +239,12 @@ export class ClienteComponent implements OnInit {
   obtenerDistritos(idprovincia, idcanton) {
   console.log(idprovincia);
   console.log(idcanton);
-    const obj = {
+  const obj = {
       idprovincia,
       idcanton
     };
 
-    this.clienteService.obtenerDistritos(obj)
+  this.clienteService.obtenerDistritos(obj)
       .subscribe(response =>  {
         this.listaDistritos= response.distritos;
       });
