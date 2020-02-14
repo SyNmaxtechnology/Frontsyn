@@ -13,14 +13,14 @@ export class ClienteComponent implements OnInit {
     this.tipoIdentificacion = clienteService.tipoIdentificacion();
   }
 
-i
+  
   listaProvincias: object = [];
   listaCantones: object = [];
   listaDistritos: object = [];
   listaBarrios: object = [];
   tipoIdentificacion: object = [];
   query = '';
-  
+  selected = '';
   objCliente = {
     id: '',
     cliente_nombre: '',
@@ -81,20 +81,28 @@ i
         }
 
         // tslint:disable-next-line: forin
-        for(let i in this.listaProvincias){
-            const provincia = response.cliente[0].provincia;
-            if (this.listaProvincias[i].provincia == provincia){
-            selectProvincia.selectedIndex = Number(i); 
-          }
+        const idProvincia = response.cliente[0].provincia;
+        const idCanton = response.cliente[0].canton;
+        const idDistrito = response.cliente[0].distrito;
+        const idBarrio = response.cliente[0].cliente_barrio;
+        for(let i in selectProvincia.options){
+            if(typeof selectProvincia.options[i].value !== 'undefined'){
+              if (selectProvincia.options[i].value.split(':')[0] == idProvincia.trim()) {
+               // selectProvincia.options[i].selected = true;
+               this.objCliente.provincia = idProvincia;
+               this.objCliente.canton = idCanton;
+               this.objCliente.distrito = idDistrito;
+               this.objCliente.cliente_barrio = idBarrio;
+               this.obtenerCantones();
+               this.obtenerDistritos(idProvincia.trim(),idCanton.trim());
+               this.obtenerBarrios(idProvincia.trim(),idCanton.trim(),idDistrito.trim());
+              
+              } 
+            }
         }
 
-        if(selectCanton.options.length > 0){
-          // tslint:disable-next-line: forin
-          for(let i in this.listaCantones){
-            console.log('Se ha cargado la listad de cantones');
-            console.log(selectCanton.options[i]);
-          }
-        }
+
+
 
         otras_senas.value = response.cliente[0].otras_senas;
         otras_senas_extranjero.value = response.cliente[0].otras_senas_extranjero;
@@ -213,6 +221,7 @@ i
 
   obtenerProvincias() {
     // tslint:disable-next-line: semicolon
+    
     this.clienteService.obtenerProvincias()
       .subscribe(response =>  {
         this.listaProvincias = response.provincias;
@@ -220,18 +229,16 @@ i
   }
 
   obtenerCantones() {
-    const selectProvincia = (document.getElementById('provincia') as HTMLSelectElement);
-    console.log(selectProvincia.selectedIndex);
-    if (selectProvincia.selectedIndex > 0) {
-      const idprovincia = selectProvincia.options[selectProvincia.selectedIndex].value.split(':')[0];
-      this.clienteService.obtenerCantones(idprovincia)
+    console.log(this.objCliente);
+    const idprovincia = this.objCliente.provincia;
+    this.clienteService.obtenerCantones(idprovincia.trim())
       .subscribe(response =>  {
         this.listaCantones = response.cantones;
       });
-    }
   }
   obtenerDistritos(idprovincia, idcanton) {
-
+  console.log(idprovincia);
+  console.log(idcanton);
     const obj = {
       idprovincia,
       idcanton
