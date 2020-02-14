@@ -42,7 +42,7 @@ export class ProductoComponent implements OnInit {
 
   ngOnInit() {
   }
-
+  
   obtenerPrecioFinal(idPrecio, idSelect) {
 
     try {

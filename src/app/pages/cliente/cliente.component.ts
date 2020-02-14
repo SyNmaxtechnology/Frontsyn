@@ -13,7 +13,7 @@ export class ClienteComponent implements OnInit {
     this.tipoIdentificacion = clienteService.tipoIdentificacion();
   }
 
-
+i
   listaProvincias: object = [];
   listaCantones: object = [];
   listaDistritos: object = [];
@@ -22,6 +22,7 @@ export class ClienteComponent implements OnInit {
   query = '';
   
   objCliente = {
+    id: '',
     cliente_nombre: '',
     cliente_nombre_comercial: '',
     cliente_tipo_identificacion: '',
@@ -39,7 +40,7 @@ export class ClienteComponent implements OnInit {
     cliente_fax_codigopais: '',
     cliente_fax_numtelefono: '',
     cliente_correo: '',
-  }
+  };
 
   ngOnInit() {
   }
@@ -54,6 +55,56 @@ export class ClienteComponent implements OnInit {
     this.clienteService.buscarCliente(texto)
       .subscribe(response => {
         console.log(response);
+          // cargar los datos en el formulario de cliente
+        this.objCliente.id = response.cliente[0].id;
+        console.log(this.objCliente)
+        const nombre = (document.getElementById('cliente_nombre') as HTMLInputElement);
+        nombre.value = response.cliente[0].cliente_nombre;
+        const nombreComercial = (document.getElementById('cliente_nombre_comercial') as HTMLInputElement);
+        nombreComercial.value = response.cliente[0].cliente_nombre_comercial;
+        const tipoIdentificacion = (document.getElementById('cliente_tipo_identificacion') as HTMLSelectElement);
+        const selectProvincia = (document.getElementById("provincia") as HTMLSelectElement);
+        const selectCanton = (document.getElementById("canton") as HTMLSelectElement);
+        const otras_senas = (document.getElementById("otras_senas") as HTMLInputElement);
+        const otras_senas_extranjero = (document.getElementById("otras_senas_extranjero") as HTMLInputElement);
+        const cedula_cliente = (document.getElementById("cedula_cliente") as HTMLInputElement);
+        const identificacion_extranjero = (document.getElementById("identificacion_extranjero") as HTMLInputElement);
+        const cliente_telefono_codigopais = (document.getElementById("cliente_telefono_codigopais") as HTMLInputElement);
+        const cliente_telefono_numtelefono = (document.getElementById("cliente_telefono_numtelefono") as HTMLInputElement);
+        const cliente_fax_codigopais = (document.getElementById("cliente_fax_codigopais") as HTMLInputElement);
+        const cliente_fax_numtelefono = (document.getElementById("cliente_fax_numtelefono") as HTMLInputElement);
+        const cliente_correo = (document.getElementById("cliente_correo") as HTMLInputElement);
+        for(let i in this.tipoIdentificacion) {
+          if (this.tipoIdentificacion[i].codigo == response.cliente[0].cliente_tipo_identificacion  ){
+              tipoIdentificacion.options[i].selected = true;
+          }
+        }
+
+        // tslint:disable-next-line: forin
+        for(let i in this.listaProvincias){
+            const provincia = response.cliente[0].provincia;
+            if (this.listaProvincias[i].provincia == provincia){
+            selectProvincia.selectedIndex = Number(i); 
+          }
+        }
+
+        if(selectCanton.options.length > 0){
+          // tslint:disable-next-line: forin
+          for(let i in this.listaCantones){
+            console.log('Se ha cargado la listad de cantones');
+            console.log(selectCanton.options[i]);
+          }
+        }
+
+        otras_senas.value = response.cliente[0].otras_senas;
+        otras_senas_extranjero.value = response.cliente[0].otras_senas_extranjero;
+        cedula_cliente.value = response.cliente[0].cedula_cliente;
+        identificacion_extranjero.value = response.cliente[0].identificacion_extranjero;
+        cliente_telefono_codigopais.value = response.cliente[0].cliente_telefono_codigopais;
+        cliente_telefono_numtelefono.value = response.cliente[0].cliente_telefono_numtelefono;
+        cliente_fax_codigopais.value = response.cliente[0].cliente_fax_codigopais;
+        cliente_fax_numtelefono.value = response.cliente[0].cliente_fax_numtelefono;
+        cliente_correo.value = response.cliente[0].cliente_correo;
       },
       err => {
         if(err.status === 404){
@@ -61,6 +112,14 @@ export class ClienteComponent implements OnInit {
           Swal.fire('Buscar Cliente', err.error.message, 'error');
         }
       });
+    }
+  }
+  
+  procesarCliente(e,obj){
+    if (obj.id === '') {
+      this.nuevoCliente(e, obj);
+    } else {
+      this.actualizarCliente(e, obj);
     }
   }
 
@@ -90,26 +149,86 @@ export class ClienteComponent implements OnInit {
         Swal.fire('Nuevo Cliente', response.message, 'success');
       },
       err => {
-        console.log(err)
-      })
+        console.log(err);
+      });
+  }
+
+  actualizarCliente(e,obj) {
+    e.preventDefault();
+    console.log("Actualizar")
+    let numero_cliente = '';
+    const nombre = (document.getElementById('cliente_nombre') as HTMLInputElement);
+    const nombreComercial = (document.getElementById('cliente_nombre_comercial') as HTMLInputElement);
+    const tipoIdentificacion = (document.getElementById('cliente_tipo_identificacion') as HTMLSelectElement);
+    const selectBarrio = (document.getElementById("barrio") as HTMLSelectElement);
+    const otras_senas = (document.getElementById("otras_senas") as HTMLInputElement);
+    const otras_senas_extranjero = (document.getElementById("otras_senas_extranjero") as HTMLInputElement);
+    const cedula_cliente = (document.getElementById("cedula_cliente") as HTMLInputElement);
+    const identificacion_extranjero = (document.getElementById("identificacion_extranjero") as HTMLInputElement);
+    const cliente_telefono_codigopais = (document.getElementById("cliente_telefono_codigopais") as HTMLInputElement);
+    const cliente_telefono_numtelefono = (document.getElementById("cliente_telefono_numtelefono") as HTMLInputElement);
+    const cliente_fax_codigopais = (document.getElementById("cliente_fax_codigopais") as HTMLInputElement);
+    const cliente_fax_numtelefono = (document.getElementById("cliente_fax_numtelefono") as HTMLInputElement);
+    const cliente_correo = (document.getElementById("cliente_correo") as HTMLInputElement);
+
+    if (cedula_cliente.value.length === 9) {
+        numero_cliente = '000' + cedula_cliente.value;
+    }
+    if (cedula_cliente.value.length === 10) {
+        numero_cliente = '00' + cedula_cliente.value;
+    }
+    if (cedula_cliente.value.length === 11) {
+        numero_cliente = '0' + cedula_cliente.value;
+    }
+    if (cedula_cliente.value.length === 12) {
+        numero_cliente = cedula_cliente.value;
+    }
+
+    obj.numero_cliente = numero_cliente;
+    obj.cliente_nombre = nombre.value,
+    obj.cliente_nombre_comercial = nombreComercial.value,
+    obj.cliente_tipo_identificacion = tipoIdentificacion.value.split(': ')[1],
+    obj.cedula_cliente = cedula_cliente.value,
+    obj.identificacion_extranjero = identificacion_extranjero.value,
+    obj.cliente_barrio = selectBarrio.value.split(': ')[1],
+    obj.otras_senas = otras_senas.value,
+    obj.otras_senas_extranjero = otras_senas_extranjero.value,
+    obj.cliente_telefono_codigopais = cliente_telefono_codigopais.value,
+    obj.cliente_telefono_numtelefono = cliente_telefono_numtelefono.value,
+    obj.cliente_fax_codigopais = cliente_fax_codigopais.value,
+    obj.cliente_fax_numtelefono = cliente_fax_numtelefono.value,
+    obj.cliente_correo = cliente_correo.value,
+    
+  console.log(obj); 
+    this.clienteService.actualizarCliente(obj)
+      .subscribe(response =>  {
+        console.log(response)
+        this.objCliente.id = '';
+        Swal.fire('Actualizar Cliente', response.message, 'success');
+      },
+      err => {
+        console.log(err);
+      });
   }
 
   obtenerProvincias() {
     // tslint:disable-next-line: semicolon
-
     this.clienteService.obtenerProvincias()
       .subscribe(response =>  {
         this.listaProvincias = response.provincias;
       });
   }
 
-  obtenerCantones(id) {
-    const idprovincia = id.toString().split(':')[0];
-    
-    this.clienteService.obtenerCantones(idprovincia)
-    .subscribe(response =>  {
-      this.listaCantones = response.cantones;
-    });
+  obtenerCantones() {
+    const selectProvincia = (document.getElementById('provincia') as HTMLSelectElement);
+    console.log(selectProvincia.selectedIndex);
+    if (selectProvincia.selectedIndex > 0) {
+      const idprovincia = selectProvincia.options[selectProvincia.selectedIndex].value.split(':')[0];
+      this.clienteService.obtenerCantones(idprovincia)
+      .subscribe(response =>  {
+        this.listaCantones = response.cantones;
+      });
+    }
   }
   obtenerDistritos(idprovincia, idcanton) {
 

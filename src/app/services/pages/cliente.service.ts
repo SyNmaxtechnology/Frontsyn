@@ -32,6 +32,14 @@ export class ClienteService {
 
   }
 
+  actualizarCliente(cliente: any) {
+
+    const headers = new HttpHeaders().set('Content-type', 'application/json');
+    const {id} = cliente;
+    return this.http.put(baseURL() + '/cliente/' + id, cliente, { headers });
+
+  }
+
   buscarCliente(query: string){
     return this.http.get(baseURL() +'/cliente/' + query);
   }

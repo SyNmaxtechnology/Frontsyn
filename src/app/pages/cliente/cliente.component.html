@@ -47,25 +47,32 @@
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="provincia">Provincia</label>
-                <select [(ngModel)]="objCliente.provincia" id="provincia" name="provincia" class="form-control" (change)="obtenerCantones(objCliente.provincia)">
+                <select [(ngModel)]="objCliente.provincia" id="provincia" name="provincia" class="form-control" (change)="obtenerCantones()">
+                    <option value="" selected>--Seleccione--</option>
                     <option *ngFor="let provincia of listaProvincias" [ngValue]="provincia.provincia">{{provincia.nPro}}</option>
                 </select>
             </div>
             <div class="form-group col-md-6">
                 <label for="canton">Cantón</label>
+
                 <select [(ngModel)]="objCliente.canton" id="canton" name="canton" class="form-control" (change)="obtenerDistritos(objCliente.provincia,objCliente.canton)">
+                    <option value="" selected>--Seleccione--</option>
                     <option *ngFor="let canton of listaCantones" [ngValue]="canton.canton">{{canton.nCan}}</option>
                 </select>
             </div>
             <div class="form-group col-md-6">
                 <label for="distrito">Distrito</label>
+
                 <select [(ngModel)]="objCliente.distrito" id="distrito" name="distrito" class="form-control" (change)="obtenerBarrios(objCliente.provincia,objCliente.canton, objCliente.distrito)">
+                    <option value="" selected>--Seleccione--</option>
                     <option *ngFor="let distrito of listaDistritos" [ngValue]="distrito.distrito">{{distrito.nDis}}</option>
                 </select>
             </div>
             <div class="form-group col-md-6">
                 <label for="barrio">Barrio</label>
+
                 <select [(ngModel)]="objCliente.cliente_barrio" id="barrio" name="barrio" class="form-control">
+                    <option value="" selected>--Seleccione--</option>
                     <option *ngFor="let barrio of listaBarrios" [ngValue]="barrio.codigo">{{barrio.nHac}}</option>
                 </select>
             </div>
@@ -104,6 +111,6 @@
             <label for="cliente_correo">Correo</label>
             <input [(ngModel)]="objCliente.cliente_correo" type="text" name="cliente_correo" id="cliente_correo" class="form-control">
         </div>
-        <button type="submit" class="btn btn-primary" (click)="nuevoCliente($event,objCliente)">Guardar</button>
+        <button type="submit" class="btn btn-primary" (click)="procesarCliente($event,objCliente)">Guardar</button>
     </form>
 </div>
