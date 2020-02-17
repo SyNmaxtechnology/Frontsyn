@@ -50,6 +50,11 @@ export class EmisorService {
   buscarEmisor(query: string){
    return this.http.get(baseURL() + '/emisor/' + query); 
   }
+
+  actualizarEmisor(obj: FormData){
+      
+    return this.http.put(baseURL() + '/emisor/' + obj.getAll("id"),obj,{});
+  }
   tipoServicio() {
     return [
       {

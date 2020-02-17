@@ -1,7 +1,7 @@
 <h1>Emisor</h1>
 <div class="col-12">
-    <form method="POST" id="form_buscar_cliente">
-        <div class="form-row" id="buscador_cliente">
+    <form method="POST" id="formBuscarEmisor">
+        <div class="form-row">
             <div class="form-group col-md-8">
                 <input [(ngModel)]="query" name="query" type="text" id="query" class="form-control" placeholder="Buscar por cédula o nombre del emisor">
             </div>
@@ -36,7 +36,7 @@
 </div>-->
 
 <div class="col-12">
-    <form method="POST">
+    <form method="POST" #formEmisor="ngForm" id="formEmisor">
 
         <div class="form-row">
             <div class="form-group col-md-6">
@@ -103,7 +103,7 @@
             </div>
             <div class="form-group col-md-6">
                 <label for="numtel">Número de Teléfono</label>
-                <input [(ngModel)]="objEmisor.num_telefono" name="num_telefono" type="text" class="form-control" id="numtelcomercial" placeholder="Número de telefono">
+                <input [(ngModel)]="objEmisor.num_telefono" name="num_telefono" type="text" class="form-control" id="num_telefono" placeholder="Número de telefono">
             </div>
         </div>
         <div class="form-row">
@@ -113,7 +113,7 @@
             </div>
             <div class="form-group col-md-6">
                 <label for="fax_numtel">Número de Fax</label>
-                <input [(ngModel)]="objEmisor.fax_num_telefono" name="fax_num_telefono" type="text" class="form-control" id="fax_numtelcomercial" placeholder="Número de Fax">
+                <input [(ngModel)]="objEmisor.fax_num_telefono" name="fax_num_telefono" type="text" class="form-control" id="fax_num_telefono" placeholder="Número de Fax">
             </div>
         </div>
         <div class="form-group">
@@ -123,11 +123,11 @@
         <div class=" form-row ">
             <div class="form-group col-md-6 ">
                 <label for="casamatriz">Casa Matriz</label>
-                <input [(ngModel)]="objEmisor.casamatriz" name="casamatriz" type="text" class="form-control " id="casamatriz " placeholder="Casa Matriz ">
+                <input [(ngModel)]="objEmisor.casamatriz" name="casamatriz" type="text" class="form-control" id="casamatriz" placeholder="Casa Matriz ">
             </div>
             <div class="form-group col-md-6 ">
                 <label for="puntoventa">Punto Venta</label>
-                <input [(ngModel)]="objEmisor.puntoventa" name="puntoventa" type="text " class="form-control" id="puntoventa" placeholder="Punto Venta ">
+                <input [(ngModel)]="objEmisor.puntoventa" name="puntoventa" type="text" class="form-control" id="puntoventa" placeholder="Punto Venta ">
             </div>
         </div>
         <div class="form-row">
@@ -137,7 +137,7 @@
             </div>
             <div class="form-group col-md-6">
                 <label for="codigo_actividad">Tipo Codigo Servicio</label>
-                <select [(ngModel)]="objEmisor.codigo_servicio" name="codigo_servicio" id="codigo_actividad" class="form-control">
+                <select [(ngModel)]="objEmisor.codigo_servicio" name="codigo_servicio" id="codigo_servicio" class="form-control">
                     <option>Seleccione</option>
                     <option *ngFor="let servicio of tipoServicio" [ngValue]="servicio.codigo">{{servicio.tipo_codigo}}</option>
                 </select>
@@ -187,6 +187,6 @@
                 <input [(ngModel)]="objEmisor.contrasenaP12" name="contrasenaP12" type="password" class="form-control" id="contrasenaP12" placeholder="Contraseña archivo p12">
             </div>
         </div>
-        <button type="submit" class="btn btn-primary" (click)="nuevoEmisor($event, objEmisor)">Guardar</button>
+        <button type="submit" class="btn btn-primary" (click)="procesarEmisor($event,objEmisor)">Guardar</button>
     </form>
 </div>

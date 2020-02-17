@@ -18,6 +18,7 @@ export class EmisorComponent implements OnInit {
   }
   query = '';
   objEmisor = {
+    id: '',
     emisor_nombre: '',
     emisor_nombrecomercial: '',
     tipoIdentificacion: '',
@@ -70,6 +71,9 @@ export class EmisorComponent implements OnInit {
     } else {
       this.emisorService.buscarEmisor(texto)
         .subscribe(response => {
+
+          (document.getElementById("formBuscarEmisor") as HTMLFormElement).reset();
+          this.objEmisor.id = response.emisor[0].id;
           console.log(response.emisor);
           this.objEmisor.emisor_nombre = response.emisor[0].emisor_nombre;
           this.objEmisor.emisor_nombrecomercial = response.emisor[0].emisor_nombrecomercial;
@@ -95,6 +99,8 @@ export class EmisorComponent implements OnInit {
           this.objEmisor.API = response.emisor[0].API;
           this.objEmisor.API_TOKEN = response.emisor[0].TOKEN_API;
           this.objEmisor.client_id = response.emisor[0].Client_ID;
+          this.objEmisor.numero_resolucion = response.emisor[0].numeroresolucion;
+          this.objEmisor.fecha_resolucion = response.emisor[0].fecharesolucion;
           this.obtenerProvincias();
           this.obtenerCantones();
           this.obtenerDistritos(this.objEmisor.provincia.trim(),this.objEmisor.canton.trim());
@@ -102,7 +108,12 @@ export class EmisorComponent implements OnInit {
         
         },
         err =>{
-          console.error(err);
+          console.log(err);
+          if(err.status === 404){
+            Swal.fire('Buscar Emisor',
+            err.error.message,
+            'error');
+          }
         })
     }
   }
@@ -161,10 +172,11 @@ export class EmisorComponent implements OnInit {
           formData.append('TOKEN_API', obj.API_TOKEN);
           formData.append('numeroresolucion', obj.numero_resolucion);
           formData.append('fecharesolucion', obj.fecha_resolucion);
-
           this.emisorService.guardarEmisor(formData)
             .subscribe(response => {
 
+              Swal.fire('Nuevo Emisor',response.message,'success');
+              (document.getElementById("formEmisor") as HTMLFormElement).reset();
             });
          } else {
           console.log('Archivo no permitido');
@@ -172,6 +184,92 @@ export class EmisorComponent implements OnInit {
          }
       }
   }
+
+  procesarEmisor(e,obj){
+    if(this.objEmisor.id === ''){
+      this.nuevoEmisor(e,obj);
+    }else{
+      this.actualizarEmisor(e,obj);
+    }
+
+  }
+
+  actualizarEmisor(e,obj){
+    e.preventDefault();
+
+    const formData = new FormData();
+    const selectTipoServicio = (document.getElementById("codigo_servicio") as HTMLSelectElement);
+    const codigo = selectTipoServicio.options[selectTipoServicio.selectedIndex].text;
+    const tipo = selectTipoServicio.options[selectTipoServicio.selectedIndex].value;
+    const File = (document.getElementById('file_p12') as HTMLInputElement);
+
+    let numero_emisor = '';
+
+          if (obj.emisor_cedula.length === 9) {
+            numero_emisor = '000' + obj.emisor_cedula;
+          }
+          if (obj.emisor_cedula.length === 10) {
+            numero_emisor = '00' + obj.emisor_cedula;
+          }
+          if (obj.emisor_cedula.length === 11) {
+            numero_emisor = '0' + obj.emisor_cedula;
+          }
+          if (obj.emisor_cedula.length === 12) {
+            numero_emisor = obj.emisor_cedula;
+          }
+
+    obj.numero_emisor = numero_emisor;
+          
+    
+    //INFORMACION FORMATEADA
+    obj.codigo_servicio = codigo;
+    obj.tipo_codigo_servicio= tipo.split(": ")[1];
+
+    formData.append("id",obj.id);
+    formData.append('emisor_nombre', obj.emisor_nombre);
+    formData.append('emisor_nombrecomercial', obj.emisor_nombrecomercial);
+    formData.append('emisor_tipo_identificacion', obj.tipoIdentificacion);
+    formData.append('cedula_emisor', obj.emisor_cedula);
+    formData.append('numero_emisor', obj.numero_emisor);
+    formData.append('emisor_barrio', obj.barrio);
+    formData.append('emisor_otras_senas', obj.otras_senas);
+    formData.append('emisor_telefono_codigopais', obj.tel_codigo_pais);
+    formData.append('emisor_telefono_numtelefono', obj.num_telefono);
+    formData.append('emisor_fax_codigopais', obj.fax_codigo_pais);
+    formData.append('emisor_fax_numtelefono', obj.fax_num_telefono);
+    formData.append('emisor_correo', obj.correo);
+    formData.append('file_p12', File.files[0]);
+    formData.append('pin_p12', obj.contrasenaP12);
+    formData.append('key_username_hacienda', obj.user_hacienda);
+    formData.append('key_password_hacienda', obj.password_hacienda);
+    formData.append('casaMatriz', obj.casamatriz);
+    formData.append('puntoVenta', obj.puntoventa);
+    formData.append('codigo_actividad', obj.codigo_actividad);
+    formData.append('tipo_codigo_servicio', obj.tipo_codigo_servicio);
+    formData.append('codigo_servicio', obj.codigo_servicio);
+    formData.append('Client_ID', obj.client_id);
+    formData.append('API', obj.API);
+    formData.append('TOKEN_API', obj.API_TOKEN);
+    formData.append('numeroresolucion', obj.numero_resolucion);
+    formData.append('fecharesolucion', obj.fecha_resolucion);
+        
+    this.emisorService.actualizarEmisor(formData)
+      .subscribe(response => {
+        Swal.fire('Editar Emisor',
+        response.message,
+        'success');
+        (document.getElementById("formEmisor") as HTMLFormElement).reset();
+      },err => {
+        console.log(err);
+        if(err.status == 500){
+          Swal.fire('Actualizar Emisor',
+          'No se pudo actualizar el emisor',
+          'error');
+          (document.getElementById("formEmisor") as HTMLFormElement).reset();
+        }
+
+      })
+  } 
 
   obtenerProvincias() {
     // tslint:disable-next-line: semicolon

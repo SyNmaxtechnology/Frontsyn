@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DescuentoService } from '../../services/pages/descuento.service';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-descuento',
   templateUrl: './descuento.component.html',
@@ -17,6 +17,7 @@ export class DescuentoComponent implements OnInit {
   
   };
 
+
   ngOnInit() {
   }
   
@@ -24,7 +25,11 @@ export class DescuentoComponent implements OnInit {
     e.preventDefault();
     this.descuentoService.guardarDescuento(obj)
       .subscribe(response => {
-        console.log(response)
+        Swal.fire('Nuevo Descuento',
+        response.message,
+        'success');
+
+        (document.getElementById("formDescuento") as HTMLFormElement).reset();
       });
   }
 }
