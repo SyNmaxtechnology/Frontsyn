@@ -13,4 +13,13 @@ export class DescuentoService {
     const headers = new HttpHeaders().set('Content-type', 'application/json');
     return this.http.post(baseURL() + '/descuento', descuento , { headers});
   }
+
+  buscarDescuento( query: string){
+    return this.http.get(baseURL() + '/descuento/' + query);
+  }
+
+  actualizarDescuento(obj: any){
+    const headers = new HttpHeaders().set('Content-Type','application/json');
+    return this.http.put(baseURL() +'/descuento/' +obj.id,obj,{headers});
+  }
 }

@@ -11,14 +11,22 @@ export class DescuentoComponent implements OnInit {
   constructor(private descuentoService: DescuentoService) { }
 
   objDescuento = {
-    
-    descuento: '',
+    id: '',
+    porcentaje: '',
     descripcion: ''
   
   };
-
+  query = '';
 
   ngOnInit() {
+  }
+
+  procesarDescuento(e,obj){
+    if(this.objDescuento.id === ''){
+      this.nuevoDescuento(e,obj);
+    }else{
+      this.actualizarDescuento(e,obj);
+    }
   }
   
   nuevoDescuento(e, obj) {
@@ -31,5 +39,33 @@ export class DescuentoComponent implements OnInit {
 
         (document.getElementById("formDescuento") as HTMLFormElement).reset();
       });
+  }
+
+  actualizarDescuento(e,obj){
+    e.preventDefault();
+
+    this.descuentoService.actualizarDescuento(obj)
+      .subscribe(response => {
+        Swal.fire('Editar Descuento',
+        response.message,
+        'success');
+
+        (document.getElementById("formDescuento") as HTMLFormElement).reset();
+      });
+  }
+
+  buscarDescuento(e,texto){
+    e.preventDefault();
+    if(texto===''){
+      return;
+    }else{
+    this.descuentoService.buscarDescuento(texto)
+      .subscribe(response => {
+        this.objDescuento.id = response.id;
+        this.objDescuento.descripcion = response.descripcion;
+        this.objDescuento.porcentaje = response.porcentaje
+      }
+      ,err => console.log(err));
+    }
   }
 }

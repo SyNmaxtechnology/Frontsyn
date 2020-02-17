@@ -48,9 +48,9 @@ export class ProductoComponent implements OnInit {
     try {
       const selectImpuesto = (document.getElementById(idSelect) as HTMLSelectElement);
       const selectedValue = selectImpuesto.value;
-      const idImpuesto = selectedValue.split(':')[0];
+      const idImpuesto = selectedValue.split(': ')[1];
       const precio = (document.getElementById(idPrecio) as HTMLInputElement).value;
-
+      
       if ( typeof idImpuesto !== 'undefined' && idImpuesto != null && precio !== '') {
         let precioFinal = 0;
         let porcentajeAplicado = 0;
@@ -68,6 +68,7 @@ export class ProductoComponent implements OnInit {
             const inputPrecioFinal = (document.getElementById('precio_final') as HTMLInputElement);
             inputPrecioFinal.value = String(precioFinal.toFixed(2));
             this.objProducto.precio_final = inputPrecioFinal.value.toString();
+            
           }
         }
       } else {
@@ -99,34 +100,12 @@ export class ProductoComponent implements OnInit {
                 this.objProducto.idcategoria = response.idcategoria; 
                 this.objProducto.tipo_impuesto = response.tipo_impuesto;
                 this.objProducto.unidad_medida = response.unidad_medida;
+
                 this.obtenerDescuentos();
                 this.obtenerImpuestos();
                 this.obtenerUnidadesMedida();
                 this.obtenerCategorias();
 
-                /*for (const i in this.listaUnidadesMedida) { 
-                  if(this.listaUnidadesMedida[i].simbolo == response.unidad_medida){
-                    selectUnidadMedida.selectedIndex= Number(i); 
-                  }
-                }
-
-                for(const i in this.listaCategorias){
-                  if(this.listaCategorias[i].id == response.idcategoria){
-                    selectCategoria.selectedIndex = Number(i);
-                  }
-                }
-
-                for(const i in this.listaImpuestos){
-                  if(this.listaImpuestos[i].id == response.tipo_impuesto){
-                    selectImpuesto.selectedIndex = Number(i);
-                  }
-                }
-
-                for(const i in this.listaDescuentos){
-                  if(this.listaDescuentos[i].id == response.iddescuento){
-                    selectDescuento.selectedIndex = Number(i);
-                  }
-                }*/
       },
       err => {
         console.error(err);
@@ -167,8 +146,7 @@ export class ProductoComponent implements OnInit {
       .subscribe(response =>  {
 
         Swal.fire('Nuevo Producto', response.message, 'success');
-        const formProducto = (document.getElementById('form_producto')  as HTMLFormElement);
-        formProducto.reset();
+        (document.getElementById('form_producto')  as HTMLFormElement).reset();
       },
       err => console.error(err));
   }
@@ -221,10 +199,11 @@ export class ProductoComponent implements OnInit {
 
         this.objProducto.id = '';
         Swal.fire('Actualizar Producto', response.message, 'success');
-        const formProducto = (document.getElementById('form_producto')  as HTMLFormElement);
-        formProducto.reset();
+        (document.getElementById('form_producto')  as HTMLFormElement).reset();
       },
-      err => console.error(err));
+      err => {
+        (document.getElementById('form_producto')  as HTMLFormElement).reset();
+      });
   }
 
   obtenerImpuestos() {

@@ -57,29 +57,20 @@ export class ClienteComponent implements OnInit {
         console.log(response);
           // cargar los datos en el formulario de cliente
         this.objCliente.id = response.cliente[0].id;
-        console.log(this.objCliente)
-        const nombre = (document.getElementById('cliente_nombre') as HTMLInputElement);
-        nombre.value = response.cliente[0].cliente_nombre;
-        const nombreComercial = (document.getElementById('cliente_nombre_comercial') as HTMLInputElement);
-        nombreComercial.value = response.cliente[0].cliente_nombre_comercial;
-        const tipoIdentificacion = (document.getElementById('cliente_tipo_identificacion') as HTMLSelectElement);
         const selectProvincia = (document.getElementById("provincia") as HTMLSelectElement);
-        const selectCanton = (document.getElementById("canton") as HTMLSelectElement);
-        const otras_senas = (document.getElementById("otras_senas") as HTMLInputElement);
-        const otras_senas_extranjero = (document.getElementById("otras_senas_extranjero") as HTMLInputElement);
-        const cedula_cliente = (document.getElementById("cedula_cliente") as HTMLInputElement);
-        const identificacion_extranjero = (document.getElementById("identificacion_extranjero") as HTMLInputElement);
-        const cliente_telefono_codigopais = (document.getElementById("cliente_telefono_codigopais") as HTMLInputElement);
-        const cliente_telefono_numtelefono = (document.getElementById("cliente_telefono_numtelefono") as HTMLInputElement);
-        const cliente_fax_codigopais = (document.getElementById("cliente_fax_codigopais") as HTMLInputElement);
-        const cliente_fax_numtelefono = (document.getElementById("cliente_fax_numtelefono") as HTMLInputElement);
-        const cliente_correo = (document.getElementById("cliente_correo") as HTMLInputElement);
-        for(let i in this.tipoIdentificacion) {
-          if (this.tipoIdentificacion[i].codigo == response.cliente[0].cliente_tipo_identificacion  ){
-              tipoIdentificacion.options[i].selected = true;
-          }
-        }
-
+       
+        this.objCliente.cliente_nombre = response.cliente[0].cliente_nombre;
+        this.objCliente.cliente_nombre_comercial = response.cliente[0].cliente_nombre_comercial;
+        this.objCliente.cliente_tipo_identificacion = response.cliente[0].cliente_tipo_identificacion;
+        this.objCliente.cedula_cliente = response.cliente[0].cedula_cliente;
+        this.objCliente.identificacion_extranjero = response.cliente[0].identificacion_extranjero;
+        this.objCliente.otras_senas = response.cliente[0].otras_senas;
+        this.objCliente.otras_senas_extranjero = response.cliente[0].otras_senas_extranjero;
+        this.objCliente.cliente_telefono_codigopais = response.cliente[0].cliente_telefono_codigopais;
+        this.objCliente.cliente_telefono_numtelefono = response.cliente[0].cliente_telefono_numtelefono;
+        this.objCliente.cliente_fax_codigopais = response.cliente[0].cliente_fax_codigopais;
+        this.objCliente.cliente_fax_numtelefono = response.cliente[0].cliente_fax_numtelefono;
+        this.objCliente.cliente_correo = response.cliente[0].cliente_correo;
         // tslint:disable-next-line: forin
         const idProvincia = response.cliente[0].provincia;
         const idCanton = response.cliente[0].canton;
@@ -100,19 +91,6 @@ export class ClienteComponent implements OnInit {
               } 
             }
         }
-
-
-
-
-        otras_senas.value = response.cliente[0].otras_senas;
-        otras_senas_extranjero.value = response.cliente[0].otras_senas_extranjero;
-        cedula_cliente.value = response.cliente[0].cedula_cliente;
-        identificacion_extranjero.value = response.cliente[0].identificacion_extranjero;
-        cliente_telefono_codigopais.value = response.cliente[0].cliente_telefono_codigopais;
-        cliente_telefono_numtelefono.value = response.cliente[0].cliente_telefono_numtelefono;
-        cliente_fax_codigopais.value = response.cliente[0].cliente_fax_codigopais;
-        cliente_fax_numtelefono.value = response.cliente[0].cliente_fax_numtelefono;
-        cliente_correo.value = response.cliente[0].cliente_correo;
       },
       err => {
         if(err.status === 404){
@@ -155,6 +133,8 @@ export class ClienteComponent implements OnInit {
     this.clienteService.guardarCliente(obj)
       .subscribe(response =>  {
         Swal.fire('Nuevo Cliente', response.message, 'success');
+        (document.getElementById("form_cliente") as HTMLFormElement).reset();
+        
       },
       err => {
         console.log(err);
@@ -213,6 +193,7 @@ export class ClienteComponent implements OnInit {
         console.log(response)
         this.objCliente.id = '';
         Swal.fire('Actualizar Cliente', response.message, 'success');
+        (document.getElementById("form_cliente") as HTMLFormElement).reset();
       },
       err => {
         console.log(err);
