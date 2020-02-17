@@ -1,6 +1,20 @@
 <h1>Impuesto</h1>
+<br>
 <div class="col-12">
-    <form method="POST">
+    <form method="POST" id="formBuscarImpuesto">
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <input [(ngModel)]="query" name="query" type="text" id="query" class="form-control" placeholder="Buscar por cédula o nombre del emisor">
+            </div>
+            <div class="form-group col-md-3">
+                <button type="submit" class="btn btn-primary" (click)="buscarImpuesto($event,query)">Buscar</button>
+            </div>
+        </div>
+    </form>
+</div>
+<br>
+<div class="col-12">
+    <form method="POST" id="formImpuesto">
 
         <div class="form-group col-md-6">
             <label for="descripcion">Descripción</label>
@@ -14,6 +28,6 @@
             <label for="descripcion">Código</label>
             <input [(ngModel)]="objImpuesto.codigo" type="text" name="codigo" id="codigo" class="form-control">
         </div>
-        <button type="submit" class="btn btn-primary" (click)="nuevoImpuesto($event,objImpuesto)">Guardar</button>
+        <button type="submit" class="btn btn-primary" (click)="procesarImpuesto($event,objImpuesto)">Guardar</button>
     </form>
 </div>

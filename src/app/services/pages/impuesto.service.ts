@@ -12,4 +12,14 @@ export class ImpuestoService {
     const headers = new HttpHeaders().set('Content-type', 'application/json');
     return this.http.post(baseURL() + '/tipoImpuesto', obj, {headers} );
   }
+
+  buscarImpuesto(query: string){
+    return this.http.get(baseURL() + '/tipoImpuesto/' + query);
+  }
+  actualizarImpuesto(obj: any){
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.put(baseURL() + '/tipoImpuesto/' + obj.id, obj, { headers });
+  }
+
+
 }
