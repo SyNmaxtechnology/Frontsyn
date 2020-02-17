@@ -12,10 +12,9 @@ console.log(SharedModule);
 @NgModule({
     declarations: [
         PagesComponent,
-        FacturaComponent,
     ],
     exports: [
-        FacturaComponent
+
     ],
     imports: [
         SharedModule,
