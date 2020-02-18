@@ -85,6 +85,7 @@
             </div>
             <div class="form-group col-md-6">
                 <label for="">Barrio</label>
+                <!---->
                 <select [(ngModel)]="objEmisor.barrio" name="barrio" id="barrio" class="form-control">
                     <option>Seleccione</option>
                     <option *ngFor="let barrio of listaBarrios" [ngValue]="barrio.codigo">{{barrio.nHac}}</option>
@@ -132,8 +133,13 @@
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
-                <label for="codigo_actividad">Codigo Actividad</label>
-                <input [(ngModel)]="objEmisor.codigo_actividad" name="codigo_actividad" type="number" id="codigo_actividad" class="form-control">
+                <form method="POST">
+                    <button data-toggle="modal" data-target="#formBuscarActividad" class="form-comtrol col-sm-2 col-md-1 mb-1">
+                        <i class="fa fa-search"></i>
+                    </button>
+                    <input [(ngModel)]="objEmisor.codigo_actividad" name="codigo_actividad" type="number" id="codigo_actividad" class="form-control" placeholder="Código Actividad">
+                </form>
+
             </div>
             <div class="form-group col-md-6">
                 <label for="codigo_actividad">Tipo Codigo Servicio</label>
@@ -189,4 +195,40 @@
         </div>
         <button type="submit" class="btn btn-primary" (click)="procesarEmisor($event,objEmisor)">Guardar</button>
     </form>
+</div>
+
+
+<div class="modal fade" id="formBuscarActividad" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Buscar Actividad</h5>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="formActividad">
+                    <div class="form-group">
+                        <label for="cedula" class="col-form-label">Cédula Emisor:</label>
+                        <input [(ngModel)]="objDataActividad.cedula" name="cedula" type="text" class="form-control" id="cedula">
+                        <button type="submit" class="btn btn-primary mt-1" (click)="obtenerActividades($event,objDataActividad.cedula)">Buscar</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre" class="col-form-label">Nombre:</label>
+                        <input [(ngModel)]="objDataActividad.nombre" name="nombre" type="text" class="form-control" id="nombre" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion" class="col-form-label">Descripcion:</label>
+                        <input [(ngModel)]="objDataActividad.descripcion" name="descripcion" type="text" class="form-control" id="descripcion" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="codigo" class="col-form-label">Código:</label>
+                        <input [(ngModel)]="objDataActividad.codigo" name="codigo" type="text" class="form-control" id="codigo" readonly>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" (click)="cargarActividad(objDataActividad.codigo)">Cargar</button>
+            </div>
+        </div>
+    </div>
 </div>

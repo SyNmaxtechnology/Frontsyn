@@ -84,6 +84,10 @@ export class FacturaService {
   obtenerTipoCambio(){
     return this.http.get(baseURL() + '/tipoCambio');
   }
+
+  obtenerMonedas(){
+    return this.http.get(baseURL() + '/monedas');
+  }
 }
 
 

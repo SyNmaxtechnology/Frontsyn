@@ -12,11 +12,13 @@ export class FacturaComponent implements OnInit {
 
     this.obtenerTipoCambio();
     this.fechaHora();
+    this.obtenerMonedas();
     this.tipoDocumento = facturaService.tipoDocumento();
     this.medioPago = facturaService.medioPago();
     this.condicionVenta = facturaService.condicionVenta();
+
   }
-  
+
   objFactura =  {
     id: '',
     idcliente: '',
@@ -50,6 +52,8 @@ export class FacturaComponent implements OnInit {
   tipoDocumento: object = [];
   condicionVenta: object = [];
   medioPago: object = [];
+  listaMonedas: object = [];
+  listaDetalles: object = [];
 
   ngOnInit() {
   }
@@ -96,5 +100,13 @@ export class FacturaComponent implements OnInit {
         this.objFactura.tipoCambio = '1.00';
        }
      });
+  }
+
+  obtenerMonedas() {
+    this.facturaService.obtenerMonedas()
+      .subscribe(monedas => {
+       this.listaMonedas = monedas.response;
+      },
+      err => console.log(err));
   }
 }

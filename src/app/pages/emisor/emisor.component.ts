@@ -12,9 +12,9 @@ export class EmisorComponent implements OnInit {
 
   constructor(private emisorService: EmisorService) {
     this.obtenerProvincias();
-    this.obtenerActividades();
     this.tipoIdentificacion = emisorService.tipoIdentificacion();
     this.tipoServicio = emisorService.tipoServicio();
+
   }
   query = '';
   objEmisor = {
@@ -49,6 +49,13 @@ export class EmisorComponent implements OnInit {
     contrasenaP12: ''
   };
   
+  objDataActividad = {
+    descripcion: '',
+    nombre: '',
+    codigo: '',
+    cedula: ''
+  };
+
   tipoIdentificacion: any = [];
   tipoServicio: any = [];
   listaProvincias: any = [];
@@ -193,7 +200,29 @@ export class EmisorComponent implements OnInit {
     }
 
   }
+  
+  obtenerActividades (e,query) {
+    e.preventDefault();
 
+    if(query === ''){
+      return;
+    } else {
+    console.log(query);
+    this.emisorService.obtenerCodigosActividad(query)
+      .subscribe(response =>  {
+        this.objDataActividad.nombre = response.nombre;
+        this.objDataActividad.codigo = response.actividades[0].codigo;
+        this.objDataActividad.descripcion = response.actividades[0].descripcion;
+      },
+      err => console.error(err));
+    }
+  }
+  cargarActividad(codigo){
+    console.log(codigo)
+    this.objEmisor.codigo_actividad = codigo;
+    (document.getElementById('formActividad') as HTMLFormElement).reset();
+    $('#formBuscarActividad').modal('hide');
+  }
   actualizarEmisor(e,obj){
     e.preventDefault();
 
@@ -205,16 +234,16 @@ export class EmisorComponent implements OnInit {
 
     let numero_emisor = '';
 
-          if (obj.emisor_cedula.length === 9) {
+    if (obj.emisor_cedula.length === 9) {
             numero_emisor = '000' + obj.emisor_cedula;
           }
-          if (obj.emisor_cedula.length === 10) {
+    if (obj.emisor_cedula.length === 10) {
             numero_emisor = '00' + obj.emisor_cedula;
           }
-          if (obj.emisor_cedula.length === 11) {
+    if (obj.emisor_cedula.length === 11) {
             numero_emisor = '0' + obj.emisor_cedula;
           }
-          if (obj.emisor_cedula.length === 12) {
+    if (obj.emisor_cedula.length === 12) {
             numero_emisor = obj.emisor_cedula;
           }
 
@@ -310,11 +339,5 @@ export class EmisorComponent implements OnInit {
       .subscribe(response => {
         this.listaBarrios = response.barrios;
       })
-  }
-  obtenerActividades() {
-    this.emisorService.cargarCodigosActividad()
-      .subscribe(actividades => {
-        this.listaActividades = actividades;
-      });
   }
 }

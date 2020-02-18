@@ -34,17 +34,16 @@ export class EmisorService {
     return this.http.get(baseURL() + url);
   }
 
-  cargarCodigosActividad() {
-
-    const url = 'https://cloud-cube.s3.amazonaws.com/sp5z9nxkd1ra/public/assets/json/actividades_por_codigo.json';
-    return this.http.get(url);
-  }
-
   guardarEmisor(emisor: object) {
 
     const headers = new HttpHeaders().set('Content-type', 'application/json');
     return this.http.post(baseURL() + '/emisor', emisor, {  });
 
+  }
+  
+  obtenerCodigosActividad(cedula: string) {
+    const url = 'https://api.hacienda.go.cr/fe/ae?identificacion=' + cedula;
+    return this.http.get(url);
   }
 
   buscarEmisor(query: string){
@@ -52,7 +51,7 @@ export class EmisorService {
   }
 
   actualizarEmisor(obj: FormData){
-      
+
     return this.http.put(baseURL() + '/emisor/' + obj.getAll("id"),obj,{});
   }
   tipoServicio() {

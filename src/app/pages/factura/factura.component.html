@@ -3,149 +3,124 @@
 <br>
 <div class="container">
     <!-- Stack the columns on mobile by making one full-width and the other half-width -->
-<div class="row">
-      <div class="col-12 col-md-8">
-        <div class="form-row">
-            <div class="form-group col-md-11">
-                <input type="text" name="cliente" id="cliente" readonly class="form-control col-md-11" placeholder="Buscar cliente">
-            </div>            
-            <div class="form-group col-md-8 mt-0">
-                <button type="submit" class="btn btn-success col-md-2 mr-1">
+    <div class="row">
+        <div class="col-12 col-md-8">
+            <div class="form-row">
+                <div class="form-group col-md-11">
+                    <input type="text" name="cliente" id="cliente" readonly class="form-control col-md-11" placeholder="Buscar cliente">
+                </div>
+                <div class="form-group col-md-8 mt-0">
+                    <button type="submit" class="btn btn-success col-md-2 mr-1">
                     <i class="fa fa-search"></i>
                 </button>
-                <button type="submit" class="btn btn-danger col-md-2 mr-1">
+                    <button type="submit" class="btn btn-danger col-md-2 mr-1">
                     <i class="fa fa-times-circle-o"></i>
                 </button>
-                <button type="submit" class="btn btn-primary col-md-2 mr-1">
+                    <button type="submit" class="btn btn-primary col-md-2 mr-1">
                     <i class="fa fa-user-plus"></i>
                 </button>
-                
+
+                </div>
             </div>
         </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="form-group mb-1" >
-            Fecha: <span>{{obj.fecha_factura}}</span>
+        <div class="col-6 col-md-3">
+            <div class="form-group mb-1">
+                Fecha: <span>{{objFactura.fecha_factura}}</span>
+            </div>
+            <div class="form-group mb-1">
+                Tipo Cambio: <span>{{objFactura.tipoCambio}}</span>
+            </div>
+            <hr>
+            <div class="form-group mb-1">
+                <select [(ngModel)]="objFactura.tipo_factura" name="tipo_factura" class="form-control">
+                 <option value="" disabled selected>--Tipo Documento--</option>
+                  <option *ngFor="let item of tipoDocumento" [value]="item.codigo">{{item.descripcion}}</option>
+                </select>
+            </div>
+            <div class="form-group mb-1">
+                <select [(ngModel)]="objFactura.condicion_venta" name="condicion_venta" class="form-control">
+                  <option value="" disabled selected>--Condición Venta--</option>
+                  <option *ngFor="let item of condicionVenta" [value]="item.id">{{item.condicion}}</option>
+                </select>
+            </div>
+            <div class="form-group mb-1">
+                <select [(ngModel)]="objFactura.medio_pago" name="medio_pago" class="form-control">
+                <option value="" disabled selected>--Medio Pago--</option>
+                <option *ngFor="let item of medioPago" [value]="item.id">{{item.medio}}</option>
+              </select>
+            </div>
+            <div class="form-group mb-1">
+                <select [(ngModel)]="objFactura.codigomoneda" name="codigomoneda" class="form-control">
+              <option value="" disabled selected>--Moneda--</option>
+              <option *ngFor="let item of listaMonedas" [value]="item.monedaISO">{{item.nombreMoneda}}</option>
+            </select>
+            </div>
+            <div class="form-group mb-1">
+                <input type="text" name="cliente" id="cliente" class="form-control" placeholder="Código Actividad">
+                <button type="submit" class="btn btn-success mt-1 col-sm-5 col-md-3">
+                  <i class="fa fa-search"></i>
+                </button>
+            </div>
         </div>
-        <hr>
-        <div class="form-group mb-1">
-            <input type="text" name="cliente" id="cliente" class="form-control">
-        </div>
-        <div class="form-group mb-1" >
-            <input type="text" name="cliente" id="cliente" class="form-control">
-        </div>
-        <div class="form-group mb-1">
-            <input type="text" name="cliente" id="cliente" class="form-control">
-        </div>
-        <div class="form-group mb-1">
-           <input type="text" name="cliente" id="cliente" class="form-control">
-        </div>
-      </div>
-</div>
-<hr>
-<div class="row">
-    <div class="col-12 col-md-8">
-        <div class="form-row">
-            <div class="form-group col-md-11">
-                <input type="text" name="cliente" id="cliente" readonly class="form-control col-md-11" placeholder="Buscar cliente">
-                <input type="number" name="cliente" id="cliente" class="form-control col-md-8 mt-2 mb-2" placeholder="Buscar cliente">
-                <select class="form-control col-md-8 mt-1">
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-12 col-md-12">
+            <div class="form-row">
+                <div class="form-group col-md-11">
+                    <input type="text" name="cliente" id="cliente" readonly class="form-control col-md-11" placeholder="Buscar cliente">
+                    <input type="number" name="cliente" id="cliente" class="form-control col-md-8 mt-2 mb-2" placeholder="Buscar cliente">
+                    <select class="form-control col-md-8 mt-1">
                     <option>--Seleccione--</option>
                 </select>
-                
-            </div> 
+
+                </div>
+
+                <div class="form-group col-md-8 mt-0">
+                    <button type="submit" class="btn btn-success col-md-2 mr-1">
+                    <i class="fa fa-search"></i>
+                </button>
+                    <button type="submit" class="btn btn-danger col-md-2 mr-1">
+                    <i class="fa fa-times-circle-o"></i>
+                </button>
+                </div>
+            </div>
+            <div class="container">
+                <h2>Detalles de Comprobante</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Descripción</th>
+                            <th>Precio</th>
+                            <th>Descuento</th>
+                            <th>Impuesto</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <hr>
+            </div>
+
+
+            <div class="form-row">
+                <div class="form-group">
+                    <textarea name="" id="" cols="50" rows="5" class="form-control" placeholder="Notas"></textarea>
+                </div>
+            </div>
 
             <div class="form-group col-md-8 mt-0">
                 <button type="submit" class="btn btn-success col-md-2 mr-1">
-                    <i class="fa fa-search"></i>
-                </button>
-                <button type="submit" class="btn btn-danger col-md-2 mr-1">
-                    <i class="fa fa-times-circle-o"></i>
-                </button>              
-            </div>
-        </div>
-        <hr>
-    <div class="table-responsive">
-        <table class="table">
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-              </tr>
-            </tbody>
-          </table>
-          
-          <table class="table">
-            <thead class="thead-light">
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-              </tr>
-            </tbody>
-          </table>
-      </div>
-      <hr>
-      <div class="form-row">
-            <div class="form-group">
-                <textarea name="" id="" cols="50" rows="5" class="form-control"
-                placeholder="Notas"></textarea>
-            </div>
-    </div>
-      <hr>
-      <div class="form-group col-md-8 mt-0">
-        <button type="submit" class="btn btn-success col-md-2 mr-1">
             <i class="fa fa-search"></i>
         </button>
-        <button type="submit" class="btn btn-danger col-md-2 mr-1">
+                <button type="submit" class="btn btn-danger col-md-2 mr-1">
             <i class="fa fa-times-circle-o"></i>
-        </button>   
-        <button type="submit" class="btn btn-danger col-md-2 mr-1">
+        </button>
+                <button type="submit" class="btn btn-danger col-md-2 mr-1">
             <i class="fa fa-times-circle-o"></i>
-        </button>              
-    </div>
-
-</div>
+        </button>
+            </div>
+        </div>
