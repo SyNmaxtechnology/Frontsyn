@@ -22,4 +22,8 @@ export class DescuentoService {
     const headers = new HttpHeaders().set('Content-Type','application/json');
     return this.http.put(baseURL() +'/descuento/' +obj.id,obj,{headers});
   }
+
+  obtenerDescuentos() {
+    return this.http.get(baseURL() + '/descuentos');
+  }
 }
