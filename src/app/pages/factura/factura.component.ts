@@ -281,13 +281,14 @@ export class FacturaComponent implements OnInit {
   cargarDatosLinea() {
 
     try {
-      const nombreProductoSelected = (document.getElementById('encodings') as HTMLDataListElement);
-      if (typeof nombreProductoSelected.options[0].value !== 'undefined') {
-        const nombreProducto = nombreProductoSelected.options[0].value;
+      const nombreProducto = (document.getElementById('txt_nombreProducto') as HTMLInputElement).value;
+      console.log(nombreProducto);
+
+      if (nombreProducto != '') {
 
         for (const obj in this.listaProductos){
           if (nombreProducto == this.listaProductos[obj].descripcion){
-
+            console.log(this.listaProductos[obj]);
             this.lineaDetalle.idproducto = this.listaProductos[obj].idproducto,
             this.lineaDetalle.precio_linea = this.listaProductos[obj].precio_producto,
             this.lineaDetalle.cantidad = '0',
@@ -307,9 +308,11 @@ export class FacturaComponent implements OnInit {
             this.lineaDetalle.impuesto_neto = '0',
             this.lineaDetalle.numerodocumento = '0',
             this.lineaDetalle.montoitotallinea = '';
+
           }
         }
       }
+
     } catch (err) {
       console.log(err);
     }
@@ -324,6 +327,7 @@ export class FacturaComponent implements OnInit {
       i += 1;
     }
   }
+
   limpiarLineaDetalle() {
     this.lineaDetalle.idproducto = '',
     this.lineaDetalle.precio_linea = '',
@@ -347,11 +351,12 @@ export class FacturaComponent implements OnInit {
   }
 
   cargarProducto() {
-    if (this.lineaDetalle.idproducto === ''){
+    if (this.lineaDetalle.idproducto === '') {
       return;
     } else {
       this.arrayDetalles.push(this.lineaDetalle);
       console.log(this.arrayDetalles);
+      //this.limpiarLineaDetalle();
     }
   }
 

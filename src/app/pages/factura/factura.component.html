@@ -113,7 +113,7 @@
                             <th>Descuento</th>
                             <th>Impuesto</th>
                             <th>Total</th>
-                            <th>Eliminar</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody *ngFor="let linea of arrayDetalles">
@@ -140,8 +140,9 @@
                                 {{linea.subtotal}}
                             </td>
                             <td><button type="button" class="btn btn-danger" (click)="quitarOrden(linea.numerolineadetalle)">
-                                <i class="fa fa-times-circle"></i>
-                            </button></td>
+                                    <i class="fa fa-times-circle"></i>
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
