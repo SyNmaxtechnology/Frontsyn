@@ -83,9 +83,10 @@ export class ProductoComponent implements OnInit {
     if (texto.length === 0) {
        return;
     } else {
-    this.productoService.obtenerProducto(texto)
+      const type = 'equal';
+      this.productoService.obtenerProducto(texto,type)
       .subscribe(response =>  {
-                
+
                 console.log(response);
 
                 (document.getElementById('query') as HTMLInputElement).value = '';
@@ -193,7 +194,7 @@ export class ProductoComponent implements OnInit {
     obj.idcategoria= selectCategoria.value.split(': ')[1];
     obj.iddescuento= selectDescuento.value.split(': ')[1];
     obj.precio_final = precio_final.value;
-  console.log(obj);
+    console.log(obj);
     this.productoService.actualizarProducto(obj)
       .subscribe(response =>  {
 

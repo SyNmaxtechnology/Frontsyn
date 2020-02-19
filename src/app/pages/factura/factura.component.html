@@ -7,21 +7,21 @@
         <div class="col-12 col-md-8">
             <div class="form-row">
                 <div class="form-group col-md-11">
-                  <h3>Datos del Cliente</h3>
+                    <h3>Datos del Cliente</h3>
                     <input type="text" name="nombreCliente" id="nombreCliente" readonly class="form-control col-md-11" placeholder="Cliente">
                 </div>
                 <div class="form-group col-md-11">
-                  <input type="text" name="nombreComercialCliente" id="nombreComercialCliente" readonly class="form-control col-md-11" placeholder="Nombre Comercial">
-              </div>
-              <div class="form-group col-md-11">
-                <input type="text" name="cedulaCliente" id="cedulaCliente" readonly class="form-control col-md-11" placeholder="Cédula">
-            </div>
-            <div class="form-group col-md-11">
-              <input type="text" name="correoCliente" id="correoCliente" readonly class="form-control col-md-11" placeholder="Correo">
-          </div>
-          <div class="form-group col-md-11">
-            <input type="text" name="telefonoCliente" id="telefonoCliente" readonly class="form-control col-md-11" placeholder="Teléfono">
-        </div>
+                    <input type="text" name="nombreComercialCliente" id="nombreComercialCliente" readonly class="form-control col-md-11" placeholder="Nombre Comercial">
+                </div>
+                <div class="form-group col-md-11">
+                    <input type="text" name="cedulaCliente" id="cedulaCliente" readonly class="form-control col-md-11" placeholder="Cédula">
+                </div>
+                <div class="form-group col-md-11">
+                    <input type="text" name="correoCliente" id="correoCliente" readonly class="form-control col-md-11" placeholder="Correo">
+                </div>
+                <div class="form-group col-md-11">
+                    <input type="text" name="telefonoCliente" id="telefonoCliente" readonly class="form-control col-md-11" placeholder="Teléfono">
+                </div>
                 <div class="form-group col-md-8 mt-0">
                     <button type="submit" class="btn btn-success col-md-2 mr-1" data-toggle="modal" data-target="#ModalBuscarCliente">
                     <i class="fa fa-search"></i>
@@ -78,7 +78,10 @@
         <div class="col-12 col-md-12">
             <div class="form-row">
                 <div class="form-group col-md-11">
-                    <input type="text" name="producto" readonly class="form-control col-md-11" placeholder="Producto">
+                    <input [(ngModel)]="objBusquedaProducto.descripcion" list="encodings" class="col-sm-6 custom-select custom-select-sm" id="txt_nombreProducto" (ngModelChange)="buscarProducto(objBusquedaProducto.descripcion);cargarDatosLinea()">
+                    <datalist id="encodings">
+                        <option *ngFor="let producto of listaProductos" [ngValue]="producto.idproducto">{{producto.descripcion}}</option>
+                    </datalist>
                     <input type="number" name="cliente" id="cliente" class="form-control col-md-8 mt-2 mb-2" placeholder="Cantidad">
                     <select class="form-control col-md-8 mt-1">
                       <option value="" disabled selected>--Descuento--</option>
@@ -87,9 +90,12 @@
                 </div>
 
                 <div class="form-group col-md-8 mt-0">
-                    <button type="submit" class="btn btn-success col-md-2 mr-1" data-toggle="modal" data-target="#ModalBuscarProducto">
+                    <!--<button type="submit" class="btn btn-success col-md-2 mr-1" data-toggle="modal" data-target="#ModalBuscarProducto">
                     <i class="fa fa-search"></i>
-                  </button>
+                  </button>-->
+                    <button type="submit" class="btn btn-success col-md-2 mr-1" (click)="cargarProducto()">
+                    <i class="fa fa-cubes"></i>
+                </button>
                     <button type="submit" class="btn btn-primary col-md-2 mr-1" data-toggle="modal" data-target="#ModalNuevoProducto">
                       <i class="fa fa-plus"></i>
                   </button>
@@ -102,14 +108,41 @@
                         <tr>
                             <th>ID</th>
                             <th>Descripción</th>
+                            <th>Cant</th>
                             <th>Precio</th>
                             <th>Descuento</th>
                             <th>Impuesto</th>
                             <th>Total</th>
+                            <th>Eliminar</th>
                         </tr>
                     </thead>
-                    <tbody>
-
+                    <tbody *ngFor="let linea of arrayDetalles">
+                        <tr>
+                            <td>
+                                {{linea.numerolineadetalle}}
+                            </td>
+                            <td>
+                                {{linea.descripcioDetalle}}
+                            </td>
+                            <td>
+                                {{linea.cantidad}}
+                            </td>
+                            <td>
+                                {{linea.precio_linea}}
+                            </td>
+                            <td>
+                                {{linea.montodescuento}}
+                            </td>
+                            <td>
+                                {{linea.impuesto}}
+                            </td>
+                            <td>
+                                {{linea.subtotal}}
+                            </td>
+                            <td><button type="button" class="btn btn-danger" (click)="quitarOrden(linea.numerolineadetalle)">
+                                <i class="fa fa-times-circle"></i>
+                            </button></td>
+                        </tr>
                     </tbody>
                 </table>
                 <hr>

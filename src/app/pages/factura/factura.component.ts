@@ -115,6 +115,7 @@ export class FacturaComponent implements OnInit {
     tarifa: '',
     monto: '',
     baseimponible: '',
+    impuesto: '',
     impuesto_neto: '',
     numerodocumento: '',
     montoitotallinea: ''
@@ -150,6 +151,7 @@ export class FacturaComponent implements OnInit {
   tipoImpuesto: object = [];
   listaServicios: object = [];
   listaCategorias: object = [];
+  listaProductos: object = [];
 
   ngOnInit() {
   }
@@ -188,16 +190,16 @@ export class FacturaComponent implements OnInit {
       console.log(error);
     }
   }
-  
+
   obtenerCategorias() {
     this.productoService.obtenerCategorias()
-      .subscribe(response => {  
+      .subscribe(response => {
         this.listaCategorias = response.categorias;
       },
       err => console.log(err));
   }
 
-  obtenerImpuesto(){
+  obtenerImpuesto() {
     this.productoService.obtenerImpuestos()
       .subscribe(response => {
         this.tipoImpuesto = response.impuestos;
@@ -228,7 +230,7 @@ export class FacturaComponent implements OnInit {
       err => console.error(err));
   }
 
-  obtenerCantones(idProvincia){
+  obtenerCantones(idProvincia) {
     this.clienteService.obtenerCantones(idProvincia)
       .subscribe(response => {
         this.canton = response.cantones;
@@ -236,7 +238,7 @@ export class FacturaComponent implements OnInit {
       err => console.error(err));
   }
 
-  obtenerDistritos(idcanton, idprovincia){
+  obtenerDistritos(idcanton, idprovincia) {
     const obj = {
       idcanton,
       idprovincia
@@ -249,7 +251,7 @@ export class FacturaComponent implements OnInit {
       err => console.error(err));
   }
 
-  obtenerBarrios(idcanton, idprovincia, iddistrito){
+  obtenerBarrios(idcanton, idprovincia, iddistrito) {
 
     const obj = {
       idcanton, idprovincia, iddistrito
@@ -262,29 +264,98 @@ export class FacturaComponent implements OnInit {
       err => console.error(err));
   }
 
-  buscarProducto(e,texto) {
-    e.preventDefault();
-
-    if(texto === ''){
+  buscarProducto(texto) {
+    if (texto === '') {
       return;
     } else {
-      this.productoService.obtenerProducto(texto)
+      const type = 'like';
+      this.productoService.obtenerProducto(texto, type)
         .subscribe(response => {
           console.log(response);
-
-          this.objBusquedaProducto.id = response.id;
-          this.objBusquedaProducto.descripcion = response.descripcion;
-          this.objBusquedaProducto.codigo = response.codigobarra_producto;
+          this.listaProductos = response;
         },
         err => console.log(err));
     }
   }
-  
-  cargarProducto(){
 
+  cargarDatosLinea() {
+
+    try {
+      const nombreProductoSelected = (document.getElementById('encodings') as HTMLDataListElement);
+      if (typeof nombreProductoSelected.options[0].value !== 'undefined') {
+        const nombreProducto = nombreProductoSelected.options[0].value;
+
+        for (const obj in this.listaProductos){
+          if (nombreProducto == this.listaProductos[obj].descripcion){
+
+            this.lineaDetalle.idproducto = this.listaProductos[obj].idproducto,
+            this.lineaDetalle.precio_linea = this.listaProductos[obj].precio_producto,
+            this.lineaDetalle.cantidad = '0',
+            this.lineaDetalle.descripcioDetalle = this.listaProductos[obj].descripcion,
+            this.lineaDetalle.porcentajedescuento = '0',
+            this.lineaDetalle.montodescuento = '0',
+            this.lineaDetalle.naturalezadescuento = '',
+            this.lineaDetalle.numerolineadetalle = String(this.arrayDetalles.length  + 1),
+            this.lineaDetalle.subtotal = this.listaProductos[obj].precio_producto,
+            this.lineaDetalle.montototal = '0',
+            this.lineaDetalle.codigo = '0',
+            this.lineaDetalle.codigo_tarifa = '0',
+            this.lineaDetalle.tarifa = '0',
+            this.lineaDetalle.monto = '0',
+            this.lineaDetalle.baseimponible = '0',
+            this.lineaDetalle.impuesto = this.listaProductos[obj].porcentaje_impuesto,
+            this.lineaDetalle.impuesto_neto = '0',
+            this.lineaDetalle.numerodocumento = '0',
+            this.lineaDetalle.montoitotallinea = '';
+          }
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  quitarOrden(idorden){
+    let i = 0;
+    // tslint:disable-next-line: forin
+    for (const obj in this.arrayDetalles){
+      if (idorden == this.arrayDetalles[obj].numerolineadetalle){
+        this.arrayDetalles.splice(i, 1);
+      }
+      i += 1;
+    }
+  }
+  limpiarLineaDetalle() {
+    this.lineaDetalle.idproducto = '',
+    this.lineaDetalle.precio_linea = '',
+    this.lineaDetalle.cantidad = '',
+    this.lineaDetalle.descripcioDetalle = '',
+    this.lineaDetalle.porcentajedescuento = '',
+    this.lineaDetalle.montodescuento = '',
+    this.lineaDetalle.naturalezadescuento = '',
+    this.lineaDetalle.numerolineadetalle = '',
+    this.lineaDetalle.subtotal = '',
+    this.lineaDetalle.montototal = '',
+    this.lineaDetalle.codigo = '',
+    this.lineaDetalle.codigo_tarifa = '',
+    this.lineaDetalle.tarifa = '',
+    this.lineaDetalle.monto = '',
+    this.lineaDetalle.baseimponible = '',
+    this.lineaDetalle.impuesto = '',
+    this.lineaDetalle.impuesto_neto = '',
+    this.lineaDetalle.numerodocumento = '',
+    this.lineaDetalle.montoitotallinea = '';
   }
 
-  nuevoProducto(e,obj){
+  cargarProducto() {
+    if (this.lineaDetalle.idproducto === ''){
+      return;
+    } else {
+      this.arrayDetalles.push(this.lineaDetalle);
+      console.log(this.arrayDetalles);
+    }
+  }
+
+  nuevoProducto(e, obj) {
     e.preventDefault();
 
     let tipoServicio = '';
@@ -300,8 +371,8 @@ export class FacturaComponent implements OnInit {
 
     obj.tipo_servicio = tipoServicio;
     obj.codigo_servicio = codigo;
-    obj.iddescuento =1;
-  
+    obj.iddescuento = 1;
+
     this.productoService.nuevoProducto(obj)
       .subscribe(response => {
         console.log(response);
@@ -309,7 +380,7 @@ export class FacturaComponent implements OnInit {
       err => console.log(err));
   }
 
-  nuevoCliente(obj){
+  nuevoCliente(obj) {
     console.log(obj);
 
     this.clienteService.guardarCliente(obj)
@@ -321,15 +392,17 @@ export class FacturaComponent implements OnInit {
       err => console.log(err));
   }
 
-  cargarCliente(obj){
-    (document.getElementById("nombreCliente") as HTMLInputElement).value = obj.nombre;
-    (document.getElementById("nombreComercialCliente") as HTMLInputElement).value = obj.nombreComercial;
-    (document.getElementById("cedulaCliente") as HTMLInputElement).value = obj.cedula;
-    (document.getElementById("correoCliente") as HTMLInputElement).value = obj.correo;
-    (document.getElementById("telefonoCliente") as HTMLInputElement).value = obj.telefono;
+  cargarCliente(obj) {
+
+    (document.getElementById('nombreCliente') as HTMLInputElement).value = obj.nombre;
+    (document.getElementById('nombreComercialCliente') as HTMLInputElement).value = obj.nombreComercial;
+    (document.getElementById('cedulaCliente') as HTMLInputElement).value = obj.cedula;
+    (document.getElementById('correoCliente') as HTMLInputElement).value = obj.correo;
+    (document.getElementById('telefonoCliente') as HTMLInputElement).value = obj.telefono;
     this.objFactura.idcliente = this.objDataCliente.id;
     (document.getElementById('formBuscarCliente') as HTMLFormElement).reset();
     $('#ModalBuscarCliente').modal('hide');
+
   }
 
   quitarCliente() {
@@ -342,22 +415,22 @@ export class FacturaComponent implements OnInit {
     this.objDataCliente.correo = '';
     this.objDataCliente.telefono = '';
 
-    (document.getElementById("nombreCliente") as HTMLInputElement).value = '';
-    (document.getElementById("nombreComercialCliente") as HTMLInputElement).value = '';
-    (document.getElementById("cedulaCliente") as HTMLInputElement).value = '';
-    (document.getElementById("correoCliente") as HTMLInputElement).value = '';
-    (document.getElementById("telefonoCliente") as HTMLInputElement).value = '';
+    (document.getElementById('nombreCliente') as HTMLInputElement).value = '';
+    (document.getElementById('nombreComercialCliente') as HTMLInputElement).value = '';
+    (document.getElementById('cedulaCliente') as HTMLInputElement).value = '';
+    (document.getElementById('correoCliente') as HTMLInputElement).value = '';
+    (document.getElementById('telefonoCliente') as HTMLInputElement).value = '';
   }
 
-  buscarCliente(e,query){
+  buscarCliente(e, query) {
     e.preventDefault();
-  
-    if(query === ''){
+
+    if (query === '') {
       return;
     } else {
      this.clienteService.buscarCliente(query)
        .subscribe(response =>  {
-         console.log(response)
+         console.log(response);
          console.log(response.cliente[0]);
          this.objDataCliente.nombre = response.cliente[0].cliente_nombre;
          this.objDataCliente.cedula = response.cliente[0].cedula_cliente;
@@ -372,20 +445,20 @@ export class FacturaComponent implements OnInit {
     }
   }
 
-  mostrarFechaHora(){
+  mostrarFechaHora() {
     this.fechaHora();
     setInterval(() => this.fechaHora(), 1000);
   }
 
-  fechaHora(){
+  fechaHora() {
     const d = new Date();
     const mes = (Number(d.getMonth()) < 10) ? '0' + Number(d.getMonth() + 1).toString() : Number(d.getMonth() + 1).toString();
     const dia = d.getDate();
     const anio = d.getFullYear();
     const horas = (d.getHours() < 10) ? '0' + d.getHours() : d.getHours();
     const minutos = (d.getMinutes() < 10) ?  '0' + d.getMinutes() : d.getMinutes();
-    const segundos = (d.getSeconds() < 10) ? '0'+ d.getSeconds(): d.getSeconds();
-    this.objFactura.fecha_factura = dia + '/' + mes + '/' + anio + ' ' + horas + ':' + minutos + ':' +segundos;
+    const segundos = (d.getSeconds() < 10) ? '0' + d.getSeconds() : d.getSeconds();
+    this.objFactura.fecha_factura = dia + '/' + mes + '/' + anio + ' ' + horas + ':' + minutos + ':' + segundos;
   }
 
   obtenerTipoCambio() {

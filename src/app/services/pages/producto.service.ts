@@ -37,7 +37,7 @@ export class ProductoService {
     return this.http.put(baseURL() + '/producto/' + id, obj);
   }
 
-  obtenerProducto(query: string) {
-    return this.http.get(baseURL() + '/producto/' + query);
+  obtenerProducto(query: string,type: string) {
+    return this.http.get(baseURL() + '/producto/?query=' + query + '&type='+type);
   }
 }
