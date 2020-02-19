@@ -15,7 +15,7 @@ export class FacturaComponent implements OnInit {
               private descuentoService: DescuentoService, private productoService: ProductoService) {
 
     this.obtenerTipoCambio();
-    this.fechaHora();
+    this.mostrarFechaHora();
     this.obtenerMonedas();
     this.obtenerDescuentos();
     this.obtenerUnidadesMedida();
@@ -33,7 +33,10 @@ export class FacturaComponent implements OnInit {
     nombre: '',
     cedula: '',
     query: '',
-    id: ''
+    id: '',
+    correo: '',
+    telefono: '',
+    nombreComercial: ''
   };
 
   objFactura =  {
@@ -318,17 +321,32 @@ export class FacturaComponent implements OnInit {
       err => console.log(err));
   }
 
-  cargarCliente(nombre){
-    console.log(nombre);
-    this.objFactura.nombreCliente = nombre;
+  cargarCliente(obj){
+    (document.getElementById("nombreCliente") as HTMLInputElement).value = obj.nombre;
+    (document.getElementById("nombreComercialCliente") as HTMLInputElement).value = obj.nombreComercial;
+    (document.getElementById("cedulaCliente") as HTMLInputElement).value = obj.cedula;
+    (document.getElementById("correoCliente") as HTMLInputElement).value = obj.correo;
+    (document.getElementById("telefonoCliente") as HTMLInputElement).value = obj.telefono;
     this.objFactura.idcliente = this.objDataCliente.id;
     (document.getElementById('formBuscarCliente') as HTMLFormElement).reset();
     $('#ModalBuscarCliente').modal('hide');
   }
 
   quitarCliente() {
-    this.objFactura.nombreCliente = '';
+
     this.objFactura.idcliente = '';
+    this.objDataCliente.nombre = '';
+    this.objDataCliente.cedula = '';
+    this.objDataCliente.id = '';
+    this.objDataCliente.nombreComercial = '';
+    this.objDataCliente.correo = '';
+    this.objDataCliente.telefono = '';
+
+    (document.getElementById("nombreCliente") as HTMLInputElement).value = '';
+    (document.getElementById("nombreComercialCliente") as HTMLInputElement).value = '';
+    (document.getElementById("cedulaCliente") as HTMLInputElement).value = '';
+    (document.getElementById("correoCliente") as HTMLInputElement).value = '';
+    (document.getElementById("telefonoCliente") as HTMLInputElement).value = '';
   }
 
   buscarCliente(e,query){
@@ -339,15 +357,24 @@ export class FacturaComponent implements OnInit {
     } else {
      this.clienteService.buscarCliente(query)
        .subscribe(response =>  {
+         console.log(response)
          console.log(response.cliente[0]);
          this.objDataCliente.nombre = response.cliente[0].cliente_nombre;
          this.objDataCliente.cedula = response.cliente[0].cedula_cliente;
          this.objDataCliente.id = response.cliente[0].id;
+         this.objDataCliente.nombreComercial = response.cliente[0].cliente_nombre_comercial;
+         this.objDataCliente.correo = response.cliente[0].cliente_correo;
+         this.objDataCliente.telefono = response.cliente[0].cliente_telefono_numtelefono;
        },
        err => {
          console.log(err);
        });
     }
+  }
+
+  mostrarFechaHora(){
+    this.fechaHora();
+    setInterval(() => this.fechaHora(), 1000);
   }
 
   fechaHora(){
@@ -357,7 +384,8 @@ export class FacturaComponent implements OnInit {
     const anio = d.getFullYear();
     const horas = (d.getHours() < 10) ? '0' + d.getHours() : d.getHours();
     const minutos = (d.getMinutes() < 10) ?  '0' + d.getMinutes() : d.getMinutes();
-    this.objFactura.fecha_factura = dia + '/' + mes + '/' + anio + ' ' + horas + ':' + minutos;
+    const segundos = (d.getSeconds() < 10) ? '0'+ d.getSeconds(): d.getSeconds();
+    this.objFactura.fecha_factura = dia + '/' + mes + '/' + anio + ' ' + horas + ':' + minutos + ':' +segundos;
   }
 
   obtenerTipoCambio() {

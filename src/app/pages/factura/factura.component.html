@@ -7,8 +7,21 @@
         <div class="col-12 col-md-8">
             <div class="form-row">
                 <div class="form-group col-md-11">
-                    <input [(ngModel)]="objFactura.nombreCliente" type="text" name="nombreCliente" id="nombreCliente" readonly class="form-control col-md-11" placeholder="Buscar cliente">
+                  <h3>Datos del Cliente</h3>
+                    <input type="text" name="nombreCliente" id="nombreCliente" readonly class="form-control col-md-11" placeholder="Cliente">
                 </div>
+                <div class="form-group col-md-11">
+                  <input type="text" name="nombreComercialCliente" id="nombreComercialCliente" readonly class="form-control col-md-11" placeholder="Nombre Comercial">
+              </div>
+              <div class="form-group col-md-11">
+                <input type="text" name="cedulaCliente" id="cedulaCliente" readonly class="form-control col-md-11" placeholder="Cédula">
+            </div>
+            <div class="form-group col-md-11">
+              <input type="text" name="correoCliente" id="correoCliente" readonly class="form-control col-md-11" placeholder="Correo">
+          </div>
+          <div class="form-group col-md-11">
+            <input type="text" name="telefonoCliente" id="telefonoCliente" readonly class="form-control col-md-11" placeholder="Teléfono">
+        </div>
                 <div class="form-group col-md-8 mt-0">
                     <button type="submit" class="btn btn-success col-md-2 mr-1" data-toggle="modal" data-target="#ModalBuscarCliente">
                     <i class="fa fa-search"></i>
@@ -149,7 +162,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" (click)="cargarCliente(objDataCliente.nombre)">Cargar</button>
+                        <button type="button" class="btn btn-primary" (click)="cargarCliente(objDataCliente)">Cargar</button>
                     </div>
                 </div>
             </div>
