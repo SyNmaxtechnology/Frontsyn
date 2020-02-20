@@ -82,8 +82,8 @@
                     <datalist id="encodings">
                         <option *ngFor="let producto of listaProductos" [ngValue]="producto.idproducto">{{producto.descripcion}}</option>
                     </datalist>
-                    <input type="number" name="cliente" id="cliente" class="form-control col-md-8 mt-2 mb-2" placeholder="Cantidad">
-                    <select class="form-control col-md-8 mt-1">
+                    <input type="number" name="cantidadLinea" id="cantidadLinea" class="form-control col-md-8 mt-2 mb-2" placeholder="Cantidad">
+                    <select class="form-control col-md-8 mt-1" id="descuentoLinea">
                       <option value="" disabled selected>--Descuento--</option>
                       <option *ngFor="let item of descuentos" [ngValue]="item.id">{{item.descripcion}}</option>
                     </select>
@@ -101,9 +101,9 @@
                   </button>
                 </div>
             </div>
-            <div class="container">
+            <div class="form-row">
                 <h2>Detalles de Comprobante</h2>
-                <table class="table table-striped">
+                <table class="table table-responsive" id="tabla_detalles">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -137,25 +137,40 @@
                                 {{linea.impuesto}}
                             </td>
                             <td>
-                                {{linea.subtotal}}
+                                {{linea.montoitotallinea}}
                             </td>
-                            <td><button type="button" class="btn btn-danger" (click)="quitarOrden(linea.numerolineadetalle)">
+                            <td><button type="button" class="btn btn-danger" (click)="quitarOrden(linea.idproducto)">
                                     <i class="fa fa-times-circle"></i>
                                 </button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                <hr>
-            </div>
-
-
-            <div class="form-row">
                 <div class="form-group">
-                    <textarea name="" id="" cols="50" rows="5" class="form-control" placeholder="Notas"></textarea>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Subtotal</th>
+                                <th>Impuestos</th>
+                                <th>Descuento</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td scope="row">{{SubtotalComprobante}}</td>
+                                <td>{{totalImpuesto}}</td>
+                                <td>{{totalDescuento}}</td>
+                                <td>{{totalPagar}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+                <!-- <div class="form-group">
+                        <textarea name="" id="" cols="35" rows="5" class="form-control" placeholder="Notas"></textarea>
+                    </div> -->
             </div>
-
+            <hr>
             <div class="form-group col-md-8 mt-0">
                 <button type="submit" class="btn btn-success col-md-2 mr-1">
             <i class="fa fa-search"></i>

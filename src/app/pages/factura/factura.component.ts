@@ -7,7 +7,7 @@ import { ProductoService } from '../../services/pages/producto.service';
 @Component({
   selector: 'app-factura',
   templateUrl: './factura.component.html',
-  styles: []
+  styleUrls: ['./factura.component.css']
 })
 export class FacturaComponent implements OnInit {
 
@@ -22,6 +22,7 @@ export class FacturaComponent implements OnInit {
     this.obtenerImpuesto();
     this.obtenerProvincias();
     this.obtenerCategorias();
+    this.listarOrdenes();
     this.tipoDocumento = facturaService.tipoDocumento();
     this.medioPago = facturaService.medioPago();
     this.condicionVenta = facturaService.condicionVenta();
@@ -152,6 +153,10 @@ export class FacturaComponent implements OnInit {
   listaServicios: object = [];
   listaCategorias: object = [];
   listaProductos: object = [];
+  totalPagar: string = '0';
+  totalImpuesto: string = '0';
+  totalDescuento: string = '0';
+  SubtotalComprobante: string = '0';
 
   ngOnInit() {
   }
@@ -281,33 +286,58 @@ export class FacturaComponent implements OnInit {
   cargarDatosLinea() {
 
     try {
+
       const nombreProducto = (document.getElementById('txt_nombreProducto') as HTMLInputElement).value;
-      console.log(nombreProducto);
+      const campoCantidad = (document.getElementById('cantidadLinea') as HTMLInputElement).value;
+      const campoDescuento = (document.getElementById('descuentoLinea') as HTMLSelectElement).value;
+      let cantidadTotal = 0;
+      let descuentoTotal = 0;
+
+      if (campoCantidad.length > 0) {
+        cantidadTotal = Number(campoCantidad);
+      }
+
+      if (campoDescuento !== '') {
+        for (const des in this.descuentos) {
+          if (campoDescuento == this.descuentos[des].descripcion) {
+            descuentoTotal = Number(this.descuentos[des].porcentaje);
+
+          }
+        }
+      }
 
       if (nombreProducto != '') {
 
-        for (const obj in this.listaProductos){
-          if (nombreProducto == this.listaProductos[obj].descripcion){
-            console.log(this.listaProductos[obj]);
+        for (const obj in this.listaProductos) {
+          if (nombreProducto == this.listaProductos[obj].descripcion) {
+
+            // tslint:disable-next-line: max-line-length
+            const impuestoTotal = (parseFloat(this.listaProductos[obj].precio_final) - parseFloat(this.listaProductos[obj].precio_producto)).toFixed(2);
+            const subtotal = parseFloat(this.listaProductos[obj].precio_producto) * cantidadTotal;
+            const descuentoAplicado = (descuentoTotal / 100 ) * Number(this.listaProductos[obj].precio_producto);
+            const totalLinea = subtotal - (descuentoAplicado) + Number(impuestoTotal);
+
             this.lineaDetalle.idproducto = this.listaProductos[obj].idproducto,
-            this.lineaDetalle.precio_linea = this.listaProductos[obj].precio_producto,
-            this.lineaDetalle.cantidad = '0',
+            this.lineaDetalle.precio_linea = String(parseFloat(this.listaProductos[obj].precio_producto).toFixed(2)),
+            this.lineaDetalle.cantidad = cantidadTotal.toString(),
             this.lineaDetalle.descripcioDetalle = this.listaProductos[obj].descripcion,
             this.lineaDetalle.porcentajedescuento = '0',
-            this.lineaDetalle.montodescuento = '0',
+            this.lineaDetalle.montodescuento = descuentoAplicado.toString(),
             this.lineaDetalle.naturalezadescuento = '',
             this.lineaDetalle.numerolineadetalle = String(this.arrayDetalles.length  + 1),
-            this.lineaDetalle.subtotal = this.listaProductos[obj].precio_producto,
+            this.lineaDetalle.subtotal = subtotal.toString(),
             this.lineaDetalle.montototal = '0',
             this.lineaDetalle.codigo = '0',
             this.lineaDetalle.codigo_tarifa = '0',
             this.lineaDetalle.tarifa = '0',
             this.lineaDetalle.monto = '0',
             this.lineaDetalle.baseimponible = '0',
-            this.lineaDetalle.impuesto = this.listaProductos[obj].porcentaje_impuesto,
+            // tslint:disable-next-line: max-line-length
+            this.lineaDetalle.impuesto = impuestoTotal.toString(),
             this.lineaDetalle.impuesto_neto = '0',
             this.lineaDetalle.numerodocumento = '0',
-            this.lineaDetalle.montoitotallinea = '';
+            // tslint:disable-next-line: max-line-length
+            this.lineaDetalle.montoitotallinea = totalLinea.toString();
 
           }
         }
@@ -317,20 +347,34 @@ export class FacturaComponent implements OnInit {
       console.log(err);
     }
   }
-  quitarOrden(idorden){
+  quitarOrden(idorden) {
     let i = 0;
+    let nuevoSubtotal = Number(this.SubtotalComprobante);
+    let nuevoImpuesto = parseFloat(this.totalImpuesto);
+    let nuevoTotal =  parseFloat(this.totalPagar);
+    let nuevoDescuento = parseFloat(this.totalDescuento);
     // tslint:disable-next-line: forin
-    for (const obj in this.arrayDetalles){
-      if (idorden == this.arrayDetalles[obj].numerolineadetalle){
+    for (const obj in this.arrayDetalles) {
+      if (idorden == this.arrayDetalles[obj].idproducto) {
+
+        nuevoSubtotal -= Number(this.arrayDetalles[obj].subtotal);
+        this.SubtotalComprobante = nuevoSubtotal.toString();
+        nuevoImpuesto -= parseFloat(this.arrayDetalles[obj].impuesto);
+        this.totalImpuesto = nuevoImpuesto.toString();
+        nuevoTotal -= parseFloat(this.arrayDetalles[obj].montoitotallinea);
+        this.totalPagar = nuevoTotal.toString();
+        nuevoDescuento -= parseFloat(this.arrayDetalles[obj].montodescuento);
+        this.totalDescuento = nuevoDescuento.toString();
         this.arrayDetalles.splice(i, 1);
+        localStorage.setItem('detalles', JSON.stringify(this.arrayDetalles));
       }
       i += 1;
     }
   }
 
   limpiarLineaDetalle() {
-    this.lineaDetalle.idproducto = '',
-    this.lineaDetalle.precio_linea = '',
+    this.lineaDetalle.idproducto = '';
+   /* this.lineaDetalle.precio_linea = '',
     this.lineaDetalle.cantidad = '',
     this.lineaDetalle.descripcioDetalle = '',
     this.lineaDetalle.porcentajedescuento = '',
@@ -347,17 +391,58 @@ export class FacturaComponent implements OnInit {
     this.lineaDetalle.impuesto = '',
     this.lineaDetalle.impuesto_neto = '',
     this.lineaDetalle.numerodocumento = '',
-    this.lineaDetalle.montoitotallinea = '';
+    this.lineaDetalle.montoitotallinea = '';*/
   }
 
   cargarProducto() {
     if (this.lineaDetalle.idproducto === '') {
       return;
     } else {
-      this.arrayDetalles.push(this.lineaDetalle);
-      console.log(this.arrayDetalles);
-      //this.limpiarLineaDetalle();
+
+      this.cargarDatosLinea();
+      // tslint:disable-next-line: one-variable-per-declaration
+      let subtotal = 0,
+          impuestos = 0,
+          descuentos = 0,
+          totalPagar = 0;
+      const getDetalles = localStorage.getItem('detalles');
+      let localStorageDetalles = [];
+      if (!getDetalles) {
+
+        localStorageDetalles.push(this.lineaDetalle);
+        localStorage.setItem('detalles', JSON.stringify(localStorageDetalles));
+        this.arrayDetalles = localStorageDetalles;
+        // this.limpiarLineaDetalle();
+      } else {
+        localStorageDetalles = JSON.parse(localStorage.getItem('detalles'));
+        localStorageDetalles.push(this.lineaDetalle);
+        localStorage.setItem('detalles', JSON.stringify(localStorageDetalles));
+        this.arrayDetalles = localStorageDetalles;
+
+        // OBTENER LOS TOTALES DEL COMPROBANTE
+
+        // tslint:disable-next-line: forin
+        for(const linea in this.arrayDetalles){
+          subtotal += parseFloat(this.arrayDetalles[linea].subtotal);
+          totalPagar += parseFloat(this.arrayDetalles[linea].montoitotallinea);
+          impuestos += parseFloat(this.arrayDetalles[linea].impuesto);
+          descuentos += parseFloat(this.arrayDetalles[linea].montodescuento);
+        }
+
+        this.totalPagar = totalPagar.toFixed(2);
+        this.totalImpuesto = impuestos.toFixed(2);
+        this.totalDescuento = descuentos.toFixed(2);
+        this.SubtotalComprobante = subtotal.toString();
+        // this.limpiarLineaDetalle();
+      }
     }
+  }
+
+  listarOrdenes() {
+    const getDetalles = localStorage.getItem('detalles');
+    if (getDetalles) {
+        this.arrayDetalles = JSON.parse(localStorage.getItem('detalles'));
+      }
   }
 
   nuevoProducto(e, obj) {
@@ -435,8 +520,7 @@ export class FacturaComponent implements OnInit {
     } else {
      this.clienteService.buscarCliente(query)
        .subscribe(response =>  {
-         console.log(response);
-         console.log(response.cliente[0]);
+
          this.objDataCliente.nombre = response.cliente[0].cliente_nombre;
          this.objDataCliente.cedula = response.cliente[0].cedula_cliente;
          this.objDataCliente.id = response.cliente[0].id;
