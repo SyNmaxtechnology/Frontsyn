@@ -153,10 +153,10 @@ export class FacturaComponent implements OnInit {
   listaServicios: object = [];
   listaCategorias: object = [];
   listaProductos: object = [];
-  totalPagar: string = '0';
-  totalImpuesto: string = '0';
-  totalDescuento: string = '0';
-  SubtotalComprobante: string = '0';
+  totalPagar = '0';
+  totalImpuesto = '0';
+  totalDescuento = '0';
+  SubtotalComprobante = '0';
 
   ngOnInit() {
   }
@@ -292,6 +292,8 @@ export class FacturaComponent implements OnInit {
       const campoDescuento = (document.getElementById('descuentoLinea') as HTMLSelectElement).value;
       let cantidadTotal = 0;
       let descuentoTotal = 0;
+      const porcentajeExoneracionGlobal = 0;
+      let impuestoNeto = 0;
 
       if (campoCantidad.length > 0) {
         cantidadTotal = Number(campoCantidad);
@@ -301,9 +303,13 @@ export class FacturaComponent implements OnInit {
         for (const des in this.descuentos) {
           if (campoDescuento == this.descuentos[des].descripcion) {
             descuentoTotal = Number(this.descuentos[des].porcentaje);
-
+            this.lineaDetalle.naturalezadescuento = campoDescuento;
+            this.lineaDetalle.porcentajedescuento = this.descuentos[des].porcentaje;
           }
         }
+      } else {
+        this.lineaDetalle.naturalezadescuento = '';
+        this.lineaDetalle.porcentajedescuento = '0';
       }
 
       if (nombreProducto != '') {
@@ -316,29 +322,44 @@ export class FacturaComponent implements OnInit {
             const subtotal = parseFloat(this.listaProductos[obj].precio_producto) * cantidadTotal;
             const descuentoAplicado = (descuentoTotal / 100 ) * Number(this.listaProductos[obj].precio_producto);
             const totalLinea = subtotal - (descuentoAplicado) + Number(impuestoTotal);
+            let monto = 0;
+            let baseImponible = 0;
 
+            /*if (this.listaProductos[obj].codigo_impuesto == '01' || this.listaProductos[obj].codigo_impuesto == '07') {
+                if (this.listaProductos[obj].codigo_impuesto == '07') {
+                  baseImponible = this.listaProductos[obj].precio_producto;
+                  monto = baseImponible * Number(this.listaProductos[obj].porcentaje_impuesto);
+                }
+            } else {
+              monto = subtotal * Number(this.listaProductos[obj].porcentaje_impuesto);
+            }*/
+
+            baseImponible = this.listaProductos[obj].precio_producto;
+            monto = baseImponible * Number(this.listaProductos[obj].porcentaje_impuesto);
+
+            impuestoNeto = parseFloat(impuestoTotal) - porcentajeExoneracionGlobal;
             this.lineaDetalle.idproducto = this.listaProductos[obj].idproducto,
             this.lineaDetalle.precio_linea = String(parseFloat(this.listaProductos[obj].precio_producto).toFixed(2)),
             this.lineaDetalle.cantidad = cantidadTotal.toString(),
             this.lineaDetalle.descripcioDetalle = this.listaProductos[obj].descripcion,
-            this.lineaDetalle.porcentajedescuento = '0',
+            // this.lineaDetalle.porcentajedescuento = '0',
             this.lineaDetalle.montodescuento = descuentoAplicado.toString(),
-            this.lineaDetalle.naturalezadescuento = '',
+           // this.lineaDetalle.naturalezadescuento = '',
             this.lineaDetalle.numerolineadetalle = String(this.arrayDetalles.length  + 1),
             this.lineaDetalle.subtotal = subtotal.toString(),
-            this.lineaDetalle.montototal = '0',
-            this.lineaDetalle.codigo = '0',
-            this.lineaDetalle.codigo_tarifa = '0',
-            this.lineaDetalle.tarifa = '0',
-            this.lineaDetalle.monto = '0',
-            this.lineaDetalle.baseimponible = '0',
+            this.lineaDetalle.montototal = subtotal.toString(),
+            this.lineaDetalle.codigo = this.listaProductos[obj].codigo_impuesto, // codigo para base imponible
+            this.lineaDetalle.codigo_tarifa = '07', // codigo del impuesto
+            this.lineaDetalle.tarifa = this.listaProductos[obj].porcentaje_impuesto, // porcentaje aplicado para el impuesto
+            this.lineaDetalle.monto = monto.toString(),
+            this.lineaDetalle.baseimponible = baseImponible.toString(),
             // tslint:disable-next-line: max-line-length
             this.lineaDetalle.impuesto = impuestoTotal.toString(),
-            this.lineaDetalle.impuesto_neto = '0',
+            this.lineaDetalle.impuesto_neto = impuestoNeto.toString(),
             this.lineaDetalle.numerodocumento = '0',
             // tslint:disable-next-line: max-line-length
             this.lineaDetalle.montoitotallinea = totalLinea.toString();
-
+            console.log(this.lineaDetalle);
           }
         }
       }
@@ -347,6 +368,65 @@ export class FacturaComponent implements OnInit {
       console.log(err);
     }
   }
+
+
+  obtenerTotalesFactura() {
+
+    // VARIABLES PARA OBTENER LOS TOTALES DE FACTURA
+    let porcentaje_descuento_total = 0;
+    let monto_descuento_total = parseFloat(this.totalDescuento);
+    let subtotal = Number(this.SubtotalComprobante);
+    let totalservgravados = 0;
+    let totalservexentos = 0;
+    let totalservexonerado = 0;
+    let totalmercanciasgravadas = 0;
+    let totalmercanciasexentas = 0;
+    let totalmercanciaexonerada = 0;
+    let totalgravado = 0;
+    let totalexento = 0;
+    let totalexonerado = 0;
+    let totalventa = 0;
+    let totaldescuentos = 0;
+    let totalventaneta = 0;
+    let totalimpuesto = 0;
+    let totalcomprobante = parseFloat(this.totalPagar);
+
+    for (const linea in this.arrayDetalles){
+
+      
+    }
+
+    // CARGAR EL OBJETO PARA GUARDAR LA FACTURA
+    this.objFactura.id = '',
+    this.objFactura.idcliente = '',
+    this.objFactura.idemisor = '',
+    this.objFactura.condicion_venta = '',
+    this.objFactura.medio_pago = '',
+    this.objFactura.porcentaje_descuento_total = '',
+    this.objFactura.monto_descuento_total = '',
+    this.objFactura.subtotal = '',
+    this.objFactura.totalservgravados = '',
+    this.objFactura.totalservexentos = '',
+    this.objFactura.totalservexonerado = '',
+    this.objFactura.totalmercanciasgravadas = '',
+    this.objFactura.totalmercanciasexentas = '',
+    this.objFactura.totalmercanciaexonerada = '',
+    this.objFactura.totalgravado = '',
+    this.objFactura.totalexento = '',
+    this.objFactura.totalexonerado = '',
+    this.objFactura.totalventa = '',
+    this.objFactura.totaldescuentos = '',
+    this.objFactura.totalventaneta = '',
+    this.objFactura.totalimpuesto = '',
+    this.objFactura.totalcomprobante = '',
+    this.objFactura.codigomoneda = '',
+    this.objFactura.tipoCambio = '',
+    this.objFactura.tipo_factura = '',
+    this.objFactura.fecha_factura = '',
+    this.objFactura.ordenes = [];
+
+  }
+
   quitarOrden(idorden) {
     let i = 0;
     let nuevoSubtotal = Number(this.SubtotalComprobante);
@@ -369,8 +449,8 @@ export class FacturaComponent implements OnInit {
         localStorage.setItem('detalles', JSON.stringify(this.arrayDetalles));
       }
       i += 1;
-    }
-  }
+    }// sub   impue   desc    total
+  } // 60370	1961.72	4861.82	57469.90
 
   limpiarLineaDetalle() {
     this.lineaDetalle.idproducto = '';
@@ -422,7 +502,7 @@ export class FacturaComponent implements OnInit {
         // OBTENER LOS TOTALES DEL COMPROBANTE
 
         // tslint:disable-next-line: forin
-        for(const linea in this.arrayDetalles){
+        for (const linea in this.arrayDetalles) {
           subtotal += parseFloat(this.arrayDetalles[linea].subtotal);
           totalPagar += parseFloat(this.arrayDetalles[linea].montoitotallinea);
           impuestos += parseFloat(this.arrayDetalles[linea].impuesto);
@@ -441,7 +521,27 @@ export class FacturaComponent implements OnInit {
   listarOrdenes() {
     const getDetalles = localStorage.getItem('detalles');
     if (getDetalles) {
+
+        // tslint:disable-next-line: one-variable-per-declaration
+        let subtotal = 0,
+        impuestos = 0,
+        descuentos = 0,
+        totalPagar = 0;
         this.arrayDetalles = JSON.parse(localStorage.getItem('detalles'));
+
+        // tslint:disable-next-line: forin
+        for (const linea in this.arrayDetalles) {
+          subtotal += parseFloat(this.arrayDetalles[linea].subtotal);
+          totalPagar += parseFloat(this.arrayDetalles[linea].montoitotallinea);
+          impuestos += parseFloat(this.arrayDetalles[linea].impuesto);
+          descuentos += parseFloat(this.arrayDetalles[linea].montodescuento);
+        }
+
+        this.totalPagar = totalPagar.toFixed(2);
+        this.totalImpuesto = impuestos.toFixed(2);
+        this.totalDescuento = descuentos.toFixed(2);
+        this.SubtotalComprobante = subtotal.toString();
+
       }
   }
 
