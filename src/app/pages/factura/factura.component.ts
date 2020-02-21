@@ -300,6 +300,7 @@ export class FacturaComponent implements OnInit {
 
       const nombreProducto = (document.getElementById('txt_nombreProducto') as HTMLInputElement).value;
       const campoCantidad = (document.getElementById('cantidadLinea') as HTMLInputElement).value;
+      console.log(campoCantidad);
       const campoDescuento = (document.getElementById('descuentoLinea') as HTMLSelectElement).value;
       let cantidadTotal = 0;
       let descuentoTotal = 0;
