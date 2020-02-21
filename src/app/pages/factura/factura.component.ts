@@ -113,7 +113,10 @@ export class FacturaComponent implements OnInit {
     montototal: '',
     codigo: '',
     codigo_tarifa: '',
+    codigo_servicio: '',
+    tipo_servicio: '',
     tarifa: '',
+    unidadMedida: '',
     monto: '',
     baseimponible: '',
     impuesto: '',
@@ -357,6 +360,9 @@ export class FacturaComponent implements OnInit {
             this.lineaDetalle.impuesto = impuestoTotal.toString(),
             this.lineaDetalle.impuesto_neto = impuestoNeto.toString(),
             this.lineaDetalle.numerodocumento = '0',
+            this.lineaDetalle.unidadMedida = this.listaProductos[obj].unidad_medida;
+            this.lineaDetalle.tipo_servicio = this.listaProductos[obj].tipo_servicio;
+            this.lineaDetalle.codigo_servicio = this.listaProductos[obj].codigo_servicio;
             // tslint:disable-next-line: max-line-length
             this.lineaDetalle.montoitotallinea = totalLinea.toString();
             console.log(this.lineaDetalle);
@@ -373,7 +379,7 @@ export class FacturaComponent implements OnInit {
   obtenerTotalesFactura() {
 
     // VARIABLES PARA OBTENER LOS TOTALES DE FACTURA
-    let porcentaje_descuento_total = 0;
+    let porcentaje_descuento_total = ((parseFloat(this.totalDescuento) * 100 )/parseFloat(this.totalPagar)).toFixed(2);
     let monto_descuento_total = parseFloat(this.totalDescuento);
     let subtotal = Number(this.SubtotalComprobante);
     let totalservgravados = 0;
@@ -386,45 +392,85 @@ export class FacturaComponent implements OnInit {
     let totalexento = 0;
     let totalexonerado = 0;
     let totalventa = 0;
-    let totaldescuentos = 0;
+    let totaldescuentos = monto_descuento_total;
     let totalventaneta = 0;
     let totalimpuesto = 0;
-    let totalcomprobante = parseFloat(this.totalPagar);
-
+    let totalOtrosCargos = 0;
+    let totalcomprobante = 0;
+    let montototal =0;
+    let impuestoLinea = 0
     for (const linea in this.arrayDetalles){
+      console.log(this.arrayDetalles[linea]);
+      montototal = parseFloat(this.arrayDetalles[linea].cantidad) *  parseFloat(this.arrayDetalles[linea].precio_linea);
+     
+      if(this.arrayDetalles[linea].codigo_impuesto != '01'){ // productos exentos del IVA
+          if(this.arrayDetalles[linea].tipo_servicio == '01'){
+            //mercancái
+            totalmercanciasexentas += montototal;
+          }
 
+          if(this.arrayDetalles[linea].tipo_servicio == '02') {
+            totalservexentos += montototal;
+          }
+
+          totalexento  += montototal;
+          impuestoLinea = parseFloat(this.arrayDetalles[linea].impuesto) ;
+          totalimpuesto += impuestoLinea;
+
+      } else { //Aplica IVA
+          if(this.arrayDetalles[linea].tipo_servicio == '01'){
+            //mercancái
+            console.log("aqui")
+            totalmercanciasgravadas += montototal;
+          }
+
+          if(this.arrayDetalles[linea].tipo_servicio == '02') {
+            totalservgravados += montototal;
+          }
+          impuestoLinea = parseFloat(this.arrayDetalles[linea].impuesto);
+          totalimpuesto += impuestoLinea;
+          totalgravado = montototal;
+      }
       
     }
-
+    totalventa = totalgravado + totalexento + totalexonerado;
+    totalventaneta = totalventa - totaldescuentos;
+    totalcomprobante = totalventaneta + totalimpuesto + totalOtrosCargos;
     // CARGAR EL OBJETO PARA GUARDAR LA FACTURA
     this.objFactura.id = '',
-    this.objFactura.idcliente = '',
-    this.objFactura.idemisor = '',
-    this.objFactura.condicion_venta = '',
-    this.objFactura.medio_pago = '',
-    this.objFactura.porcentaje_descuento_total = '',
-    this.objFactura.monto_descuento_total = '',
-    this.objFactura.subtotal = '',
-    this.objFactura.totalservgravados = '',
-    this.objFactura.totalservexentos = '',
-    this.objFactura.totalservexonerado = '',
-    this.objFactura.totalmercanciasgravadas = '',
-    this.objFactura.totalmercanciasexentas = '',
-    this.objFactura.totalmercanciaexonerada = '',
-    this.objFactura.totalgravado = '',
-    this.objFactura.totalexento = '',
-    this.objFactura.totalexonerado = '',
-    this.objFactura.totalventa = '',
-    this.objFactura.totaldescuentos = '',
-    this.objFactura.totalventaneta = '',
-    this.objFactura.totalimpuesto = '',
-    this.objFactura.totalcomprobante = '',
-    this.objFactura.codigomoneda = '',
-    this.objFactura.tipoCambio = '',
-    this.objFactura.tipo_factura = '',
+    //this.objFactura.idcliente = '',
+    this.objFactura.idemisor = '4',
+    /*this.objFactura.condicion_venta = '',
+    this.objFactura.medio_pago = '',*/
+    this.objFactura.porcentaje_descuento_total = porcentaje_descuento_total,
+    this.objFactura.monto_descuento_total = monto_descuento_total.toFixed(2),
+    this.objFactura.subtotal = subtotal.toString(),
+    this.objFactura.totalservgravados = totalservgravados.toString(),
+    this.objFactura.totalservexentos = totalservexentos.toString(),
+    this.objFactura.totalservexonerado = totalservexonerado.toString(),
+    this.objFactura.totalmercanciasgravadas = totalmercanciasgravadas.toString(),
+    this.objFactura.totalmercanciasexentas = totalmercanciasexentas.toString(),
+    this.objFactura.totalmercanciaexonerada = totalmercanciaexonerada.toString(),
+    this.objFactura.totalgravado = totalgravado.toString(),
+    this.objFactura.totalexento = totalexento.toString(),
+    this.objFactura.totalexonerado = totalexonerado.toString(),
+    this.objFactura.totalventa = totalventa.toString(),
+    this.objFactura.totaldescuentos = totaldescuentos.toString(),
+    this.objFactura.totalventaneta = totalventaneta.toString(),
+    this.objFactura.totalimpuesto = totalimpuesto.toFixed(2).toString(),
+    this.objFactura.totalcomprobante = totalcomprobante.toFixed(2),
+    this.objFactura.codigomoneda = 'CRC',
+    /*this.objFactura.tipoCambio = '',
+    this.objFactura.tipo_factura = '',*/
     this.objFactura.fecha_factura = '',
-    this.objFactura.ordenes = [];
+    this.objFactura.ordenes.push(JSON.stringify(this.generarJsonDetalles()));
+    
+    console.log(this.objFactura);
 
+  }
+
+  generarFactura(obj: object) {
+    
   }
 
   quitarOrden(idorden) {
@@ -472,6 +518,106 @@ export class FacturaComponent implements OnInit {
     this.lineaDetalle.impuesto_neto = '',
     this.lineaDetalle.numerodocumento = '',
     this.lineaDetalle.montoitotallinea = '';*/
+  }
+
+  generarJsonDetalles(){
+
+    let listaDetalles = {};
+    let descuento = 0;
+    let montototal = 0;
+    let subTotal = 0;
+    let impuesto = {};
+    let descuentoorden = 0;
+    let montototallinea = 0;
+    let object = {};
+    let index=0;
+    let monto_impuesto = 0;
+    let porcentaje='';
+    let decimal='';
+    let impuestoNeto=0;
+    let porcentajeExoneracionGlobal = 0;
+    for(let i in this.arrayDetalles){
+      index = index+1;
+
+      montototal = Number(this.arrayDetalles[i].subtotal);
+      descuento = Number(this.arrayDetalles[i].montodescuento);
+      //subTotal = Number(this.arrayDetalles[i].total_orden);
+
+      object[index]={   
+        'codigo'    : String(this.arrayDetalles[i].codigo_servicio),
+        'codigoComercial' : {'tipo': String(this.arrayDetalles[i].tipo_servicio), 'codigo': String(this.arrayDetalles[i].codigo_servicio)},
+        'cantidad'        : String(this.arrayDetalles[i].cantidad),
+        'unidadMedida'    : String(this.arrayDetalles[i].unidadMedida),
+        'detalle'         : String(this.arrayDetalles[i].descripcioDetalle),
+        'precioUnitario'  : String(this.arrayDetalles[i].precio_linea),
+        'montoTotal'      : String(montototal)
+      }
+      if(Number(this.arrayDetalles[i].montodescuento )> 0){
+        object[index].descuento = [{'montoDescuento': String(this.arrayDetalles[i].montodescuento), 'naturalezaDescuento': String(this.arrayDetalles[i].naturalezadescuento)}]
+      }
+
+      object[index].subtotal        = String(montototal);
+      if(this.arrayDetalles[i].codigo_tarifa == "07" || this.arrayDetalles[i].codigo_tarifa == "01"){
+        if(this.arrayDetalles[i].codigo_tarifa == "07"){
+          object[index].baseImponible = String(this.arrayDetalles[i].precio_linea);
+        }
+
+        object[index].impuesto = {
+          '1': {
+            'codigo': String(this.arrayDetalles[i].codigo),
+            'codigoTarifa': String(this.arrayDetalles[i].codigo_tarifa),
+            'tarifa': String(this.arrayDetalles[i].tarifa),
+            'monto': ''
+          }
+        };
+
+        if(Number(this.arrayDetalles[i].porcentaje_impuesto) > 9){
+          decimal = parseFloat(this.arrayDetalles[i].porcentaje_impuesto).toFixed(0);
+          porcentaje= '0.'+String(decimal);
+          monto_impuesto= Number((parseFloat(object[index].subtotal) * parseFloat(porcentaje)).toFixed(2));
+        }else{
+          decimal = parseFloat(this.arrayDetalles[i].porcentaje_impuesto).toFixed(0);
+          porcentaje= '0.0'+String(decimal);
+          monto_impuesto= Number((parseFloat(object[index].subtotal) * parseFloat(porcentaje)).toFixed(2));
+        }
+        object[index].impuesto[1].monto = String(monto_impuesto);
+        montototallinea = (subTotal  + Number(object[index].impuesto[1].monto));
+      } else {
+        object[index].impuesto = {
+          '1': {
+            'codigoTarifa': String(this.arrayDetalles[i].codigo_tarifa),
+            'tarifa': String(this.arrayDetalles[i].tarifa),
+            'monto': ''
+          }
+        };
+
+        if(Number(this.arrayDetalles[i].porcentaje_impuesto) > 9){
+          decimal = parseFloat(this.arrayDetalles[i].porcentaje_impuesto).toFixed(0);
+          porcentaje= '0.'+String(decimal);
+          monto_impuesto= Number((parseFloat(object[index].subtotal) * parseFloat(porcentaje)).toFixed(2));
+        }else{
+          decimal = parseFloat(this.arrayDetalles[i].porcentaje_impuesto).toFixed(0);
+          porcentaje= '0.0'+String(decimal);
+          monto_impuesto= Number((parseFloat(object[index].subtotal) * parseFloat(porcentaje)).toFixed(2));
+        }
+
+
+        object[index].impuesto[1].monto = String(monto_impuesto);
+        montototallinea = (subTotal  + Number(object[index].impuesto[1].monto));
+      }
+
+      impuestoNeto=monto_impuesto - Number((monto_impuesto * porcentajeExoneracionGlobal).toFixed(2));
+      object[index].impuestoNeto    = String(impuestoNeto);
+      /*-----------------------------------------------------------------------------*/
+
+      object[index].montoTotalLinea = String(montototallinea);
+
+      //Agrega el array en formato JSON
+      listaDetalles= object;
+    }
+
+    return listaDetalles;
+
   }
 
   cargarProducto() {
@@ -590,6 +736,7 @@ export class FacturaComponent implements OnInit {
     (document.getElementById('correoCliente') as HTMLInputElement).value = obj.correo;
     (document.getElementById('telefonoCliente') as HTMLInputElement).value = obj.telefono;
     this.objFactura.idcliente = this.objDataCliente.id;
+    console.log(this.objFactura.idcliente);
     (document.getElementById('formBuscarCliente') as HTMLFormElement).reset();
     $('#ModalBuscarCliente').modal('hide');
 
