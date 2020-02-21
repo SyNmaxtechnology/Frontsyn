@@ -9,84 +9,30 @@ export class FacturaService {
 
   constructor(private http: HttpClient) { }
 
-
-  tipoDocumento(){
-    return [{
-
-      descripcion: 'Factura Electrónica',
-      codigo: '01'
-      },
-      {
-      descripcion: 'Nota de débito electrónica',
-      codigo: '02'
-      },
-      {
-      descripcion: 'Nota de crédito electrónica',
-      codigo: '03'
-      },
-      {
-      descripcion: 'Tiquete electrónico',
-      codigo: '04'
-      },
-      {
-      descripcion: 'Confirmación de aceptación del comprobante electrónico',
-      codigo: '05'
-      },
-      {
-      descripcion: 'Confirmación de aceptación parcial del comprobante electrónico',
-      codigo: '06'
-      },
-      {
-      descripcion: 'Confirmación de rechazo del comprobante electrónico',
-      codigo: '07'
-    }];
+  tipoDocumento() {
+    return this.http.get(baseURL() + '/tipoDocumento');
   }
 
   condicionVenta() {
-    return [{
-
-      condicion: 'Contado',
-      id: '01'
-     },
-     {
-      condicion: 'Crédito',
-      id: '02'
-    }];
+    return this.http.get(baseURL() + '/condicionVenta');
   }
 
-  medioPago(){
-    return [{
-      id: '01',
-      medio: 'Efectivo'
-    },
-    {
-      id: '02',
-      medio: 'Tarjeta'
-    },
-    {
-      id: '03',
-      medio: 'Cheque'
-    },
-    {
-      id: '04',
-      medio: 'Depósito bancario'
-    },
-    {
-      id: '05',
-      medio: 'Recaudado por terceros'
-    },
-    {
-      id: '99',
-      medio: 'Otros'
-    }];
+  medioPago() {
+    return this.http.get(baseURL() + '/medioPago');
   }
 
-  obtenerTipoCambio(){
+  obtenerTipoCambio() {
     return this.http.get(baseURL() + '/tipoCambio');
   }
 
-  obtenerMonedas(){
+  obtenerMonedas() {
     return this.http.get(baseURL() + '/monedas');
+  }
+
+  nuevoComprobante(obj: any) {
+    console.log("obj factura desde service", obj)
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post(baseURL() + '/factura', obj, {headers});
   }
 }
 

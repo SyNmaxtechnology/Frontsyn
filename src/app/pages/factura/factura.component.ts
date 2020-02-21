@@ -23,10 +23,15 @@ export class FacturaComponent implements OnInit {
     this.obtenerProvincias();
     this.obtenerCategorias();
     this.listarOrdenes();
-    this.tipoDocumento = facturaService.tipoDocumento();
+    this.TipoDocumento();
+    this.MedioPago();
+    this.CondicionVenta();
+
+  /* this.tipoDocumento = facturaService.tipoDocumento();
     this.medioPago = facturaService.medioPago();
     this.condicionVenta = facturaService.condicionVenta();
     this.tipoIdentificacion = clienteService.tipoIdentificacion();
+    */
 
   }
 
@@ -65,10 +70,11 @@ export class FacturaComponent implements OnInit {
     totalimpuesto: '',
     totalcomprobante: '',
     codigomoneda: '',
-    tipoCambio: '',
+    tipocambio: '',
     tipo_factura: '',
     fecha_factura: '',
-    ordenes: []
+    ordenes: [],
+    objOrdenes: {}
   };
 
   objCliente = {
@@ -117,6 +123,7 @@ export class FacturaComponent implements OnInit {
     tipo_servicio: '',
     tarifa: '',
     unidadMedida: '',
+    unidadMedidaComercial: '',
     monto: '',
     baseimponible: '',
     impuesto: '',
@@ -124,6 +131,7 @@ export class FacturaComponent implements OnInit {
     numerodocumento: '',
     montoitotallinea: ''
   };
+
   objProducto = {
     id: '',
     descripcion: '',
@@ -361,11 +369,13 @@ export class FacturaComponent implements OnInit {
             this.lineaDetalle.impuesto_neto = impuestoNeto.toString(),
             this.lineaDetalle.numerodocumento = '0',
             this.lineaDetalle.unidadMedida = this.listaProductos[obj].unidad_medida;
+            this.lineaDetalle.unidadMedidaComercial = this.listaProductos[obj].unidad_medida_comercial;
             this.lineaDetalle.tipo_servicio = this.listaProductos[obj].tipo_servicio;
             this.lineaDetalle.codigo_servicio = this.listaProductos[obj].codigo_servicio;
             // tslint:disable-next-line: max-line-length
             this.lineaDetalle.montoitotallinea = totalLinea.toString();
-            console.log(this.lineaDetalle);
+            this.objFactura.ordenes.push(this.lineaDetalle);
+
           }
         }
       }
@@ -381,24 +391,25 @@ export class FacturaComponent implements OnInit {
     // VARIABLES PARA OBTENER LOS TOTALES DE FACTURA
     let porcentaje_descuento_total = ((parseFloat(this.totalDescuento) * 100 )/parseFloat(this.totalPagar)).toFixed(2);
     let monto_descuento_total = parseFloat(this.totalDescuento);
-    let subtotal = Number(this.SubtotalComprobante);
+    const subtotal = Number(this.SubtotalComprobante);
     let totalservgravados = 0;
     let totalservexentos = 0;
-    let totalservexonerado = 0;
+    const totalservexonerado = 0;
     let totalmercanciasgravadas = 0;
     let totalmercanciasexentas = 0;
-    let totalmercanciaexonerada = 0;
+    const totalmercanciaexonerada = 0;
     let totalgravado = 0;
     let totalexento = 0;
-    let totalexonerado = 0;
+    const totalexonerado = 0;
     let totalventa = 0;
-    let totaldescuentos = monto_descuento_total;
+    const totaldescuentos = monto_descuento_total;
     let totalventaneta = 0;
     let totalimpuesto = 0;
-    let totalOtrosCargos = 0;
+    const totalOtrosCargos = 0;
     let totalcomprobante = 0;
     let montototal =0;
     let impuestoLinea = 0
+    // tslint:disable-next-line: forin
     for (const linea in this.arrayDetalles){
       console.log(this.arrayDetalles[linea]);
       montototal = parseFloat(this.arrayDetalles[linea].cantidad) *  parseFloat(this.arrayDetalles[linea].precio_linea);
@@ -439,7 +450,7 @@ export class FacturaComponent implements OnInit {
     // CARGAR EL OBJETO PARA GUARDAR LA FACTURA
     this.objFactura.id = '',
     //this.objFactura.idcliente = '',
-    this.objFactura.idemisor = '4',
+    this.objFactura.idemisor = '1',
     /*this.objFactura.condicion_venta = '',
     this.objFactura.medio_pago = '',*/
     this.objFactura.porcentaje_descuento_total = porcentaje_descuento_total,
@@ -463,14 +474,24 @@ export class FacturaComponent implements OnInit {
     /*this.objFactura.tipoCambio = '',
     this.objFactura.tipo_factura = '',*/
     this.objFactura.fecha_factura = '',
-    this.objFactura.ordenes.push(JSON.stringify(this.generarJsonDetalles()));
+    this.objFactura.objOrdenes = this.generarJsonDetalles();
     
-    console.log(this.objFactura);
+    const obj = {
+      ordenes: this.objFactura.ordenes,
+      factura: this.objFactura,
+      objOrdenes: this.objFactura.objOrdenes
+    };
+    
+    this.generarFactura(obj);
 
   }
 
-  generarFactura(obj: object) {
-    
+  generarFactura(obj) {
+    this.facturaService.nuevoComprobante(obj)
+      .subscribe(response => {
+        console.log(response);
+      },
+      err => console.error(err));
   }
 
   quitarOrden(idorden) {
@@ -492,6 +513,7 @@ export class FacturaComponent implements OnInit {
         nuevoDescuento -= parseFloat(this.arrayDetalles[obj].montodescuento);
         this.totalDescuento = nuevoDescuento.toString();
         this.arrayDetalles.splice(i, 1);
+        this.objFactura.ordenes.splice(i, 1);
         localStorage.setItem('detalles', JSON.stringify(this.arrayDetalles));
       }
       i += 1;
@@ -525,35 +547,37 @@ export class FacturaComponent implements OnInit {
     let listaDetalles = {};
     let descuento = 0;
     let montototal = 0;
-    let subTotal = 0;
-    let impuesto = {};
-    let descuentoorden = 0;
+    const subTotal = 0;
+    const impuesto = {};
+    const descuentoorden = 0;
     let montototallinea = 0;
-    let object = {};
+    const object = {};
     let index=0;
     let monto_impuesto = 0;
     let porcentaje='';
     let decimal='';
     let impuestoNeto=0;
-    let porcentajeExoneracionGlobal = 0;
-    for(let i in this.arrayDetalles){
+    const porcentajeExoneracionGlobal = 0;
+    // tslint:disable-next-line: forin
+    for(const i in this.arrayDetalles){
       index = index+1;
 
       montototal = Number(this.arrayDetalles[i].subtotal);
       descuento = Number(this.arrayDetalles[i].montodescuento);
-      //subTotal = Number(this.arrayDetalles[i].total_orden);
+      // subTotal = Number(this.arrayDetalles[i].total_orden);
 
       object[index]={   
-        'codigo'    : String(this.arrayDetalles[i].codigo_servicio),
-        'codigoComercial' : {'tipo': String(this.arrayDetalles[i].tipo_servicio), 'codigo': String(this.arrayDetalles[i].codigo_servicio)},
-        'cantidad'        : String(this.arrayDetalles[i].cantidad),
-        'unidadMedida'    : String(this.arrayDetalles[i].unidadMedida),
-        'detalle'         : String(this.arrayDetalles[i].descripcioDetalle),
-        'precioUnitario'  : String(this.arrayDetalles[i].precio_linea),
-        'montoTotal'      : String(montototal)
+        codigo    : String(this.arrayDetalles[i].codigo_servicio),
+        codigoComercial : {tipo: String(this.arrayDetalles[i].tipo_servicio), codigo: String(this.arrayDetalles[i].codigo_servicio)},
+        cantidad        : String(this.arrayDetalles[i].cantidad),
+        unidadMedida    : String(this.arrayDetalles[i].unidadMedida),
+        detalle         : String(this.arrayDetalles[i].descripcioDetalle),
+        precioUnitario  : String(this.arrayDetalles[i].precio_linea),
+        montoTotal      : String(montototal)
       }
       if(Number(this.arrayDetalles[i].montodescuento )> 0){
-        object[index].descuento = [{'montoDescuento': String(this.arrayDetalles[i].montodescuento), 'naturalezaDescuento': String(this.arrayDetalles[i].naturalezadescuento)}]
+        // tslint:disable-next-line: max-line-length
+        object[index].descuento = [{montoDescuento: String(this.arrayDetalles[i].montodescuento), naturalezaDescuento: String(this.arrayDetalles[i].naturalezadescuento)}]
       }
 
       object[index].subtotal        = String(montototal);
@@ -563,11 +587,11 @@ export class FacturaComponent implements OnInit {
         }
 
         object[index].impuesto = {
-          '1': {
-            'codigo': String(this.arrayDetalles[i].codigo),
-            'codigoTarifa': String(this.arrayDetalles[i].codigo_tarifa),
-            'tarifa': String(this.arrayDetalles[i].tarifa),
-            'monto': ''
+          1: {
+            codigo: String(this.arrayDetalles[i].codigo),
+            codigoTarifa: String(this.arrayDetalles[i].codigo_tarifa),
+            tarifa: String(this.arrayDetalles[i].tarifa),
+            monto: ''
           }
         };
 
@@ -584,21 +608,21 @@ export class FacturaComponent implements OnInit {
         montototallinea = (subTotal  + Number(object[index].impuesto[1].monto));
       } else {
         object[index].impuesto = {
-          '1': {
-            'codigoTarifa': String(this.arrayDetalles[i].codigo_tarifa),
-            'tarifa': String(this.arrayDetalles[i].tarifa),
-            'monto': ''
+          1: {
+            codigoTarifa: String(this.arrayDetalles[i].codigo_tarifa),
+            tarifa: String(this.arrayDetalles[i].tarifa),
+            monto: ''
           }
         };
 
-        if(Number(this.arrayDetalles[i].porcentaje_impuesto) > 9){
-          decimal = parseFloat(this.arrayDetalles[i].porcentaje_impuesto).toFixed(0);
-          porcentaje= '0.'+String(decimal);
-          monto_impuesto= Number((parseFloat(object[index].subtotal) * parseFloat(porcentaje)).toFixed(2));
-        }else{
-          decimal = parseFloat(this.arrayDetalles[i].porcentaje_impuesto).toFixed(0);
-          porcentaje= '0.0'+String(decimal);
-          monto_impuesto= Number((parseFloat(object[index].subtotal) * parseFloat(porcentaje)).toFixed(2));
+        if (Number(this.arrayDetalles[i].porcentaje_impuesto) > 9){
+            decimal = parseFloat(this.arrayDetalles[i].porcentaje_impuesto).toFixed(0);
+            porcentaje= '0.'+String(decimal);
+            monto_impuesto= Number((parseFloat(object[index].subtotal) * parseFloat(porcentaje)).toFixed(2));
+        } else {
+            decimal = parseFloat(this.arrayDetalles[i].porcentaje_impuesto).toFixed(0);
+            porcentaje= '0.0'+String(decimal);
+            monto_impuesto= Number((parseFloat(object[index].subtotal) * parseFloat(porcentaje)).toFixed(2));
         }
 
 
@@ -612,7 +636,7 @@ export class FacturaComponent implements OnInit {
 
       object[index].montoTotalLinea = String(montototallinea);
 
-      //Agrega el array en formato JSON
+      // Agrega el array en formato JSON
       listaDetalles= object;
     }
 
@@ -625,7 +649,6 @@ export class FacturaComponent implements OnInit {
       return;
     } else {
 
-      this.cargarDatosLinea();
       // tslint:disable-next-line: one-variable-per-declaration
       let subtotal = 0,
           impuestos = 0,
@@ -816,11 +839,11 @@ export class FacturaComponent implements OnInit {
       }*/
 
       const tipocambio = Number(xmlDoc.getElementsByTagName('NUM_VALOR')[0].innerHTML).toFixed(2);
-      this.objFactura.tipoCambio = tipocambio.toString();
+      this.objFactura.tipocambio = tipocambio.toString();
     },
      err => {
        if (err.status === 500) {
-        this.objFactura.tipoCambio = '1.00';
+        this.objFactura.tipocambio = '1.00';
        }
      });
   }
@@ -831,5 +854,29 @@ export class FacturaComponent implements OnInit {
        this.listaMonedas = monedas.response;
       },
       err => console.log(err));
+  }
+
+  TipoDocumento() {
+    this.facturaService.tipoDocumento()
+      .subscribe(response => {  
+        this.tipoDocumento = response.tipoDocumento;
+      },
+      err => console.error(err));
+  }
+
+  MedioPago() {
+    this.facturaService.medioPago()
+      .subscribe(response =>  {
+        this.medioPago = response.medioPago;
+      },
+      err => console.error(err));
+  }
+
+  CondicionVenta() {
+    this.facturaService.condicionVenta()
+      .subscribe(response => {
+        this.condicionVenta = response.condicionVenta;
+      },  
+      err => console.error(err));
   }
 }
