@@ -787,7 +787,7 @@ export class FacturaComponent implements OnInit {
     (document.getElementById('telefonoCliente') as HTMLInputElement).value = obj.telefono;
     this.objFactura.idcliente = this.objDataCliente.id;
     this.objFactura.tipo_factura ='01';
-    console.log(this.objFactura.idcliente);
+    console.log(this.objFactura.idcliente == "");
     (document.getElementById('formBuscarCliente') as HTMLFormElement).reset();
     $('#ModalBuscarCliente').modal('hide');
 
