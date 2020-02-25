@@ -497,6 +497,19 @@ export class FacturaComponent implements OnInit {
     
     this.generarFactura(obj);
 
+    this.limpiarLineaDetalle();
+    this.limpiarTotalesFactura();
+
+    localStorage.setItem('detalles',JSON.stringify("[]"));
+    localStorage.setItem('totalFactura', '0');
+    localStorage.setItem('subtotalFactura', '0');
+    localStorage.setItem('descuentosFactura', '0');
+    localStorage.setItem('impuestosFactura', '0');
+    this.arrayDetalles = [];
+    this.totalPagar = localStorage.getItem('totalFactura');
+    this.totalImpuesto = localStorage.getItem('subtotalFactura');
+    this.totalDescuento = localStorage.getItem('descuentosFactura');
+    this.SubtotalComprobante = localStorage.getItem('impuestosFactura');
   }
 
   generarFactura(obj) {
@@ -541,9 +554,9 @@ export class FacturaComponent implements OnInit {
 
   limpiarLineaDetalle() {
     this.lineaDetalle.idproducto = '';
-   /* this.lineaDetalle.precio_linea = '',
+    this.lineaDetalle.precio_linea = '',
     this.lineaDetalle.cantidad = '',
- c   this.lineaDetalle.descripcioDetalle = '',
+    this.lineaDetalle.descripcioDetalle = '',
     this.lineaDetalle.porcentajedescuento = '',
     this.lineaDetalle.montodescuento = '',
     this.lineaDetalle.naturalezadescuento = '',
@@ -558,9 +571,42 @@ export class FacturaComponent implements OnInit {
     this.lineaDetalle.impuesto = '',
     this.lineaDetalle.impuesto_neto = '',
     this.lineaDetalle.numerodocumento = '',
-    this.lineaDetalle.montoitotallinea = '';*/
+    this.lineaDetalle.montoitotallinea = '';
   }
 
+
+  limpiarTotalesFactura() {
+   
+    this.objFactura.id= '',
+    this.objFactura.idcliente= '',
+    this.objFactura.idemisor= '',
+    this.objFactura.nombreCliente= '',
+    this.objFactura.condicion_venta= '01',
+    this.objFactura.medio_pago= '01',
+    this.objFactura.porcentaje_descuento_total= '',
+    this.objFactura.monto_descuento_total= '',
+    this.objFactura.subtotal= '',
+    this.objFactura.totalservgravados= '',
+    this.objFactura.totalservexentos= '',
+    this.objFactura.totalservexonerado= '',
+    this.objFactura.totalmercanciasgravadas= '',
+    this.objFactura.totalmercanciasexentas= '',
+    this.objFactura.totalmercanciaexonerada= '',
+    this.objFactura.totalgravado= '',
+    this.objFactura.totalexento= '',
+    this.objFactura.totalexonerado= '',
+    this.objFactura.totalventa= '',
+    this.objFactura.totaldescuentos= '',
+    this.objFactura.totalventaneta= '',
+    this.objFactura.totalimpuesto= '',
+    this.objFactura.totalcomprobante= '',
+    this.objFactura.codigomoneda= '',
+    this.objFactura.tipocambio= '',
+    this.objFactura.tipo_factura= '01',
+    this.objFactura.ordenes= [],
+    this.objFactura.objOrdenes= {}
+    
+  }
   generarJsonDetalles(){
 
     let listaDetalles = {};
@@ -787,7 +833,6 @@ export class FacturaComponent implements OnInit {
     (document.getElementById('telefonoCliente') as HTMLInputElement).value = obj.telefono;
     this.objFactura.idcliente = this.objDataCliente.id;
     this.objFactura.tipo_factura ='01';
-    console.log(this.objFactura.idcliente == "");
     (document.getElementById('formBuscarCliente') as HTMLFormElement).reset();
     $('#ModalBuscarCliente').modal('hide');
 
