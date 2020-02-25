@@ -460,7 +460,7 @@ export class FacturaComponent implements OnInit {
     // CARGAR EL OBJETO PARA GUARDAR LA FACTURA
     this.objFactura.id = '',
     //this.objFactura.idcliente = '',
-    this.objFactura.idemisor = '1',
+    this.objFactura.idemisor = '4',
     /*this.objFactura.condicion_venta = '',
     this.objFactura.medio_pago = '',*/
     this.objFactura.porcentaje_descuento_total = porcentaje_descuento_total,
@@ -490,6 +490,10 @@ export class FacturaComponent implements OnInit {
       factura: this.objFactura,
       objOrdenes: this.objFactura.objOrdenes
     };
+
+    if(this.objFactura.tipo_factura === '04'){
+      delete this.objFactura.idcliente;
+    }
     
     this.generarFactura(obj);
 
@@ -661,6 +665,7 @@ export class FacturaComponent implements OnInit {
 
   cargarProducto() {
     if (this.lineaDetalle.idproducto === '') {
+  
       return;
     } else {
 
@@ -689,11 +694,11 @@ export class FacturaComponent implements OnInit {
   
       // tslint:disable-next-line: forin
       for (const linea in this.arrayDetalles) {
-          subtotal += Number(parseFloat(this.arrayDetalles[linea].subtotal).toFixed(2));
-          totalPagar += Number(parseFloat(this.arrayDetalles[linea].montoitotallinea).toFixed(2));
-          impuestos += Number(parseFloat(this.arrayDetalles[linea].impuesto).toFixed(2));
-          descuentos += Number(parseFloat(this.arrayDetalles[linea].montodescuento).toFixed(2));
-        }
+        subtotal += Number(parseFloat(this.arrayDetalles[linea].subtotal).toFixed(2));
+        totalPagar += Number(parseFloat(this.arrayDetalles[linea].montoitotallinea).toFixed(2));
+        impuestos += Number(parseFloat(this.arrayDetalles[linea].impuesto).toFixed(2));
+        descuentos += Number(parseFloat(this.arrayDetalles[linea].montodescuento).toFixed(2));
+      }
         // this.limpiarLineaDetalle();
 
       localStorage.setItem('totalFactura', totalPagar.toString());
