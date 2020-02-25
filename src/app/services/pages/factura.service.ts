@@ -30,7 +30,6 @@ export class FacturaService {
   }
 
   nuevoComprobante(obj: any) {
-    console.log("obj factura desde service", obj)
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post(baseURL() + '/factura', obj, {headers});
   }

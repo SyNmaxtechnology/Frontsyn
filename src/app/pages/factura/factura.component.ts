@@ -26,14 +26,16 @@ export class FacturaComponent implements OnInit {
     this.TipoDocumento();
     this.MedioPago();
     this.CondicionVenta();
+    this.cargarDatosDefault();
 
   /* this.tipoDocumento = facturaService.tipoDocumento();
     this.medioPago = facturaService.medioPago();
     this.condicionVenta = facturaService.condicionVenta();
     this.tipoIdentificacion = clienteService.tipoIdentificacion();
     */
-  
-  }
+  };
+
+
   fechaActual = '';
   objDataCliente = {
     nombre: '',
@@ -459,8 +461,8 @@ export class FacturaComponent implements OnInit {
     totalcomprobante = totalventaneta + totalimpuesto + totalOtrosCargos;
     // CARGAR EL OBJETO PARA GUARDAR LA FACTURA
     this.objFactura.id = '',
-    //this.objFactura.idcliente = '',
-    this.objFactura.idemisor = '4',
+    // this.objFactura.idcliente = '',
+    this.objFactura.idemisor = '1',
     /*this.objFactura.condicion_venta = '',
     this.objFactura.medio_pago = '',*/
     this.objFactura.porcentaje_descuento_total = porcentaje_descuento_total,
@@ -491,9 +493,7 @@ export class FacturaComponent implements OnInit {
       objOrdenes: this.objFactura.objOrdenes
     };
 
-    if(this.objFactura.tipo_factura === '04'){
-      delete this.objFactura.idcliente;
-    }
+    console.log(this.objFactura);
     
     this.generarFactura(obj);
 
@@ -515,8 +515,7 @@ export class FacturaComponent implements OnInit {
     let nuevoDescuento = parseFloat(localStorage.getItem('descuentosFactura'));
     // tslint:disable-next-line: forin
     for (const obj in this.arrayDetalles) {
-      if (idorden == this.arrayDetalles[obj].idproducto) {
-
+      if (idorden == this.arrayDetalles[obj].numerolineadetalle) {
         nuevoSubtotal -= Number(this.arrayDetalles[obj].subtotal);
         this.SubtotalComprobante = nuevoSubtotal.toFixed(2);
 
@@ -534,6 +533,7 @@ export class FacturaComponent implements OnInit {
         localStorage.setItem('subtotalFactura', this.SubtotalComprobante);
         localStorage.setItem('descuentosFactura', this.totalDescuento);
         localStorage.setItem('impuestosFactura', this.totalImpuesto);
+
       }
       i += 1;
     }// sub   impue   desc    total
@@ -543,7 +543,7 @@ export class FacturaComponent implements OnInit {
     this.lineaDetalle.idproducto = '';
    /* this.lineaDetalle.precio_linea = '',
     this.lineaDetalle.cantidad = '',
-    this.lineaDetalle.descripcioDetalle = '',
+ c   this.lineaDetalle.descripcioDetalle = '',
     this.lineaDetalle.porcentajedescuento = '',
     this.lineaDetalle.montodescuento = '',
     this.lineaDetalle.naturalezadescuento = '',
@@ -725,7 +725,7 @@ export class FacturaComponent implements OnInit {
 
       // tslint:disable-next-line: one-variable-per-declaration
       this.arrayDetalles = JSON.parse(localStorage.getItem('detalles'));
-
+      this.objFactura.ordenes = JSON.parse(localStorage.getItem('detalles'));
       // tslint:disable-next-line: forin
       for (const linea in this.arrayDetalles) {
         subtotal += parseFloat(this.arrayDetalles[linea].subtotal);
@@ -786,6 +786,7 @@ export class FacturaComponent implements OnInit {
     (document.getElementById('correoCliente') as HTMLInputElement).value = obj.correo;
     (document.getElementById('telefonoCliente') as HTMLInputElement).value = obj.telefono;
     this.objFactura.idcliente = this.objDataCliente.id;
+    this.objFactura.tipo_factura ='01';
     console.log(this.objFactura.idcliente);
     (document.getElementById('formBuscarCliente') as HTMLFormElement).reset();
     $('#ModalBuscarCliente').modal('hide');
@@ -801,7 +802,7 @@ export class FacturaComponent implements OnInit {
     this.objDataCliente.nombreComercial = '';
     this.objDataCliente.correo = '';
     this.objDataCliente.telefono = '';
-
+    this.objFactura.tipo_factura ='04';
     (document.getElementById('nombreCliente') as HTMLInputElement).value = '';
     (document.getElementById('nombreComercialCliente') as HTMLInputElement).value = '';
     (document.getElementById('cedulaCliente') as HTMLInputElement).value = '';
@@ -845,6 +846,12 @@ export class FacturaComponent implements OnInit {
     const minutos = (d.getMinutes() < 10) ?  '0' + d.getMinutes() : d.getMinutes();
     const segundos = (d.getSeconds() < 10) ? '0' + d.getSeconds() : d.getSeconds();
     this.fechaActual = dia + '/' + mes + '/' + anio + ' ' + horas + ':' + minutos + ':' + segundos;
+  }
+
+  cargarDatosDefault(){
+    this.objFactura.tipo_factura ='04';
+    this.objFactura.condicion_venta = '01';
+    this.objFactura.medio_pago = '01';
   }
 
   obtenerTipoCambio() {

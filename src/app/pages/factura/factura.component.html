@@ -78,7 +78,7 @@
         <div class="col-12 col-md-12">
             <div class="form-row">
                 <div class="form-group col-md-11">
-                    <input [(ngModel)]="objBusquedaProducto.descripcion" list="encodings" class="col-sm-6 custom-select custom-select-sm" id="txt_nombreProducto" (ngModelChange)="buscarProducto(objBusquedaProducto.descripcion);cargarDatosLinea()">
+                    <input [(ngModel)]="objBusquedaProducto.descripcion" list="encodings" class="col-sm-6 custom-select custom-select-sm" id="txt_nombreProducto" (ngModelChange)="buscarProducto(objBusquedaProducto.descripcion);">
                     <datalist id="encodings">
                         <option *ngFor="let producto of listaProductos" [ngValue]="producto.idproducto">{{producto.descripcion}}</option>
                     </datalist>
@@ -93,7 +93,7 @@
                     <!--<button type="submit" class="btn btn-success col-md-2 mr-1" data-toggle="modal" data-target="#ModalBuscarProducto">
                     <i class="fa fa-search"></i>
                   </button>-->
-                    <button type="submit" class="btn btn-success col-md-2 mr-1" (click)="cargarProducto()">
+                    <button type="submit" class="btn btn-success col-md-2 mr-1" (click)="cargarDatosLinea();cargarProducto()">
                     <i class="fa fa-cubes"></i>
                 </button>
                     <button type="submit" class="btn btn-primary col-md-2 mr-1" data-toggle="modal" data-target="#ModalNuevoProducto">
@@ -139,7 +139,7 @@
                             <td>
                                 {{linea.montoitotallinea}}
                             </td>
-                            <td><button type="button" class="btn btn-danger" (click)="quitarOrden(linea.idproducto)">
+                            <td><button type="button" class="btn btn-danger" (click)="quitarOrden(linea.numerolineadetalle)">
                                     <i class="fa fa-times-circle"></i>
                                 </button>
                             </td>
