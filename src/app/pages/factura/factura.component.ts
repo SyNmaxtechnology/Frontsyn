@@ -462,7 +462,7 @@ export class FacturaComponent implements OnInit {
     // CARGAR EL OBJETO PARA GUARDAR LA FACTURA
     this.objFactura.id = '',
     // this.objFactura.idcliente = '',
-    this.objFactura.idemisor = '1',
+    this.objFactura.idemisor = '4',
     /*this.objFactura.condicion_venta = '',
     this.objFactura.medio_pago = '',*/
     this.objFactura.porcentaje_descuento_total = porcentaje_descuento_total,
@@ -500,7 +500,7 @@ export class FacturaComponent implements OnInit {
     this.limpiarLineaDetalle();
     this.limpiarTotalesFactura();
 
-    localStorage.setItem('detalles',JSON.stringify("[]"));
+    //localStorage.setItem('detalles','[]');
     localStorage.setItem('totalFactura', '0');
     localStorage.setItem('subtotalFactura', '0');
     localStorage.setItem('descuentosFactura', '0');
@@ -601,7 +601,7 @@ export class FacturaComponent implements OnInit {
     this.objFactura.totalimpuesto= '',
     this.objFactura.totalcomprobante= '',
     this.objFactura.codigomoneda= '',
-    this.objFactura.tipocambio= '',
+    //this.objFactura.tipocambio= '',
     this.objFactura.tipo_factura= '01',
     this.objFactura.ordenes= [],
     this.objFactura.objOrdenes= {}
@@ -710,6 +710,7 @@ export class FacturaComponent implements OnInit {
   }
 
   cargarProducto() {
+      console.log(this.lineaDetalle.idproducto)
     if (this.lineaDetalle.idproducto === '') {
   
       return;
@@ -723,18 +724,11 @@ export class FacturaComponent implements OnInit {
       const getDetalles = localStorage.getItem('detalles');
       let localStorageDetalles = [];
 
-      if (!getDetalles) {
-
+        localStorageDetalles = JSON.parse(getDetalles);
         localStorageDetalles.push(this.lineaDetalle);
         localStorage.setItem('detalles', JSON.stringify(localStorageDetalles));
         this.arrayDetalles = localStorageDetalles;
-      } else {
       
-        localStorageDetalles = JSON.parse(localStorage.getItem('detalles'));
-        localStorageDetalles.push(this.lineaDetalle);
-        localStorage.setItem('detalles', JSON.stringify(localStorageDetalles));
-        this.arrayDetalles = localStorageDetalles;
-      }
       
       // OBTENER LOS TOTALES DEL COMPROBANTE
   
@@ -762,12 +756,14 @@ export class FacturaComponent implements OnInit {
 
   listarOrdenes() {
     const getDetalles = localStorage.getItem('detalles');
+    console.log(getDetalles);
+    
     // tslint:disable-next-line: one-variable-per-declaration
     let subtotal = 0,
     impuestos = 0,
     descuentos = 0,
     totalPagar = 0;
-    if (getDetalles != null && JSON.parse(getDetalles) != "[]" ) {
+    if (getDetalles !== '' && getDetalles != null && JSON.parse(getDetalles) != "[]" ) {
 
       // tslint:disable-next-line: one-variable-per-declaration
       this.arrayDetalles = JSON.parse(localStorage.getItem('detalles'));
@@ -779,11 +775,13 @@ export class FacturaComponent implements OnInit {
         impuestos += parseFloat(this.arrayDetalles[linea].impuesto);
         descuentos += parseFloat(this.arrayDetalles[linea].montodescuento);
       }
-  
+
       this.totalPagar = totalPagar.toFixed(2);
       this.totalImpuesto = impuestos.toFixed(2);
       this.totalDescuento = descuentos.toFixed(2);
       this.SubtotalComprobante = subtotal.toString(); 
+    }else {
+      localStorage.setItem("detalles",'[]');
     }
   }
 
@@ -870,6 +868,7 @@ export class FacturaComponent implements OnInit {
          this.objDataCliente.nombreComercial = response.cliente[0].cliente_nombre_comercial;
          this.objDataCliente.correo = response.cliente[0].cliente_correo;
          this.objDataCliente.telefono = response.cliente[0].cliente_telefono_numtelefono;
+
        },
        err => {
          console.log(err);
