@@ -30,6 +30,8 @@ export class ConsultaComponent implements OnInit {
     descuentoTotal: 0,
     porcentajeDescuentoTotal: 0,
     subtotal: 0,
+    medioPago: '',
+    condicionVenta: '',
     totalservgravados: 0,
     totalservexentos: 0,
     totalservexonerado: 0,
@@ -46,6 +48,8 @@ export class ConsultaComponent implements OnInit {
     totalcomprobante: 0,
     codigomoneda: '',
     tipocambio: '',
+    fechaFactura: '',
+    tipoFactura: ''
   }
 
   arrayComprobantes = [];
@@ -78,13 +82,25 @@ export class ConsultaComponent implements OnInit {
     this.consultaService.reporteFactura(id)
       .subscribe(response => {
         if (response.factura[0].tipo_factura === '01') {
-          this.tipoFactura = 'Factura Electrónica';
+          this.objFacturaResultado.tipoFactura = 'Factura Electrónica';
         } else if (response.factura[0].tipo_factura === '04') {
-          this.tipoFactura = 'Tiquete Electrónico';
+          this.objFacturaResultado.tipoFactura = 'Tiquete Electrónico';
         } else if (response.factura[0].tipo_factura === '03') {
-          this.tipoFactura = 'Nota de Crédito';
+          this.objFacturaResultado.tipoFactura = 'Nota de Crédito';
         }
         console.log(response);
+
+        //cargar datos totales y encabezado de factura
+
+        this.objFacturaResultado.clave = response.factura[0].clavenumerica;
+        this.objFacturaResultado.consecutivo = response.factura[0].consecutivo;
+        this.objFacturaResultado.medioPago = response.factura[0].medio_pago;
+        this.objFacturaResultado.fechaFactura = response.factura[0].fecha_factura;
+        this.objFacturaResultado.porcentajeDescuentoTotal = response.factura[0].porcentaje_descuento_total;
+        this.objFacturaResultado.descuentoTotal = response.factura[0].monto_descuento_total;
+        this.objFacturaResultado.subtotal = response.factura[0].subtotal;
+        
+
       },
       err => console.error(err));
   }
