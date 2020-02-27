@@ -462,7 +462,7 @@ export class FacturaComponent implements OnInit {
     // CARGAR EL OBJETO PARA GUARDAR LA FACTURA
     this.objFactura.id = '',
     // this.objFactura.idcliente = '',
-    this.objFactura.idemisor = '4',
+    this.objFactura.idemisor = '1',
     /*this.objFactura.condicion_venta = '',
     this.objFactura.medio_pago = '',*/
     this.objFactura.porcentaje_descuento_total = porcentaje_descuento_total,

@@ -6,29 +6,30 @@
         <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="form-group">
                 <p>
-                   Documento: <select name="tipo_factura" class="form-control col-6">
+                    Documento: <select [(ngModel)]="objBusquedaFacturas.tipoFactura" name="tipo_factura" class="form-control col-6">
                         <option value="" disabled selected>--Documento--</option>
+                        <option *ngFor="let item of tiposDocumento" [value]="item.codigo">{{item.descripcion}}</option>
                     </select>
                 </p>
             </div>
             <div class="form-group">
                 <p>
-                    Fecha Inicio: <input type="date" name="fechaInicio" id="fechaInicio" class="form-control col-6">
+                    Fecha Inicio: <input [(ngModel)]="objBusquedaFacturas.fechaInicio" type="date" name="fechaInicio" id="fechaInicio" class="form-control col-6">
                 </p>
             </div>
             <div class="form-group">
                 <p>
-                    Fecha Final:&nbsp;&nbsp;<input type="date" name="fechaFIn" id="fechaFIn" class="form-control col-6">
+                    Fecha Final:&nbsp;&nbsp;<input [(ngModel)]="objBusquedaFacturas.fechaFin" type="date" name="fechaFin" id="fechaFin" class="form-control col-6">
                 </p>
             </div>
             <div class="form-group">
                 <p>
-                    ID Interno:&nbsp;&nbsp;&nbsp;<input type="text" name="numeroInterno" id="numeroInterno" class="form-control col-6" placeholder="Número Interno">
+                    ID Interno:&nbsp;&nbsp;&nbsp;<input [(ngModel)]="objBusquedaFacturas.numeroInterno" type="text" name="numeroInterno" id="numeroInterno" class="form-control col-6" placeholder="Número Interno">
                 </p>
-            </div>   
+            </div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-6">
-            
+
             <div class="form-group">
                 <p>
                     Cliente:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="numeroExterno" id="numeroExterno" class="form-control col-6" placeholder="Nombre cliente">
@@ -44,70 +45,101 @@
                     Consecutivo:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="numeroExterno" id="numeroExterno" class="form-control col-6" placeholder="Consecutivo documento">
                 </p>
             </div>
-            <button type="submit" class="btn btn-success">Buscar</button>
+            <button type="button" class="btn btn-info mr-1" (click)="ejecutarBusqueda(objBusquedaFacturas)"><i class="fa fa-search"></i></button>
+            <button type="button" class="btn btn-info mr-1" (click)="ejecutarBusqueda(objBusquedaFacturas)"><i class="fa fa-file-excel-o"></i></button>
+            <button type="button" class="btn btn-info" (click)="ejecutarBusqueda(objBusquedaFacturas)"><i class="fa fa-eye"></i></button>
         </div>
     </div>
-    <hr>
 
-    <div class="row">
-        <table class="table table-responsive" id="tabla_detalles">
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Hora</th>
-                    <th>Número Interno</th>
-                    <th>Consecutivo</th>
-                    <th>Número Documento</th>
-                    <th>Cédula Juridica</th>
-                    <th>Razón Social</th>
-                    <th>Subtotal</th>
-                    <th>Impuesto</th>
-                    <th>Total</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody *ngFor="let factura of arrayComprobantes">
-                <tr>
-                    <td>
-                        {{factura.fecha}}
-                    </td> 
-                    <td>
-                        {{factura.hora}}
-                    </td> 
-                    <td>
-                        {{factura.numero_interno}}
-                    </td>   
-                    <td>
-                        {{factura.consecutivo}}
-                    </td>    
-                    <td>
-                        {{factura.clavenumerica}}
-                    </td>
-                    <td>
-                        {{factura.cedula_cliente}}
-                    </td>
-                    <td>   
-                        {{factura.razon_social}}
-                    </td>
-                    <td>
-                        {{factura.subtotal}}
-                    </td>
-                    <td>
-                        {{factura.totalimpuesto}}
-                    </td>
-                    <td>
-                        {{factura.totalcomprobante}}
-                    </td>
-                    <td>
-                        {{factura.status_factura}}
-                    </td>
-                    <td><button type="button" class="btn btn-danger">
-                            <i class="fa fa-times-circle"></i>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+</div>
+
+<div class="col-12">
+    <hr>
+    <table class="table table-responsive" id="tabla_detalles">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Número Interno</th>
+                <th>Consecutivo</th>
+                <th>Número Documento</th>
+                <th>Cédula Juridica</th>
+                <th>Razón Social</th>
+                <th>Subtotal</th>
+                <th>Impuesto</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let factura of arrayComprobantes">
+            <tr>
+                <td>
+                    {{factura.fecha | date: 'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    {{factura.hora}}
+                </td>
+                <td>
+                    {{factura.numero_interno}}
+                </td>
+                <td>
+                    {{factura.consecutivo}}
+                </td>
+                <td class="col-md-2">
+                    {{factura.clavenumerica}}
+                </td>
+                <td>
+                    {{factura.cedula_cliente}}
+                </td>
+                <td>
+                    {{factura.razon_social}}
+                </td>
+                <td>
+                    {{factura.subtotal}}
+                </td>
+                <td>
+                    {{factura.totalimpuesto}}
+                </td>
+                <td>
+                    {{factura.totalcomprobante}}
+                </td>
+                <td>
+                    {{factura.status_factura}}
+                </td>
+                <td><button type="button" class="btn btn-danger btn-xs mr-1">
+                        <i class="fa fa-download"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs">
+                        <i class="fa fa-file-excel-o"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs mr-1">
+                        <i class="fa fa-envelope-o"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs" (click)="reporteFactura(factura.id)">
+                        <i class="fa fa-search-plus"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!-- MODAL PARA DESCRICION TOTAL DE FACTURA JUNTO CON LAS ORDENES DE CADA FACTURA -->
+
+<div class="modal fade" id="ModalBuscarCliente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{tipoFactura}}</h5>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
     </div>
 </div>
