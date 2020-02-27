@@ -1,3 +1,4 @@
+import { ConsultaComponent } from './consulta/consulta.component';
 import { RouterModule, Routes } from '@angular/router';
 import { PagesComponent } from './pages.component';
 import { ProductoComponent } from './producto/producto.component';
@@ -19,6 +20,7 @@ const pagesRoutes: Routes = [
         {path: 'categoria', component: CategoriaComponent},
         {path: 'impuesto', component: ImpuestoComponent},
         {path: 'cliente', component: ClienteComponent},
+        {path: 'consulta', component: ConsultaComponent},
         {path: '', redirectTo: '/factura', pathMatch: 'full'}, // si la ruta esta vacía entonces redireccionar a /factura
     ]}
 ];

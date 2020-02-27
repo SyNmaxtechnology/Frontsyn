@@ -1,4 +1,3 @@
-
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { PagesModule } from './pages/pages.module';
@@ -17,7 +16,7 @@ import { ImpuestoComponent } from './pages/impuesto/impuesto.component';
 import { ProductoComponent } from './pages/producto/producto.component';
 import { ClienteComponent } from './pages/cliente/cliente.component';
 import { FacturaComponent } from './pages/factura/factura.component';
-
+import { ConsultaComponent } from './pages/consulta/consulta.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +28,8 @@ import { FacturaComponent } from './pages/factura/factura.component';
     ImpuestoComponent,
     ProductoComponent,
     ClienteComponent,
-    FacturaComponent
+    FacturaComponent,
+    ConsultaComponent
   ],
   imports: [// todos los modulos que se importen en este componente, se deben pasar a el array imports
     BrowserModule,

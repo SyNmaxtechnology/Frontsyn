@@ -1,0 +1,113 @@
+<h1><i class="fa fa-file-text"></i>Listado de documentos procesados</h1>
+<hr>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="form-group">
+                <p>
+                   Documento: <select name="tipo_factura" class="form-control col-6">
+                        <option value="" disabled selected>--Documento--</option>
+                    </select>
+                </p>
+            </div>
+            <div class="form-group">
+                <p>
+                    Fecha Inicio: <input type="date" name="fechaInicio" id="fechaInicio" class="form-control col-6">
+                </p>
+            </div>
+            <div class="form-group">
+                <p>
+                    Fecha Final:&nbsp;&nbsp;<input type="date" name="fechaFIn" id="fechaFIn" class="form-control col-6">
+                </p>
+            </div>
+            <div class="form-group">
+                <p>
+                    ID Interno:&nbsp;&nbsp;&nbsp;<input type="text" name="numeroInterno" id="numeroInterno" class="form-control col-6" placeholder="Número Interno">
+                </p>
+            </div>   
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            
+            <div class="form-group">
+                <p>
+                    Cliente:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="numeroExterno" id="numeroExterno" class="form-control col-6" placeholder="Nombre cliente">
+                </p>
+            </div>
+            <div class="form-group">
+                <p>
+                    ID documento:&nbsp;&nbsp;<input type="text" name="numeroExterno" id="numeroExterno" class="form-control col-6" placeholder="Número de documento">
+                </p>
+            </div>
+            <div class="form-group">
+                <p>
+                    Consecutivo:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="numeroExterno" id="numeroExterno" class="form-control col-6" placeholder="Consecutivo documento">
+                </p>
+            </div>
+            <button type="submit" class="btn btn-success">Buscar</button>
+        </div>
+    </div>
+    <hr>
+
+    <div class="row">
+        <table class="table table-responsive" id="tabla_detalles">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Número Interno</th>
+                    <th>Consecutivo</th>
+                    <th>Número Documento</th>
+                    <th>Cédula Juridica</th>
+                    <th>Razón Social</th>
+                    <th>Subtotal</th>
+                    <th>Impuesto</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let factura of arrayComprobantes">
+                <tr>
+                    <td>
+                        {{factura.fecha}}
+                    </td> 
+                    <td>
+                        {{factura.hora}}
+                    </td> 
+                    <td>
+                        {{factura.numero_interno}}
+                    </td>   
+                    <td>
+                        {{factura.consecutivo}}
+                    </td>    
+                    <td>
+                        {{factura.clavenumerica}}
+                    </td>
+                    <td>
+                        {{factura.cedula_cliente}}
+                    </td>
+                    <td>   
+                        {{factura.razon_social}}
+                    </td>
+                    <td>
+                        {{factura.subtotal}}
+                    </td>
+                    <td>
+                        {{factura.totalimpuesto}}
+                    </td>
+                    <td>
+                        {{factura.totalcomprobante}}
+                    </td>
+                    <td>
+                        {{factura.status_factura}}
+                    </td>
+                    <td><button type="button" class="btn btn-danger">
+                            <i class="fa fa-times-circle"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
