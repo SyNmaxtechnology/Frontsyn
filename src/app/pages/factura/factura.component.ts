@@ -290,6 +290,7 @@ export class FacturaComponent implements OnInit {
         .subscribe(response => {
           console.log(response);
           this.listaProductos = response;
+          this.lineaDetalle.idproducto = response[0].idproducto;
         },
         err => console.log(err));
     }
@@ -386,7 +387,7 @@ export class FacturaComponent implements OnInit {
                   localStorage.setItem('descuentosFactura', this.totalDescuento);
                   localStorage.setItem('impuestosFactura', this.totalImpuesto);
             */
-
+            this.cargarProducto();
           }
         }
       }
@@ -462,7 +463,7 @@ export class FacturaComponent implements OnInit {
     // CARGAR EL OBJETO PARA GUARDAR LA FACTURA
     this.objFactura.id = '',
     // this.objFactura.idcliente = '',
-    this.objFactura.idemisor = '1',
+    this.objFactura.idemisor = '4',
     /*this.objFactura.condicion_venta = '',
     this.objFactura.medio_pago = '',*/
     this.objFactura.porcentaje_descuento_total = porcentaje_descuento_total,
@@ -506,6 +507,7 @@ export class FacturaComponent implements OnInit {
     localStorage.setItem('descuentosFactura', '0');
     localStorage.setItem('impuestosFactura', '0');
     this.arrayDetalles = [];
+    localStorage.setItem("detalles",'[]');
     this.totalPagar = localStorage.getItem('totalFactura');
     this.totalImpuesto = localStorage.getItem('subtotalFactura');
     this.totalDescuento = localStorage.getItem('descuentosFactura');
@@ -710,7 +712,7 @@ export class FacturaComponent implements OnInit {
   }
 
   cargarProducto() {
-      console.log(this.lineaDetalle.idproducto)
+      console.log(this.lineaDetalle.idproducto === '');
     if (this.lineaDetalle.idproducto === '') {
   
       return;
