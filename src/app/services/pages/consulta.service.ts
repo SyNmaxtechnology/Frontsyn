@@ -33,4 +33,8 @@ export class ConsultaService {
   reporteFactura(id: number) {
     return this.http.get(baseURL() + '/reportes/facturas/?idfactura=' + id);
   }
+
+  reportesYCorreos(obj: any) {
+    return this.http.get(baseURL() + '/reportes/factura/pdf/?id=' + obj.id + '&tipo=' + obj.tipo);
+  }
 }

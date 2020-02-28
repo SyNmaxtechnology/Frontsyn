@@ -107,7 +107,7 @@
                 <td>
                     {{factura.status_factura}}
                 </td>
-                <td><button type="button" class="btn btn-danger btn-xs mr-1">
+                <td><button type="button" class="btn btn-danger btn-xs mr-1" (click)="reportesYCorreos(factura.id,'01')">
                         <i class="fa fa-download"></i>
                     </button>
                     <button type="button" class="btn btn-default btn-xs">
