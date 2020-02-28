@@ -11,6 +11,8 @@ export class ConsultaComponent implements OnInit {
   constructor(private consultaService: ConsultaService) { 
 
     this.tipoDocumento();
+    this.medioPago();
+    this.condicionVenta();
   }
 
   objBusquedaFacturas = {
@@ -25,6 +27,7 @@ export class ConsultaComponent implements OnInit {
   };
 
   objFacturaResultado = {
+    id: '',
     clave: '',
     consecutivo: '',
     descuentoTotal: 0,
@@ -51,9 +54,12 @@ export class ConsultaComponent implements OnInit {
     fechaFactura: '',
     tipoFactura: ''
   }
-
+  
+  arrayOrdenes = [];
   arrayComprobantes = [];
   tiposDocumento= [];
+  mediosPago = [];
+  condicionesVenta = [];
   ngOnInit() {
   }
   ejecutarBusqueda(obj: any) {
@@ -90,17 +96,52 @@ export class ConsultaComponent implements OnInit {
         }
         console.log(response);
 
-        //cargar datos totales y encabezado de factura
+        // cargar datos totales y encabezado de factura
 
         this.objFacturaResultado.clave = response.factura[0].clavenumerica;
         this.objFacturaResultado.consecutivo = response.factura[0].consecutivo;
         this.objFacturaResultado.medioPago = response.factura[0].medio_pago;
+        this.objFacturaResultado.condicionVenta = response.factura[0].condicion_venta;
         this.objFacturaResultado.fechaFactura = response.factura[0].fecha_factura;
         this.objFacturaResultado.porcentajeDescuentoTotal = response.factura[0].porcentaje_descuento_total;
         this.objFacturaResultado.descuentoTotal = response.factura[0].monto_descuento_total;
         this.objFacturaResultado.subtotal = response.factura[0].subtotal;
-        
+        this.objFacturaResultado.totalservgravados = response.factura[0].totalservgravados;
+        this.objFacturaResultado.totalservexentos = response.factura[0].totalservexentos;
+        this.objFacturaResultado.totalservexonerado = response.factura[0].totalservexonerado;
+        this.objFacturaResultado.totalmercanciasgravadas = response.factura[0].totalmercanciasgravadas;
+        this.objFacturaResultado.totalmercanciasexentas = response.factura[0].totalmercanciasexentas;
+        this.objFacturaResultado.totalmercanciaexonerada = response.factura[0].totalmercanciaexonerada;
+        this.objFacturaResultado.totalgravado = response.factura[0].totalgravado;
+        this.objFacturaResultado.totalexento = response.factura[0].totalexento;
+        this.objFacturaResultado.totalexonerado = response.factura[0].totalexonerado;
+        this.objFacturaResultado.totalventa = response.factura[0].totalventa;
+        this.objFacturaResultado.totaldescuentos = response.factura[0].totaldescuentos;
+        this.objFacturaResultado.totalventaneta = response.factura[0].totalventaneta;
+        this.objFacturaResultado.totalimpuesto = response.factura[0].totalimpuesto;
+        this.objFacturaResultado.totalcomprobante = response.factura[0].totalcomprobante;
+        this.objFacturaResultado.tipocambio = response.factura[0].tipocambio;
+        this.objFacturaResultado.id = response.factura[0].id;
+        this.arrayOrdenes = response.ordenes;
 
+        console.log(this.arrayOrdenes);
+      },
+      err => console.error(err));
+  }
+
+  medioPago() {
+    this.consultaService.medioPago()
+      .subscribe(response =>  {
+      console.log(response);
+      this.mediosPago = response.medioPago;
+      }, err => console.error(err));
+  }
+
+  condicionVenta() {
+    this.consultaService.condicionVenta()
+      .subscribe(response => {
+        console.log(response);
+        this.condicionesVenta = response.condicionVenta;
       },
       err => console.error(err));
   }

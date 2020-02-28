@@ -30,10 +30,10 @@ export class FacturaComponent implements OnInit {
 
   /* this.tipoDocumento = facturaService.tipoDocumento();
     this.medioPago = facturaService.medioPago();
-    this.condicionVenta = facturaService.condicionVenta();
+    this.condicionVenta = facturaService.condicionVenta(); */
     this.tipoIdentificacion = clienteService.tipoIdentificacion();
-    */
-  };
+   
+  }
 
 
   fechaActual = '';
@@ -291,6 +291,7 @@ export class FacturaComponent implements OnInit {
           console.log(response);
           this.listaProductos = response;
           this.lineaDetalle.idproducto = response[0].idproducto;
+          //this.cargarDatosLinea();
         },
         err => console.log(err));
     }
@@ -401,8 +402,8 @@ export class FacturaComponent implements OnInit {
   obtenerTotalesFactura() {
 
     // VARIABLES PARA OBTENER LOS TOTALES DE FACTURA
-    
-    let porcentaje_descuento_total = ((parseFloat(this.totalDescuento) * 100 )/parseFloat(this.totalPagar)).toFixed(2);
+
+    let porcentaje_descuento_total = ((parseFloat(this.totalDescuento) * 100 ) / parseFloat(this.totalPagar)).toFixed(2);
     let monto_descuento_total = parseFloat(this.totalDescuento);
     const subtotal = Number(this.SubtotalComprobante);
     let totalservgravados = 0;
@@ -420,20 +421,20 @@ export class FacturaComponent implements OnInit {
     let totalimpuesto = 0;
     const totalOtrosCargos = 0;
     let totalcomprobante = 0;
-    let montototal =0;
-    let impuestoLinea = 0
+    let montototal = 0;
+    let impuestoLinea = 0;
     // tslint:disable-next-line: forin
-    for (const linea in this.arrayDetalles){
+    for (const linea in this.arrayDetalles) {
       console.log(this.arrayDetalles[linea]);
       montototal = parseFloat(this.arrayDetalles[linea].cantidad) *  parseFloat(this.arrayDetalles[linea].precio_linea);
-     
-      if(this.arrayDetalles[linea].codigo_impuesto != '01'){ // productos exentos del IVA
-          if(this.arrayDetalles[linea].tipo_servicio == '01'){
-            //mercancái
+
+      if (this.arrayDetalles[linea].codigo_impuesto != '01') { // productos exentos del IVA
+          if (this.arrayDetalles[linea].tipo_servicio == '01') {
+            // mercancái
             totalmercanciasexentas += montototal;
           }
 
-          if(this.arrayDetalles[linea].tipo_servicio == '02') {
+          if (this.arrayDetalles[linea].tipo_servicio == '02') {
             totalservexentos += montototal;
           }
 
@@ -441,21 +442,21 @@ export class FacturaComponent implements OnInit {
           impuestoLinea = parseFloat(this.arrayDetalles[linea].impuesto) ;
           totalimpuesto += impuestoLinea;
 
-      } else { //Aplica IVA
-          if(this.arrayDetalles[linea].tipo_servicio == '01'){
-            //mercancái
-            console.log("aqui")
+      } else { // Aplica IVA
+          if (this.arrayDetalles[linea].tipo_servicio == '01') {
+            // mercancái
+            console.log('aqui');
             totalmercanciasgravadas += montototal;
           }
 
-          if(this.arrayDetalles[linea].tipo_servicio == '02') {
+          if (this.arrayDetalles[linea].tipo_servicio == '02') {
             totalservgravados += montototal;
           }
           impuestoLinea = parseFloat(this.arrayDetalles[linea].impuesto);
           totalimpuesto += impuestoLinea;
           totalgravado = montototal;
       }
-      
+
     }
     totalventa = totalgravado + totalexento + totalexonerado;
     totalventaneta = totalventa - totaldescuentos;
@@ -463,7 +464,7 @@ export class FacturaComponent implements OnInit {
     // CARGAR EL OBJETO PARA GUARDAR LA FACTURA
     this.objFactura.id = '',
     // this.objFactura.idcliente = '',
-    this.objFactura.idemisor = '4',
+    this.objFactura.idemisor = '1',
     /*this.objFactura.condicion_venta = '',
     this.objFactura.medio_pago = '',*/
     this.objFactura.porcentaje_descuento_total = porcentaje_descuento_total,
@@ -487,7 +488,7 @@ export class FacturaComponent implements OnInit {
     /*this.objFactura.tipoCambio = '',
     this.objFactura.tipo_factura = '',*/
     this.objFactura.objOrdenes = this.generarJsonDetalles();
-  
+
     const obj = {
       ordenes: this.objFactura.ordenes,
       factura: this.objFactura,
@@ -495,19 +496,19 @@ export class FacturaComponent implements OnInit {
     };
 
     console.log(this.objFactura);
-    
+
     this.generarFactura(obj);
 
     this.limpiarLineaDetalle();
     this.limpiarTotalesFactura();
 
-    //localStorage.setItem('detalles','[]');
+    // localStorage.setItem('detalles','[]');
     localStorage.setItem('totalFactura', '0');
     localStorage.setItem('subtotalFactura', '0');
     localStorage.setItem('descuentosFactura', '0');
     localStorage.setItem('impuestosFactura', '0');
     this.arrayDetalles = [];
-    localStorage.setItem("detalles",'[]');
+    localStorage.setItem('detalles', '[]');
     this.totalPagar = localStorage.getItem('totalFactura');
     this.totalImpuesto = localStorage.getItem('subtotalFactura');
     this.totalDescuento = localStorage.getItem('descuentosFactura');
@@ -578,38 +579,38 @@ export class FacturaComponent implements OnInit {
 
 
   limpiarTotalesFactura() {
-   
-    this.objFactura.id= '',
-    this.objFactura.idcliente= '',
-    this.objFactura.idemisor= '',
-    this.objFactura.nombreCliente= '',
-    this.objFactura.condicion_venta= '01',
-    this.objFactura.medio_pago= '01',
-    this.objFactura.porcentaje_descuento_total= '',
-    this.objFactura.monto_descuento_total= '',
-    this.objFactura.subtotal= '',
-    this.objFactura.totalservgravados= '',
-    this.objFactura.totalservexentos= '',
-    this.objFactura.totalservexonerado= '',
-    this.objFactura.totalmercanciasgravadas= '',
-    this.objFactura.totalmercanciasexentas= '',
-    this.objFactura.totalmercanciaexonerada= '',
-    this.objFactura.totalgravado= '',
-    this.objFactura.totalexento= '',
-    this.objFactura.totalexonerado= '',
-    this.objFactura.totalventa= '',
-    this.objFactura.totaldescuentos= '',
-    this.objFactura.totalventaneta= '',
-    this.objFactura.totalimpuesto= '',
-    this.objFactura.totalcomprobante= '',
-    this.objFactura.codigomoneda= '',
-    //this.objFactura.tipocambio= '',
-    this.objFactura.tipo_factura= '01',
-    this.objFactura.ordenes= [],
-    this.objFactura.objOrdenes= {}
-    
+
+    this.objFactura.id = '',
+    this.objFactura.idcliente = '',
+    this.objFactura.idemisor = '1',
+    this.objFactura.nombreCliente = '',
+    this.objFactura.condicion_venta = '01',
+    this.objFactura.medio_pago = '01',
+    this.objFactura.porcentaje_descuento_total = '',
+    this.objFactura.monto_descuento_total = '',
+    this.objFactura.subtotal = '',
+    this.objFactura.totalservgravados = '',
+    this.objFactura.totalservexentos = '',
+    this.objFactura.totalservexonerado = '',
+    this.objFactura.totalmercanciasgravadas = '',
+    this.objFactura.totalmercanciasexentas = '',
+    this.objFactura.totalmercanciaexonerada = '',
+    this.objFactura.totalgravado = '',
+    this.objFactura.totalexento = '',
+    this.objFactura.totalexonerado = '',
+    this.objFactura.totalventa = '',
+    this.objFactura.totaldescuentos = '',
+    this.objFactura.totalventaneta = '',
+    this.objFactura.totalimpuesto = '',
+    this.objFactura.totalcomprobante = '',
+    this.objFactura.codigomoneda = '',
+    // this.objFactura.tipocambio= '',
+    this.objFactura.tipo_factura = '01',
+    this.objFactura.ordenes = [],
+    this.objFactura.objOrdenes = {};
+
   }
-  generarJsonDetalles(){
+  generarJsonDetalles() {
 
     let listaDetalles = {};
     let descuento = 0;
@@ -619,21 +620,21 @@ export class FacturaComponent implements OnInit {
     const descuentoorden = 0;
     let montototallinea = 0;
     const object = {};
-    let index=0;
+    let index = 0;
     let monto_impuesto = 0;
-    let porcentaje='';
-    let decimal='';
-    let impuestoNeto=0;
+    let porcentaje = '';
+    let decimal = '';
+    let impuestoNeto = 0;
     const porcentajeExoneracionGlobal = 0;
     // tslint:disable-next-line: forin
-    for(const i in this.arrayDetalles){
-      index = index+1;
+    for (const i in this.arrayDetalles) {
+      index = index + 1;
 
       montototal = Number(this.arrayDetalles[i].subtotal);
       descuento = Number(this.arrayDetalles[i].montodescuento);
       // subTotal = Number(this.arrayDetalles[i].total_orden);
 
-      object[index]={   
+      object[index] = {
         codigo    : String(this.arrayDetalles[i].codigo_servicio),
         codigoComercial : {tipo: String(this.arrayDetalles[i].tipo_servicio), codigo: String(this.arrayDetalles[i].codigo_servicio)},
         cantidad        : String(this.arrayDetalles[i].cantidad),
@@ -641,15 +642,15 @@ export class FacturaComponent implements OnInit {
         detalle         : String(this.arrayDetalles[i].descripcioDetalle),
         precioUnitario  : String(this.arrayDetalles[i].precio_linea),
         montoTotal      : String(montototal)
-      }
-      if(Number(this.arrayDetalles[i].montodescuento )> 0){
+      };
+      if (Number(this.arrayDetalles[i].montodescuento ) > 0) {
         // tslint:disable-next-line: max-line-length
-        object[index].descuento = [{montoDescuento: String(this.arrayDetalles[i].montodescuento), naturalezaDescuento: String(this.arrayDetalles[i].naturalezadescuento)}]
+        object[index].descuento = [{montoDescuento: String(this.arrayDetalles[i].montodescuento), naturalezaDescuento: String(this.arrayDetalles[i].naturalezadescuento)}];
       }
 
       object[index].subtotal        = String(montototal);
-      if(this.arrayDetalles[i].codigo_tarifa == "07" || this.arrayDetalles[i].codigo_tarifa == "01"){
-        if(this.arrayDetalles[i].codigo_tarifa == "07"){
+      if (this.arrayDetalles[i].codigo_tarifa == '07' || this.arrayDetalles[i].codigo_tarifa == '01') {
+        if (this.arrayDetalles[i].codigo_tarifa == '07') {
           object[index].baseImponible = String(this.arrayDetalles[i].precio_linea);
         }
 
@@ -662,14 +663,14 @@ export class FacturaComponent implements OnInit {
           }
         };
 
-        if(Number(this.arrayDetalles[i].porcentaje_impuesto) > 9){
+        if (Number(this.arrayDetalles[i].porcentaje_impuesto) > 9) {
           decimal = parseFloat(this.arrayDetalles[i].porcentaje_impuesto).toFixed(0);
-          porcentaje= '0.'+String(decimal);
-          monto_impuesto= Number((parseFloat(object[index].subtotal) * parseFloat(porcentaje)).toFixed(2));
-        }else{
+          porcentaje = '0.' + String(decimal);
+          monto_impuesto = Number((parseFloat(object[index].subtotal) * parseFloat(porcentaje)).toFixed(2));
+        } else {
           decimal = parseFloat(this.arrayDetalles[i].porcentaje_impuesto).toFixed(0);
-          porcentaje= '0.0'+String(decimal);
-          monto_impuesto= Number((parseFloat(object[index].subtotal) * parseFloat(porcentaje)).toFixed(2));
+          porcentaje = '0.0' + String(decimal);
+          monto_impuesto = Number((parseFloat(object[index].subtotal) * parseFloat(porcentaje)).toFixed(2));
         }
         object[index].impuesto[1].monto = String(monto_impuesto);
         montototallinea = (subTotal  + Number(object[index].impuesto[1].monto));
@@ -682,14 +683,14 @@ export class FacturaComponent implements OnInit {
           }
         };
 
-        if (Number(this.arrayDetalles[i].porcentaje_impuesto) > 9){
+        if (Number(this.arrayDetalles[i].porcentaje_impuesto) > 9) {
             decimal = parseFloat(this.arrayDetalles[i].porcentaje_impuesto).toFixed(0);
-            porcentaje= '0.'+String(decimal);
-            monto_impuesto= Number((parseFloat(object[index].subtotal) * parseFloat(porcentaje)).toFixed(2));
+            porcentaje = '0.' + String(decimal);
+            monto_impuesto = Number((parseFloat(object[index].subtotal) * parseFloat(porcentaje)).toFixed(2));
         } else {
             decimal = parseFloat(this.arrayDetalles[i].porcentaje_impuesto).toFixed(0);
-            porcentaje= '0.0'+String(decimal);
-            monto_impuesto= Number((parseFloat(object[index].subtotal) * parseFloat(porcentaje)).toFixed(2));
+            porcentaje = '0.0' + String(decimal);
+            monto_impuesto = Number((parseFloat(object[index].subtotal) * parseFloat(porcentaje)).toFixed(2));
         }
 
 
@@ -697,14 +698,14 @@ export class FacturaComponent implements OnInit {
         montototallinea = (subTotal  + Number(object[index].impuesto[1].monto));
       }
 
-      impuestoNeto=monto_impuesto - Number((monto_impuesto * porcentajeExoneracionGlobal).toFixed(2));
+      impuestoNeto = monto_impuesto - Number((monto_impuesto * porcentajeExoneracionGlobal).toFixed(2));
       object[index].impuestoNeto    = String(impuestoNeto);
       /*-----------------------------------------------------------------------------*/
 
       object[index].montoTotalLinea = String(montototallinea);
 
       // Agrega el array en formato JSON
-      listaDetalles= object;
+      listaDetalles = object;
     }
 
     return listaDetalles;
@@ -712,9 +713,9 @@ export class FacturaComponent implements OnInit {
   }
 
   cargarProducto() {
-      console.log(this.lineaDetalle.idproducto === '');
-    if (this.lineaDetalle.idproducto === '') {
-  
+
+      if (this.lineaDetalle.idproducto === '') {
+
       return;
     } else {
 
@@ -726,14 +727,14 @@ export class FacturaComponent implements OnInit {
       const getDetalles = localStorage.getItem('detalles');
       let localStorageDetalles = [];
 
-        localStorageDetalles = JSON.parse(getDetalles);
-        localStorageDetalles.push(this.lineaDetalle);
-        localStorage.setItem('detalles', JSON.stringify(localStorageDetalles));
-        this.arrayDetalles = localStorageDetalles;
-      
-      
+      localStorageDetalles = JSON.parse(getDetalles);
+      localStorageDetalles.push(this.lineaDetalle);
+      localStorage.setItem('detalles', JSON.stringify(localStorageDetalles));
+      this.arrayDetalles = localStorageDetalles;
+
+
       // OBTENER LOS TOTALES DEL COMPROBANTE
-  
+
       // tslint:disable-next-line: forin
       for (const linea in this.arrayDetalles) {
         subtotal += Number(parseFloat(this.arrayDetalles[linea].subtotal).toFixed(2));
@@ -747,25 +748,25 @@ export class FacturaComponent implements OnInit {
       localStorage.setItem('subtotalFactura', subtotal.toString());
       localStorage.setItem('descuentosFactura', descuentos.toString());
       localStorage.setItem('impuestosFactura', impuestos.toString());
-    
+
       this.totalPagar = localStorage.getItem('totalFactura');
-      this.totalImpuesto = localStorage.getItem('subtotalFactura');
+      this.totalImpuesto = localStorage.getItem('impuestosFactura');
       this.totalDescuento = localStorage.getItem('descuentosFactura');
-      this.SubtotalComprobante = localStorage.getItem('impuestosFactura');
-                                                                          
+      this.SubtotalComprobante = localStorage.getItem('subtotalFactura');//
+
     }
   }
 
   listarOrdenes() {
     const getDetalles = localStorage.getItem('detalles');
     console.log(getDetalles);
-    
+
     // tslint:disable-next-line: one-variable-per-declaration
     let subtotal = 0,
     impuestos = 0,
     descuentos = 0,
     totalPagar = 0;
-    if (getDetalles !== '' && getDetalles != null && JSON.parse(getDetalles) != "[]" ) {
+    if (getDetalles !== '' && getDetalles != null && JSON.parse(getDetalles) != '[]' ) {
 
       // tslint:disable-next-line: one-variable-per-declaration
       this.arrayDetalles = JSON.parse(localStorage.getItem('detalles'));
@@ -781,9 +782,9 @@ export class FacturaComponent implements OnInit {
       this.totalPagar = totalPagar.toFixed(2);
       this.totalImpuesto = impuestos.toFixed(2);
       this.totalDescuento = descuentos.toFixed(2);
-      this.SubtotalComprobante = subtotal.toString(); 
-    }else {
-      localStorage.setItem("detalles",'[]');
+      this.SubtotalComprobante = subtotal.toString();
+    } else {
+      localStorage.setItem('detalles', '[]');
     }
   }
 
@@ -818,8 +819,8 @@ export class FacturaComponent implements OnInit {
     this.clienteService.guardarCliente(obj)
       .subscribe(response => {
         (document.getElementById('formNuevoCliente') as HTMLFormElement).reset();
-        $('#ModalNuevoCliente').hide();
-        this.cargarCliente(this.objCliente.cliente_nombre);
+        //$('#ModalNuevoCliente').hide();
+        //this.cargarCliente(this.objCliente.cliente_nombre);
       },
       err => console.log(err));
   }
@@ -832,7 +833,7 @@ export class FacturaComponent implements OnInit {
     (document.getElementById('correoCliente') as HTMLInputElement).value = obj.correo;
     (document.getElementById('telefonoCliente') as HTMLInputElement).value = obj.telefono;
     this.objFactura.idcliente = this.objDataCliente.id;
-    this.objFactura.tipo_factura ='01';
+    this.objFactura.tipo_factura = '01';
     (document.getElementById('formBuscarCliente') as HTMLFormElement).reset();
     $('#ModalBuscarCliente').modal('hide');
 
@@ -847,7 +848,7 @@ export class FacturaComponent implements OnInit {
     this.objDataCliente.nombreComercial = '';
     this.objDataCliente.correo = '';
     this.objDataCliente.telefono = '';
-    this.objFactura.tipo_factura ='04';
+    this.objFactura.tipo_factura = '04';
     (document.getElementById('nombreCliente') as HTMLInputElement).value = '';
     (document.getElementById('nombreComercialCliente') as HTMLInputElement).value = '';
     (document.getElementById('cedulaCliente') as HTMLInputElement).value = '';
@@ -894,8 +895,8 @@ export class FacturaComponent implements OnInit {
     this.fechaActual = dia + '/' + mes + '/' + anio + ' ' + horas + ':' + minutos + ':' + segundos;
   }
 
-  cargarDatosDefault(){
-    this.objFactura.tipo_factura ='04';
+  cargarDatosDefault() {
+    this.objFactura.tipo_factura = '04';
     this.objFactura.condicion_venta = '01';
     this.objFactura.medio_pago = '01';
   }
@@ -938,7 +939,7 @@ export class FacturaComponent implements OnInit {
 
   TipoDocumento() {
     this.facturaService.tipoDocumento()
-      .subscribe(response => {  
+      .subscribe(response => {
         this.tipoDocumento = response.tipoDocumento;
       },
       err => console.error(err));
@@ -956,7 +957,7 @@ export class FacturaComponent implements OnInit {
     this.facturaService.condicionVenta()
       .subscribe(response => {
         this.condicionVenta = response.condicionVenta;
-      },  
+      },
       err => console.error(err));
   }
 }

@@ -14,6 +14,14 @@ export class ConsultaService {
     return this.http.get(baseURL() + '/tipoDocumento');
   }
 
+  condicionVenta() {
+    return this.http.get(baseURL() + '/condicionVenta');
+  }
+
+  medioPago() {
+    return this.http.get(baseURL() + '/medioPago');
+  }
+
   buscarFacturaPorFechaOtipo(obj: any){
     const { tipoFactura, fechaInicio, fechaFin} = obj;
     // tslint:disable-next-line: max-line-length
@@ -23,7 +31,6 @@ export class ConsultaService {
   }
 
   reporteFactura(id: number) {
-    console.log("Id factura desde el servicio", id);
     return this.http.get(baseURL() + '/reportes/facturas/?idfactura=' + id);
   }
 }

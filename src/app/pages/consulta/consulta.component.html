@@ -93,7 +93,7 @@
                     {{factura.cedula_cliente}}
                 </td>
                 <td>
-                    {{factura.razon_social}}
+                    {{factura.cliente_nombre}}
                 </td>
                 <td>
                     {{factura.subtotal}}
@@ -116,7 +116,7 @@
                     <button type="button" class="btn btn-default btn-xs mr-1">
                         <i class="fa fa-envelope-o"></i>
                     </button>
-                    <button type="button" class="btn btn-default btn-xs" (click)="reporteFactura(factura.id)">
+                    <button type="button" class="btn btn-default btn-xs" (click)="reporteFactura(factura.id)" data-toggle="modal" data-target="#ModalPreFactura">
                         <i class="fa fa-search-plus"></i>
                     </button>
                 </td>
@@ -128,13 +128,98 @@
 
 <!-- MODAL PARA DESCRICION TOTAL DE FACTURA JUNTO CON LAS ORDENES DE CADA FACTURA -->
 
-<div class="modal fade" id="ModalBuscarCliente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="ModalPreFactura" tabindex="-1" role="dialog" aria-labelledby="ModalPreFactura" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">{{objFacturaResultado.tipoFactura}}</h5>
             </div>
             <div class="modal-body">
+
+
+                <p style="padding: 0%;">
+                    <b>Factura: </b>{{this.objFacturaResultado.id}}
+                    <p><b>clave:</b> {{this.objFacturaResultado.clave}}</p>
+                    <p><b>Consecutivo:</b> {{this.objFacturaResultado.consecutivo}}</p>
+                    <p><b>Fecha:</b> {{this.objFacturaResultado.fechaFactura | date: 'yyyy-MM-dd'}}
+                        <p><b>Tipo Cambio:</b> {{this.objFacturaResultado.tipocambio}}
+                        </p>
+
+
+
+                        <div class="row">
+
+                            <!-- tu tabla aquí siempre se verá al 100% en todas las resolcuiones-->
+                            <table class="table table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Descripcion</th>
+                                        <th>Cantidad</th>
+                                        <th>Descuento</th>
+                                        <th>Impuesto</th>
+                                        <th>Subtotal</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngFor="let linea of arrayOrdenes">
+                                    <tr>
+                                        <td>
+                                            {{linea.numerolineadetalle}}
+                                        </td>
+                                        <td>
+                                            {{linea.descripcioDetalle}}
+                                        </td>
+                                        <td>
+                                            {{linea.cantidad}}
+                                            <td>
+                                                {{linea.montodescuento}}
+                                            </td>
+                                            <td>
+                                                {{linea.monto}}
+                                            </td>
+                                            <td>
+                                                {{linea.subtotal}}
+                                            </td>
+                                            <td>
+                                                {{linea.montoitotallinea}}
+                                            </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                Medio Pago
+                                <select [(ngModel)]="objFacturaResultado.medioPago" class="form-control">
+                                <option *ngFor="let item of mediosPago" [ngValue]="item.id">{{item.medio}}</option>
+                            </select>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                Condicion Venta
+                                <select [(ngModel)]="objFacturaResultado.condicionVenta" class="form-control">
+                                    <option *ngFor="let item of condicionesVenta" [ngValue]="item.id">{{item.condicion}}</option>
+                        </select>
+                            </div>
+                        </div>
+
+                        <p style="padding: 0%;">
+                            <h4>Totales del comprobante</h4>
+                            <h6>Subtotal: {{this.objFacturaResultado.subtotal}}</h6>
+                            <h6>Servicios Gravados: {{this.objFacturaResultado.totalservgravados}}</h6>
+                            <h6>Servicios Exentos: {{this.objFacturaResultado.totalservexentos}}</h6>
+                            <h6>Mercancías Gravadas: {{this.objFacturaResultado.totalmercanciasgravadas}}</h6>
+                            <h6>Mercancías Exentas: {{this.objFacturaResultado.totalmercanciasexentas}}</h6>
+                            <h6>Total Gravado: {{this.objFacturaResultado.totalgravado}}</h6>
+                            <h6>Total Exento: {{this.objFacturaResultado.totalexento}}</h6>
+                            <h6>Total Exonerado: {{this.objFacturaResultado.totalexonerado}}</h6>
+                            <h6>Subtotal: {{this.objFacturaResultado.subtotal}}</h6>
+                            <h6>Descuentos: {{this.objFacturaResultado.descuentoTotal}}</h6>
+                            <h6>Impuestos: {{this.objFacturaResultado.totalimpuesto}}</h6>
+                            <hr>
+                            <p><b>Total Factura:</b> {{this.objFacturaResultado.totalcomprobante}}
+                            </p>
 
             </div>
             <div class="modal-footer">

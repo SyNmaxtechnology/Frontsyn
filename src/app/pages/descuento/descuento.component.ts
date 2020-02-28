@@ -30,6 +30,7 @@ export class DescuentoComponent implements OnInit {
   }
   
   nuevoDescuento(e, obj) {
+    console.log(obj);
     e.preventDefault();
     this.descuentoService.guardarDescuento(obj)
       .subscribe(response => {
