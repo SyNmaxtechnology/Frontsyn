@@ -35,6 +35,11 @@ export class ConsultaService {
   }
 
   reportesYCorreos(obj: any) {
-    return this.http.get(baseURL() + '/reportes/factura/pdf/?id=' + obj.id + '&tipo=' + obj.tipo);
+    const url = baseURL() + '/reportes/factura/pdf/?id=' + obj.id + '&tipo=' + obj.tipo;
+    const a = document.createElement('a');
+    a.href = url;
+    a.click();
+    a.remove();
+    // return this.http.get(baseURL() + '/reportes/factura/pdf/?id=' + obj.id + '&tipo=' + obj.tipo);
   }
 }

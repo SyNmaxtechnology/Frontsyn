@@ -146,12 +146,11 @@ export class ConsultaComponent implements OnInit {
       err => console.error(err));
   }
 
-  reportesYCorreos(id,tipo){
-  
-    this.consultaService.reportesYCorreos({id,tipo})
-      .subscribe(response => {
-       console.log(response);
-      },
-      err => console.error(err));
+  reportesYCorreos(id, tipo) {
+    try {
+      this.consultaService.reportesYCorreos({id , tipo});
+    } catch (err) {
+      console.error(err);
+    }
   }
 }
