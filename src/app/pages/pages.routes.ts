@@ -24,5 +24,8 @@ const pagesRoutes: Routes = [
         {path: '', redirectTo: '/factura', pathMatch: 'full'}, // si la ruta esta vacía entonces redireccionar a /factura
     ]}
 ];
-
+@NgModule({
+    imports: [RouterModule.forChild(pagesRoutes)],
+    exports: [RouterModule]
+})
 export const PAGES_ROUTES = RouterModule.forChild(pagesRoutes);

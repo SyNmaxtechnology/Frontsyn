@@ -107,13 +107,13 @@
                 <td>
                     {{factura.status_factura}}
                 </td>
-                <td><button type="button" class="btn btn-danger btn-xs mr-1" (click)="reportesYCorreos(factura.id,'01')">
+                <td><button type="button" class="btn btn-danger btn-xs mr-1" (click)="descargarPDF(factura.id,'01')">
                         <i class="fa fa-download"></i>
                     </button>
                     <button type="button" class="btn btn-default btn-xs">
-                        <i class="fa fa-file-excel-o"></i>
+                        <i class="fa fa-ban"></i>
                     </button>
-                    <button type="button" class="btn btn-default btn-xs mr-1">
+                    <button type="button" class="btn btn-default btn-xs mr-1" data-toggle="modal" data-target="#ModalCorreos" (click)="cargarFactura(factura.id)">
                         <i class="fa fa-envelope-o"></i>
                     </button>
                     <button type="button" class="btn btn-default btn-xs" (click)="reporteFactura(factura.id)" data-toggle="modal" data-target="#ModalPreFactura">
@@ -224,6 +224,33 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--MODAL PARA ENVIAR CORREOS A 3 DESTINATARIOS -->
+
+<div class="modal fade" id="ModalCorreos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Enviar Correos</h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="text" name="correo1" id="correo1" class="form-control" placeholder="Correo 1">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="correo2" id="correo2" class="form-control" placeholder="Correo 2">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="correo3" id="correo3" class="form-control" placeholder="Correo 3">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="enviarCorreo()">Enviar</button>
             </div>
         </div>
     </div>

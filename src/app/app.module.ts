@@ -4,6 +4,8 @@ import { PagesModule } from './pages/pages.module';
 import { CommonModule } from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
+
 // IMPORTAR LAS RUTAS DEL SISTEMA
 import {APP_ROUTES} from './app.routes';
 import { AppRoutingModule } from './app-routing.module';
@@ -17,6 +19,7 @@ import { ProductoComponent } from './pages/producto/producto.component';
 import { ClienteComponent } from './pages/cliente/cliente.component';
 import { FacturaComponent } from './pages/factura/factura.component';
 import { ConsultaComponent } from './pages/consulta/consulta.component';
+
 
 @NgModule({
   declarations: [
@@ -38,7 +41,8 @@ import { ConsultaComponent } from './pages/consulta/consulta.component';
     PagesModule,
     FormsModule,
     CommonModule,
-    HttpClientModule
+    HttpClientModule,
+    RouterModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -8,13 +8,14 @@ import { ConsultaService } from '../../services/pages/consulta.service';
 })
 export class ConsultaComponent implements OnInit {
 
-  constructor(private consultaService: ConsultaService) { 
+  constructor(private consultaService: ConsultaService) {
 
     this.tipoDocumento();
     this.medioPago();
     this.condicionVenta();
   }
 
+  idfactura = '';
   objBusquedaFacturas = {
     fechaInicio: '',
     fechaFin: '',
@@ -53,11 +54,11 @@ export class ConsultaComponent implements OnInit {
     tipocambio: '',
     fechaFactura: '',
     tipoFactura: ''
-  }
-  
+  };
+
   arrayOrdenes = [];
   arrayComprobantes = [];
-  tiposDocumento= [];
+  tiposDocumento = [];
   mediosPago = [];
   condicionesVenta = [];
   ngOnInit() {
@@ -146,11 +147,58 @@ export class ConsultaComponent implements OnInit {
       err => console.error(err));
   }
 
-  reportesYCorreos(id, tipo) {
+  descargarPDF(id, tipo) {
     try {
-      this.consultaService.reportesYCorreos({id , tipo});
+      this.consultaService.descargarPDF({id , tipo});
     } catch (err) {
       console.error(err);
     }
+  }
+
+  enviarCorreo() {
+    /*try {
+
+      const tipo = '02';
+      const id = this.idfactura;
+      const listaCorreos = [];
+      const correo1 = (document.getElementById('correo1') as HTMLInputElement).value;
+      const correo2 = (document.getElementById('correo2') as HTMLInputElement).value;
+      const correo3 = (document.getElementById('correo3') as HTMLInputElement).value;
+      listaCorreos.push(correo1);
+      listaCorreos.push(correo2);
+      listaCorreos.push(correo3);
+
+      this.consultaService.enviarCorreo({id, tipo, listaCorreos});
+    } catch (err) {
+       console.error(err);
+    }*/
+
+    const tipo = '02';
+    const id = this.idfactura;
+    const listaCorreos = [];
+    const correo1 = (document.getElementById('correo1') as HTMLInputElement).value;
+    const correo2 = (document.getElementById('correo2') as HTMLInputElement).value;
+    const correo3 = (document.getElementById('correo3') as HTMLInputElement).value;
+
+    if (correo1.length > 0) {
+      listaCorreos.push(correo1);
+    }
+    if (correo2.length >  0) {
+      listaCorreos.push(correo2);
+    }
+    if (correo3.length > 0) {
+      listaCorreos.push(correo3);
+    }
+    $('#ModalCorreos').modal('hide');
+
+    this.consultaService.enviarCorreo({id, tipo, listaCorreos})
+      .subscribe(response => {
+        console.log(response);
+      },
+      err => console.log(err));
+  }
+
+  cargarFactura(id) {
+    this.idfactura = id;
   }
 }
