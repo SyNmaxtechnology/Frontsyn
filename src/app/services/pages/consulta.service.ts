@@ -184,4 +184,19 @@ export class ConsultaService {
     a.click(); // se descarga el archivo
     document.body.removeChild(a);
   }
+
+  cargarVistaFacturas(obj: any){
+    // HAY QUE PASAR LOS TIPOS DE FILTROS, NUMERO DE RESULTADOS 
+    if(obj.length === 0){
+      return;
+    } else {
+
+      const url = baseURL() + '/comprobantes/'+JSON.stringify(obj); 
+      const pestana = window.open('/factura', '_blank');
+      pestana.focus();
+
+      // return this.http.get(baseURL() + '/comprobantes');
+    }
+
+  }
 }

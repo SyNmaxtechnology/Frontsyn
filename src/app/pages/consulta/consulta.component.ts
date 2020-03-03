@@ -214,4 +214,12 @@ export class ConsultaComponent implements OnInit {
       console.error(err);
     }
   }
+
+  cargarVistaFacturas(obj) {
+    try {  
+      this.consultaService.cargarVistaFacturas(obj);
+    } catch(err){
+      console.error(err);
+    }
+  }
 }
