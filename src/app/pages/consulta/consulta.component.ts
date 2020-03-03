@@ -201,4 +201,17 @@ export class ConsultaComponent implements OnInit {
   cargarFactura(id) {
     this.idfactura = id;
   }
+
+  descargarReporteExcel(obj) {
+    console.log(obj); 
+    try{
+      if(this.arrayComprobantes.length === 0){
+        return;
+      } else {
+        this.consultaService.reporteExcel(this.arrayComprobantes);
+      } 
+    } catch (err){
+      console.error(err);
+    }
+  }
 }
