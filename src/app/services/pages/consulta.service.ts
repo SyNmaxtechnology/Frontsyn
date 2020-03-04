@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import {baseURL} from '../../config/config';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import {baseURL} from '../../config/config';
 
 export class ConsultaService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   tipoDocumento() {
     return this.http.get(baseURL() + '/tipoDocumento');
@@ -187,9 +188,16 @@ export class ConsultaService {
     if(obj.length === 0){
       return;
     } else {
+    
+      const url = 'reporte/22/233/03';
+      
+      /*this.router.navigate(['/reporte'], {queryParams: {
+        fecha1: '20-20-2020',
+        fecha2: '20-20-2020',
+        tipoFactura: '01'
+      }}); */
 
-      const url = baseURL() + '/comprobantes/'+JSON.stringify(obj); 
-      const pestana = window.open('/factura', '_blank');
+      const pestana = window.open('/reporte', '_blank');
       pestana.focus();
 
       // return this.http.get(baseURL() + '/comprobantes');

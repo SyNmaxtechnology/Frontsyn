@@ -290,6 +290,7 @@ export class FacturaComponent implements OnInit {
         .subscribe(response => {
           console.log(response);
           this.listaProductos = response;
+          console.log(this.listaProductos);
           this.lineaDetalle.idproducto = response[0].idproducto;
           //this.cargarDatosLinea();
         },
@@ -378,8 +379,10 @@ export class FacturaComponent implements OnInit {
             this.lineaDetalle.codigo_servicio = this.listaProductos[obj].codigo_servicio;
             // tslint:disable-next-line: max-line-length
             this.lineaDetalle.montoitotallinea = totalLinea.toString();
-            this.objFactura.ordenes.push(this.lineaDetalle);
-
+            //this.objFactura.ordenes.push(this.lineaDetalle);
+            
+            console.log("array detallles",this.arrayDetalles);
+            console.log("Ordenes",this.objFactura.ordenes);
 
             /*
                   localStorage.setItem('detalles', JSON.stringify(this.arrayDetalles));
@@ -389,10 +392,10 @@ export class FacturaComponent implements OnInit {
                   localStorage.setItem('impuestosFactura', this.totalImpuesto);
             */
             this.cargarProducto();
+             
           }
         }
       }
-
     } catch (err) {
       console.log(err);
     }
@@ -496,8 +499,8 @@ export class FacturaComponent implements OnInit {
     };
 
     console.log(this.objFactura);
-
-    this.generarFactura(obj);
+    console.log("detalles ",this.arrayDetalles);
+     this.generarFactura(obj);
 
     this.limpiarLineaDetalle();
     this.limpiarTotalesFactura();
@@ -673,7 +676,7 @@ export class FacturaComponent implements OnInit {
           monto_impuesto = Number((parseFloat(object[index].subtotal) * parseFloat(porcentaje)).toFixed(2));
         }
         object[index].impuesto[1].monto = String(monto_impuesto);
-        montototallinea = (subTotal  + Number(object[index].impuesto[1].monto));
+        montototallinea = (montototal  + Number(object[index].impuesto[1].monto));
       } else {
         object[index].impuesto = {
           1: {
@@ -695,7 +698,7 @@ export class FacturaComponent implements OnInit {
 
 
         object[index].impuesto[1].monto = String(monto_impuesto);
-        montototallinea = (subTotal  + Number(object[index].impuesto[1].monto));
+        montototallinea = (montototal  + Number(object[index].impuesto[1].monto));
       }
 
       impuestoNeto = monto_impuesto - Number((monto_impuesto * porcentajeExoneracionGlobal).toFixed(2));
@@ -707,7 +710,7 @@ export class FacturaComponent implements OnInit {
       // Agrega el array en formato JSON
       listaDetalles = object;
     }
-
+  
     return listaDetalles;
 
   }
@@ -759,8 +762,7 @@ export class FacturaComponent implements OnInit {
 
   listarOrdenes() {
     const getDetalles = localStorage.getItem('detalles');
-    console.log(getDetalles);
-
+    
     // tslint:disable-next-line: one-variable-per-declaration
     let subtotal = 0,
     impuestos = 0,
