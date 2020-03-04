@@ -49,7 +49,7 @@ export class FacturaComponent implements OnInit {
 
   objFactura =  {
     id: '',
-    idcliente: '',
+    idcliente: '1',
     idemisor: '',
     nombreCliente: '',
     condicion_venta: '',
@@ -581,8 +581,8 @@ export class FacturaComponent implements OnInit {
   limpiarTotalesFactura() {
 
     this.objFactura.id = '',
-    this.objFactura.idcliente = '',
-    this.objFactura.idemisor = '1',
+    this.objFactura.idcliente = '1',
+    //this.objFactura.idemisor = '1',
     this.objFactura.nombreCliente = '',
     this.objFactura.condicion_venta = '01',
     this.objFactura.medio_pago = '01',

@@ -22,12 +22,9 @@ export class ConsultaService {
     return this.http.get(baseURL() + '/medioPago');
   }
 
-  buscarFacturaPorFechaOtipo(obj: any) {
-    const { tipoFactura, fechaInicio, fechaFin} = obj;
-    // tslint:disable-next-line: max-line-length
-    const url = baseURL() + '/facturas/fechaOtipo/?' + 'tipoFactura=' + tipoFactura + '&fechaInicio=' + fechaInicio + '&fechaFin=' + fechaFin;
-
-    return this.http.get(url);
+  buscarFacturas(obj: any) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post(baseURL() + '/facturas/buscar/', obj, {headers});
   }
 
   reporteFactura(id: number) {

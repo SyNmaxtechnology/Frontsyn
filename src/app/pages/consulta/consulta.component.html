@@ -32,20 +32,21 @@
 
             <div class="form-group">
                 <p>
-                    Cliente:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="numeroExterno" id="numeroExterno" class="form-control col-6" placeholder="Nombre cliente">
+                    Cliente:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input [(ngModel)]="objBusquedaFacturas.nombreCliente" type="text" name="nombreCliente" id="nombreCliente" class="form-control col-6"
+                        placeholder="Nombre cliente">
                 </p>
             </div>
             <div class="form-group">
                 <p>
-                    ID documento:&nbsp;&nbsp;<input type="text" name="numeroExterno" id="numeroExterno" class="form-control col-6" placeholder="Número de documento">
+                    ID documento:&nbsp;&nbsp;<input [(ngModel)]="objBusquedaFacturas.claveNumerica" type="text" name="numeroExterno" id="numeroExterno" class="form-control col-6" placeholder="Número de documento">
                 </p>
             </div>
             <div class="form-group">
                 <p>
-                    Consecutivo:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="numeroExterno" id="numeroExterno" class="form-control col-6" placeholder="Consecutivo documento">
+                    Consecutivo:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input [(ngModel)]="objBusquedaFacturas.consecutivo" type="text" name="numeroExterno" id="numeroExterno" class="form-control col-6" placeholder="Consecutivo documento">
                 </p>
             </div>
-            <button type="button" class="btn btn-info mr-1" (click)="ejecutarBusqueda(objBusquedaFacturas)"><i class="fa fa-search"></i></button>
+            <button type="button" class="btn btn-info mr-1" (click)="buscarFacturas(objBusquedaFacturas)"><i class="fa fa-search"></i></button>
             <button type="button" class="btn btn-info mr-1" (click)="descargarReporteExcel(arrayComprobantes)"><i class="fa fa-file-excel-o"></i></button>
             <button type="button" class="btn btn-info" (click)="cargarVistaFacturas(arrayComprobantes)"><i class="fa fa-eye"></i></button>
         </div>

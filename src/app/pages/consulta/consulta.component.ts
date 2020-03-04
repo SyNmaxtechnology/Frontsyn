@@ -19,7 +19,6 @@ export class ConsultaComponent implements OnInit {
   objBusquedaFacturas = {
     fechaInicio: '',
     fechaFin: '',
-    tipoDocumento: '',
     numeroInterno: '',
     nombreCliente: '',
     claveNumerica: '',
@@ -63,15 +62,71 @@ export class ConsultaComponent implements OnInit {
   condicionesVenta = [];
   ngOnInit() {
   }
-  ejecutarBusqueda(obj: any) {
-    console.log(obj);
-    this.buscarFacturaPorTipoOFechas(obj);
-  }
-  buscarFacturaPorTipoOFechas(obj: any) {
-    this.consultaService.buscarFacturaPorFechaOtipo(obj)
-      .subscribe(response =>  {
-        console.log(response.data[0]);
-        this.arrayComprobantes = response.data;
+  buscarFacturas(obj: any) {
+
+    const objetoFactura: any = {};
+    objetoFactura.tipoFactura = obj.tipoFactura;
+    
+    if(obj.fechaInicio != '' && obj.fin != ''){
+      console.log("envio de fechas");
+      // Obtener los valores de las fechas
+      const fecha1: Date = new Date(obj.fechaInicio);
+      const fecha2: Date = new Date(obj.fechaFin);
+      // tslint:disable-next-line: one-variable-per-declaration
+      let mes1: string, dia1: string, anio1: string;
+      // tslint:disable-next-line: one-variable-per-declaration
+      let mes2: string, dia2: string, anio2: string;
+      let fechaInicio: string;
+      let fechaFin: string;
+
+      anio1 = fecha1.getFullYear().toString();
+      mes1 = (fecha1.getMonth() < 10) ? String('0'+ Number(fecha1.getMonth() + 1)) : String(Number(fecha1.getMonth() + 1));
+      dia1 = (fecha1.getDate()< 10)? String('0'+ Number(fecha1.getDate() + 1)) : String(Number(fecha1.getDate() + 1));
+
+      anio2 = fecha2.getFullYear().toString();
+      mes2 = (fecha2.getMonth() < 10) ? String('0'+ Number(fecha2.getMonth() + 1)) : String(Number(fecha2.getMonth() + 1));
+      dia2 = (fecha2.getDate()< 10)? String('0'+ Number(fecha2.getDate() + 1)) : String(Number(fecha2.getDate() + 1));
+
+      if(Number(dia1) > Number(dia2) && mes1 == mes2 && anio1 == anio2 ){
+        alert('La fecha de inicio no se ser mayor a la fecha de fin');
+      }
+      if(dia1 == dia2 && Number(mes1) > Number(mes2) && anio1 == anio2){
+        alert('La fecha de inicio no se ser mayor a la fecha de fin');
+      }
+      if(Number(dia1) > Number(dia2) && Number(mes1) > Number(mes2) && Number(anio1) > Number(anio2)) {
+        alert('La fecha de inicio no se ser mayor a la fecha de fin');
+      }
+
+      if(Number(anio1) > Number(anio2)) {
+        alert('La fecha de inicio no se ser mayor a la fecha de fin');
+      }
+
+      fechaInicio = anio1 + '-' + mes1 + '-' + dia1;
+      fechaFin = anio2 + '-' + mes2 + '-' + dia2;
+      objetoFactura.fechaInicio = fechaInicio;
+      objetoFactura.fechaFin = fechaFin;
+    }
+    
+    if(obj.numeroInterno != ''){
+      objetoFactura.numeroInterno = obj.numeroInterno;
+    }
+  
+    if(obj.claveNumerica != ''){
+      objetoFactura.claveNumerica = obj.claveNumerica;
+    }
+
+    if(obj.consecutivo != ''){
+      objetoFactura.consecutivo = obj.consecutivo;
+    }
+
+    if(obj.nombreCliente != ''){
+      objetoFactura.nombreCliente = obj.nombreCliente;
+    }
+    console.log("objeto envio",objetoFactura )
+    this.consultaService.buscarFacturas(objetoFactura)
+      .subscribe((response: any) =>  {
+        console.log(response.data);
+        this.arrayComprobantes =response.data;
       },
       err => console.error(err));
   }
@@ -140,7 +195,7 @@ export class ConsultaComponent implements OnInit {
 
   condicionVenta() {
     this.consultaService.condicionVenta()
-      .subscribe(response => {
+      .subscribe((response: any) => {
         console.log(response);
         this.condicionesVenta = response.condicionVenta;
       },
