@@ -127,6 +127,7 @@ export class ConsultaComponent implements OnInit {
       .subscribe((response: any) =>  {
         console.log(response.data);
         this.arrayComprobantes =response.data;
+        localStorage.setItem("comprobantes",JSON.stringify(response.data));
       },
       err => console.error(err));
   }

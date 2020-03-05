@@ -50,7 +50,7 @@ export class FacturaComponent implements OnInit {
   objFactura =  {
     id: '',
     idcliente: '1',
-    idemisor: '',
+    idemisor: '4',
     nombreCliente: '',
     condicion_venta: '',
     medio_pago: '',
@@ -379,7 +379,7 @@ export class FacturaComponent implements OnInit {
             this.lineaDetalle.codigo_servicio = this.listaProductos[obj].codigo_servicio;
             // tslint:disable-next-line: max-line-length
             this.lineaDetalle.montoitotallinea = totalLinea.toString();
-            //this.objFactura.ordenes.push(this.lineaDetalle);
+            this.objFactura.ordenes.push(this.lineaDetalle);
             
             console.log("array detallles",this.arrayDetalles);
             console.log("Ordenes",this.objFactura.ordenes);
@@ -467,7 +467,7 @@ export class FacturaComponent implements OnInit {
     // CARGAR EL OBJETO PARA GUARDAR LA FACTURA
     this.objFactura.id = '',
     // this.objFactura.idcliente = '',
-    this.objFactura.idemisor = '1',
+    this.objFactura.idemisor = '4',
     /*this.objFactura.condicion_venta = '',
     this.objFactura.medio_pago = '',*/
     this.objFactura.porcentaje_descuento_total = porcentaje_descuento_total,

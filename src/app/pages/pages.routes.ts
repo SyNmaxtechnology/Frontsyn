@@ -21,7 +21,7 @@ const pagesRoutes: Routes = [
         {path: 'impuesto', component: ImpuestoComponent},
         {path: 'cliente', component: ClienteComponent},
         {path: 'consulta', component: ConsultaComponent},
-        {path: 'reporte', component: ReporteComponent},
+        {path: 'reporte/comprobantes/:tipoFactura', component: ReporteComponent},
         {path: '', redirectTo: '/factura', pathMatch: 'full'}, // si la ruta esta vacía entonces redireccionar a /factura
     ]}
 ];

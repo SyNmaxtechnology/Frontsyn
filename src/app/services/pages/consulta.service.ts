@@ -197,7 +197,7 @@ export class ConsultaService {
         tipoFactura: '01'
       }}); */
 
-      const pestana = window.open('/reporte', '_blank');
+      const pestana = window.open('#/reporte/comprobantes/01', '_blank');
       pestana.focus();
 
       // return this.http.get(baseURL() + '/comprobantes');
