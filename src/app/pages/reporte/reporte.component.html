@@ -4,15 +4,14 @@
 <div class="form-row flex-column">
     <h1>Reporte de Facturas - Total de Resultados: {{numeroComprobantes}}</h1>
     <br>
-    <h5>Filtros</h5>
+    <h5>Filtros: {{filtros}}</h5>
 </div>
 
 <hr>
 <div class="table">
     <table class="table table-responsive">
-       <thead>
+        <thead>
             <tr>
-                <th></th>
                 <th> Número Interno </th>
                 <th> Consecutivo </th>
                 <th> Clave </th>
@@ -45,40 +44,41 @@
                 <th> IVA Devuelto </th>
                 <th> Otros Cargos </th>
             </tr>
-       </thead>
-       <tbody *ngFor="let factura of arrayComprobantes">
+        </thead>
+        <tbody *ngFor="let factura of arrayComprobantes">
             <tr>
-                <td>{{factura.id}}</td>
-                <td>{{factura.numero_interno}}</td>
-                <td>{{factura.consecutivo}}</td>
-                <td>{{factura.clavenumerica}}</td>
-                <td>{{factura.tipo_factura}}</td>
-                <td>{{factura.medio_pago}}</td>
-                <td>{{factura.condicion_venta}}</td>
-                <td>{{factura.codigomoneda}}</td>
-                <td>{{factura.tipocambio}}</td>
-                <td>{{factura.fecha}}</td>
-                <td>{{factura.hora}}</td>
-                <td>{{factura.cedula_cliente}}</td>
-                <td>{{factura.cliente_nombre_comercial}}</td>
-                <td>{{factura.status_factura}}</td>
-                <td>{{factura.subtotal}}</td>
-                <td>{{factura.totalimpuesto}}</td>
-                <td>{{factura.totaldescuentos}}</td>
-                <td>{{factura.totalservgravados}}</td>
-                <td>{{factura.totalservexentos}}</td>
-                <td>{{factura.totalservexonerado}}</td>
-                <td>{{factura.totalmercanciasgravadas}}</td>
-                <td>{{factura.totalmercanciasexentas}}</td>
-                <td>{{factura.totalmercanciaexonerada}}</td>
-                <td>{{factura.totalgravado}}</td>
-                <td>{{factura.totalexento}}</td>
-                <td>{{factura.totalexonerado}}</td>
-                <td>{{factura.totalventa}}</td>
-                <td>{{factura.totalventaneta}}</td>
-                <td>{{factura.totalIVADevuelto}}</td>
+                <td>{{factura.NumeroInterno}}</td>
+                <td>{{factura.Consecutivo}}</td>
+                <td>{{factura.Clavenumerica}}</td>
+                <td>{{factura.TipoComprobante}}</td>
+                <td>{{factura.MedioPago}}</td>
+                <td>{{factura.CondicionVenta}}</td>
+                <td>{{factura.CodigoMoneda}}</td>
+                <td>{{factura.TipoCambio}}</td>
+                <td>{{factura.Fecha}}</td>
+                <td>{{factura.Hora}}</td>
+                <td>{{factura.CedulaCliente}}</td>
+                <td>{{factura.Cliente}}</td>
+                <td>{{factura.NombreComercial}}</td>
+                <td>{{factura.Estado}}</td>
+                <td>{{factura.Subtotal}}</td>
+                <td>{{factura.TotalImpuestos}}</td>
+                <td>{{factura.TotalDescuentos}}</td>
+                <td>{{factura.ServiciosGravados}}</td>
+                <td>{{factura.ServiciosExentos}}</td>
+                <td>{{factura.ServiciosExonerados}}</td>
+                <td>{{factura.MercanciasGravadas}}</td>
+                <td>{{factura.MercanciasExentas}}</td>
+                <td>{{factura.MercanciasExoneradas}}</td>
+                <td>{{factura.TotalGravado}}</td>
+                <td>{{factura.TotalExento}}</td>
+                <td>{{factura.TotalExonerado}}</td>
+                <td>{{factura.TotalVenta}}</td>
+                <td>{{factura.TotalVentaNeta}}</td>
+                <td>{{factura.TotalFactura}}</td>
+                <td>{{factura.TotalIVADevuelto}}</td>
                 <td>{{factura.TotalOtrosCargos}}</td>
             </tr>
-       </tbody>
-    </table> 
+        </tbody>
+    </table>
 </div>

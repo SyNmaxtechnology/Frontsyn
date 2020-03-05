@@ -1,14 +1,15 @@
-import { ConsultaComponent } from './consulta/consulta.component';
+
 import { RouterModule, Routes } from '@angular/router';
 import { PagesComponent } from './pages.component';
 import { ProductoComponent } from './producto/producto.component';
 import { FacturaComponent } from './factura/factura.component';
 import { EmisorComponent } from './emisor/emisor.component';
 import { DescuentoComponent } from './descuento/descuento.component';
-import {CategoriaComponent} from './categoria/categoria.component';
+import { CategoriaComponent } from './categoria/categoria.component';
 import { ImpuestoComponent } from './impuesto/impuesto.component';
 import { ClienteComponent } from './cliente/cliente.component';
 import { ReporteComponent } from './reporte/reporte.component';
+import { ConsultaComponent } from './consulta/consulta.component';
 
 const pagesRoutes: Routes = [
     {path: '', component: PagesComponent,

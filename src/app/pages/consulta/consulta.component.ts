@@ -68,7 +68,7 @@ export class ConsultaComponent implements OnInit {
     objetoFactura.tipoFactura = obj.tipoFactura;
     
     if(obj.fechaInicio != '' && obj.fin != ''){
-      console.log("envio de fechas");
+     
       // Obtener los valores de las fechas
       const fecha1: Date = new Date(obj.fechaInicio);
       const fecha2: Date = new Date(obj.fechaFin);
@@ -122,12 +122,13 @@ export class ConsultaComponent implements OnInit {
     if(obj.nombreCliente != ''){
       objetoFactura.nombreCliente = obj.nombreCliente;
     }
-    console.log("objeto envio",objetoFactura )
+
     this.consultaService.buscarFacturas(objetoFactura)
       .subscribe((response: any) =>  {
         console.log(response.data);
         this.arrayComprobantes =response.data;
-        localStorage.setItem("comprobantes",JSON.stringify(response.data));
+        localStorage.setItem('comprobantes', JSON.stringify(response.data));
+        localStorage.setItem('filtros', JSON.stringify(objetoFactura));
       },
       err => console.error(err));
   }

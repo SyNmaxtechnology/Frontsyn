@@ -8,14 +8,10 @@ import { ActivatedRoute, Params } from '@angular/router';
   styleUrls: ['./reporte.component.css']
 })
 export class ReporteComponent implements OnInit {
-  reporte: {
-    fecha1: string,
-    fecha2: string,
-    tipoFactura: string
-  }
 
+  filtros = '';
   arrayComprobantes = [];
-  numeroComprobantes: Number;
+  numeroComprobantes: number;
 
   constructor(private rutaActiva: ActivatedRoute, private reporteService: ReporteService) { 
     this.cargarReporte();
@@ -30,9 +26,45 @@ export class ReporteComponent implements OnInit {
       this.arrayComprobantes = this.reporteService.obtenerListadoComprobantes();
       console.log(this.arrayComprobantes);
       this.numeroComprobantes = this.arrayComprobantes.length;
-    }catch(err){
+      this.cargarMensajeFiltro();
+    } catch(err){
       console.error(err);
     }
   }
 
+  cargarMensajeFiltro(){
+
+    const objetoFiltros = JSON.parse(localStorage.getItem('filtros'));
+    console.log(objetoFiltros);
+    const {tipoFactura,fechaInicio,fechaFin,numeroInterno,claveNumerica,consecutivo,nombreCliente} = objetoFiltros;
+    let descripcionDoc = ''; 
+
+    switch(tipoFactura){
+      case '01':
+        descripcionDoc = 'Factura Electrónica';
+        break;
+      case '04':
+        descripcionDoc = 'Tiquete Electrónico';
+        break;
+      case '03':
+        descripcionDoc = 'Nota Crédito';
+        break;
+    }
+
+    if(typeof fechaInicio === 'undefined' && typeof fechaFin === 'undefined'
+    && typeof numeroInterno === 'undefined' && typeof claveNumerica === 'undefined'
+    && typeof consecutivo === 'undefined' && typeof nombreCliente === 'undefined'){
+      this.filtros = 'Tipo de documento '+descripcionDoc;
+    }
+
+    if(typeof fechaInicio !== 'undefined' && typeof numeroInterno === 'undefined' && typeof claveNumerica === 'undefined'
+    && typeof consecutivo === 'undefined' && typeof nombreCliente === 'undefined'){
+      this.filtros = 'Fecha entre ' + fechaInicio +' y ' + fechaFin +', '+descripcionDoc;
+    }
+
+    /*if(typeof fechaInicio !== 'undefined' && (typeof numeroInterno !== 'undefined' || typeof claveNumerica !== 'undefined'
+    || typeof consecutivo !== 'undefined' || typeof nombreCliente !== 'undefined')){
+      this.filtros = 'Fecha entre ' + fechaInicio +' y ' + fechaFin +', '+descripcionDoc;
+    }*/
+  }
 }

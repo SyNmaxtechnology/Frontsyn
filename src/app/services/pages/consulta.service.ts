@@ -188,19 +188,18 @@ export class ConsultaService {
     if(obj.length === 0){
       return;
     } else {
-    
-      const url = 'reporte/22/233/03';
-      
-      /*this.router.navigate(['/reporte'], {queryParams: {
-        fecha1: '20-20-2020',
-        fecha2: '20-20-2020',
-        tipoFactura: '01'
-      }}); */
+
+      /*
+          this.router.navigate(['/reporte'], {queryParams: {
+            fecha1: '20-20-2020',
+            fecha2: '20-20-2020',
+            tipoFactura: '01'
+          }});
+      */
 
       const pestana = window.open('#/reporte/comprobantes/01', '_blank');
       pestana.focus();
 
-      // return this.http.get(baseURL() + '/comprobantes');
     }
 
   }
