@@ -364,8 +364,8 @@ export class FacturaComponent implements OnInit {
             this.lineaDetalle.numerolineadetalle = String(this.arrayDetalles.length  + 1),
             this.lineaDetalle.subtotal = subtotal.toString(),
             this.lineaDetalle.montototal = subtotal.toString(),
-            this.lineaDetalle.codigo = this.listaProductos[obj].codigo_impuesto, // codigo para base imponible
-            this.lineaDetalle.codigo_tarifa = '07', // codigo del impuesto
+            this.lineaDetalle.codigo = '01', // codigo del impuesto, siempre se envia el 01 o 07
+            this.lineaDetalle.codigo_tarifa = this.listaProductos[obj].codigo_impuesto, // codigo de la tarifa para base imponible
             this.lineaDetalle.tarifa = this.listaProductos[obj].porcentaje_impuesto, // porcentaje aplicado para el impuesto
             this.lineaDetalle.monto = monto.toString(),
             this.lineaDetalle.baseimponible = baseImponible.toString(),
@@ -390,9 +390,12 @@ export class FacturaComponent implements OnInit {
                   localStorage.setItem('subtotalFactura', this.SubtotalComprobante);
                   localStorage.setItem('descuentosFactura', this.totalDescuento);
                   localStorage.setItem('impuestosFactura', this.totalImpuesto);
-            */
+                  en los nodos de ordenes se envian dos parametros de codigo, numerolinea y luego codigo, luego dentro del nodo
+                  //codigo comercial esta el tipo y codigo, tanto el codigo dentro del codigo comercial como el codigo
+                  despues del numeroLinea son el codigo del producto, el codigo creado del producto.
+                  */
             this.cargarProducto();
-             
+
           }
         }
       }
@@ -431,35 +434,37 @@ export class FacturaComponent implements OnInit {
       console.log(this.arrayDetalles[linea]);
       montototal = parseFloat(this.arrayDetalles[linea].cantidad) *  parseFloat(this.arrayDetalles[linea].precio_linea);
 
-      if (this.arrayDetalles[linea].codigo_impuesto != '01') { // productos exentos del IVA
-          if (this.arrayDetalles[linea].tipo_servicio == '01') {
-            // mercancái
-            totalmercanciasexentas += montototal;
+      if (this.arrayDetalles[linea].codigo == '01' || this.arrayDetalles[linea].codigo == '07') {
+          if (this.arrayDetalles[linea].codigo_tarifa == '01'){ // productos exentos del IVA
+            if (this.arrayDetalles[linea].tipo_servicio == '01') {
+              // servicios
+              totalservexentos += montototal;
+            }
+  
+            if (this.arrayDetalles[linea].tipo_servicio == '02') {
+              // mercancías
+              totalmercanciasexentas += montototal; 
+            }
+  
+            totalexento  += montototal;
+            impuestoLinea = parseFloat(this.arrayDetalles[linea].impuesto) ;
+            totalimpuesto += impuestoLinea;
+          } else {
+              // Aplica IVA
+            if (this.arrayDetalles[linea].tipo_servicio == '01') {
+              // servicios
+              totalservgravados += montototal;
+            }
+  
+            if (this.arrayDetalles[linea].tipo_servicio == '02') {
+              // mercancías
+              totalmercanciasgravadas += montototal; 
+            }
+            impuestoLinea = parseFloat(this.arrayDetalles[linea].impuesto);
+            totalimpuesto += impuestoLinea;
+            totalgravado = montototal;
           }
-
-          if (this.arrayDetalles[linea].tipo_servicio == '02') {
-            totalservexentos += montototal;
-          }
-
-          totalexento  += montototal;
-          impuestoLinea = parseFloat(this.arrayDetalles[linea].impuesto) ;
-          totalimpuesto += impuestoLinea;
-
-      } else { // Aplica IVA
-          if (this.arrayDetalles[linea].tipo_servicio == '01') {
-            // mercancái
-            console.log('aqui');
-            totalmercanciasgravadas += montototal;
-          }
-
-          if (this.arrayDetalles[linea].tipo_servicio == '02') {
-            totalservgravados += montototal;
-          }
-          impuestoLinea = parseFloat(this.arrayDetalles[linea].impuesto);
-          totalimpuesto += impuestoLinea;
-          totalgravado = montototal;
-      }
-
+      } 
     }
     totalventa = totalgravado + totalexento + totalexonerado;
     totalventaneta = totalventa - totaldescuentos;
@@ -500,7 +505,8 @@ export class FacturaComponent implements OnInit {
 
     console.log(this.objFactura);
     console.log("detalles ",this.arrayDetalles);
-     this.generarFactura(obj);
+   
+    this.generarFactura(obj);
 
     this.limpiarLineaDetalle();
     this.limpiarTotalesFactura();
@@ -608,7 +614,7 @@ export class FacturaComponent implements OnInit {
     this.objFactura.totalcomprobante = '',
     this.objFactura.codigomoneda = '',
     // this.objFactura.tipocambio= '',
-    this.objFactura.tipo_factura = '01',
+    this.objFactura.tipo_factura = '04',
     this.objFactura.ordenes = [],
     this.objFactura.objOrdenes = {};
 
@@ -652,8 +658,8 @@ export class FacturaComponent implements OnInit {
       }
 
       object[index].subtotal        = String(montototal);
-      if (this.arrayDetalles[i].codigo_tarifa == '07' || this.arrayDetalles[i].codigo_tarifa == '01') {
-        if (this.arrayDetalles[i].codigo_tarifa == '07') {
+      if (this.arrayDetalles[i].codigo == '07' || this.arrayDetalles[i].codigo == '01') {
+        if (this.arrayDetalles[i].codigo_tarifa == '07') { // aplicar base imponible
           object[index].baseImponible = String(this.arrayDetalles[i].precio_linea);
         }
 
@@ -821,8 +827,8 @@ export class FacturaComponent implements OnInit {
     this.clienteService.guardarCliente(obj)
       .subscribe(response => {
         (document.getElementById('formNuevoCliente') as HTMLFormElement).reset();
-        //$('#ModalNuevoCliente').hide();
-        //this.cargarCliente(this.objCliente.cliente_nombre);
+        // $('#ModalNuevoCliente').hide();
+        // this.cargarCliente(this.objCliente.cliente_nombre);
       },
       err => console.log(err));
   }
@@ -843,7 +849,7 @@ export class FacturaComponent implements OnInit {
 
   quitarCliente() {
 
-    this.objFactura.idcliente = '';
+    this.objFactura.idcliente = '1';
     this.objDataCliente.nombre = '';
     this.objDataCliente.cedula = '';
     this.objDataCliente.id = '';
@@ -925,9 +931,7 @@ export class FacturaComponent implements OnInit {
       this.objFactura.tipocambio = tipocambio.toString();
     },
      err => {
-       if (err.status === 500) {
         this.objFactura.tipocambio = '1.00';
-       }
      });
   }
 
