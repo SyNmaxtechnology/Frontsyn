@@ -41,11 +41,13 @@ export class ConsultaService {
   }
 
   enviarCorreo(obj: any) { // TIPO 02 ENVIA EL CORREO
+
     /*const url = baseURL() + '/reportes/factura/pdf/?id=' + obj.id + '&tipo=' + obj.tipo;
     const a = document.createElement('a');
     a.href = url;
     a.click();
     a.remove();*/
+    
     return this.http.get(baseURL() + '/reportes/factura/pdf/?id=' + obj.id + '&tipo=' + obj.tipo + '&listaCorreos=' + obj.listaCorreos);
   }
 

@@ -379,10 +379,10 @@ export class FacturaComponent implements OnInit {
             this.lineaDetalle.codigo_servicio = this.listaProductos[obj].codigo_servicio;
             // tslint:disable-next-line: max-line-length
             this.lineaDetalle.montoitotallinea = totalLinea.toString();
-            this.objFactura.ordenes.push(this.lineaDetalle);
-            
-            console.log("array detallles",this.arrayDetalles);
-            console.log("Ordenes",this.objFactura.ordenes);
+            // this.objFactura.ordenes.push(this.lineaDetalle);
+
+            console.log('array detallles',this.arrayDetalles);
+            console.log('Ordenes',this.objFactura.ordenes);
 
             /*
                   localStorage.setItem('detalles', JSON.stringify(this.arrayDetalles));
@@ -496,7 +496,8 @@ export class FacturaComponent implements OnInit {
     /*this.objFactura.tipoCambio = '',
     this.objFactura.tipo_factura = '',*/
     this.objFactura.objOrdenes = this.generarJsonDetalles();
-
+    this.objFactura.ordenes = this.arrayDetalles;
+    
     const obj = {
       ordenes: this.objFactura.ordenes,
       factura: this.objFactura,
@@ -552,7 +553,7 @@ export class FacturaComponent implements OnInit {
         nuevoDescuento -= parseFloat(this.arrayDetalles[obj].montodescuento);
         this.totalDescuento = nuevoDescuento.toFixed(2);
         this.arrayDetalles.splice(i, 1);
-        this.objFactura.ordenes.splice(i, 1);
+        this.objFactura.ordenes = this.arrayDetalles;
         localStorage.setItem('detalles', JSON.stringify(this.arrayDetalles));
         localStorage.setItem('totalFactura', this.totalPagar);
         localStorage.setItem('subtotalFactura', this.SubtotalComprobante);
@@ -701,7 +702,6 @@ export class FacturaComponent implements OnInit {
             porcentaje = '0.0' + String(decimal);
             monto_impuesto = Number((parseFloat(object[index].subtotal) * parseFloat(porcentaje)).toFixed(2));
         }
-
 
         object[index].impuesto[1].monto = String(monto_impuesto);
         montototallinea = (montototal  + Number(object[index].impuesto[1].monto));
