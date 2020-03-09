@@ -205,4 +205,8 @@ export class ConsultaService {
     }
 
   }
+
+  anularComprobante(id: number) {
+    return this.http.get(baseURL() + '/notacredito-anular/ ' + id);
+  }
 }

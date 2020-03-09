@@ -111,7 +111,7 @@
                 <td><button type="button" class="btn btn-danger btn-xs mr-1" (click)="descargarPDF(factura.id,'01')">
                         <i class="fa fa-download"></i>
                     </button>
-                    <button type="button" class="btn btn-default btn-xs">
+                    <button type="button" class="btn btn-default btn-xs" (click)="anularComprobante(factura.id)">
                         <i class="fa fa-ban"></i>
                     </button>
                     <button type="button" class="btn btn-default btn-xs mr-1" data-toggle="modal" data-target="#ModalCorreos" (click)="cargarFactura(factura.id)">

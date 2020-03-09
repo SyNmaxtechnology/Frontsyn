@@ -279,4 +279,11 @@ export class ConsultaComponent implements OnInit {
       console.error(err);
     }
   }
+
+  anularComprobante(id) {
+    this.consultaService.anularComprobante(id)
+      .subscribe(response => {
+        console.log(response);
+      }, err => console.error(err));
+  }
 }
