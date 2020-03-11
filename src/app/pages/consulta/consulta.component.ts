@@ -145,6 +145,7 @@ export class ConsultaComponent implements OnInit {
     console.log(id);
     this.consultaService.reporteFactura(id)
       .subscribe(response => {
+
         if (response.factura[0].tipo_factura === '01') {
           this.objFacturaResultado.tipoFactura = 'Factura Electrónica';
         } else if (response.factura[0].tipo_factura === '04') {
@@ -152,8 +153,7 @@ export class ConsultaComponent implements OnInit {
         } else if (response.factura[0].tipo_factura === '03') {
           this.objFacturaResultado.tipoFactura = 'Nota de Crédito';
         }
-        console.log(response);
-
+        
         // cargar datos totales y encabezado de factura
 
         this.objFacturaResultado.clave = response.factura[0].clavenumerica;
@@ -213,23 +213,7 @@ export class ConsultaComponent implements OnInit {
   }
 
   enviarCorreo() {
-    /*try {
-
-      const tipo = '02';
-      const id = this.idfactura;
-      const listaCorreos = [];
-      const correo1 = (document.getElementById('correo1') as HTMLInputElement).value;
-      const correo2 = (document.getElementById('correo2') as HTMLInputElement).value;
-      const correo3 = (document.getElementById('correo3') as HTMLInputElement).value;
-      listaCorreos.push(correo1);
-      listaCorreos.push(correo2);
-      listaCorreos.push(correo3);
-
-      this.consultaService.enviarCorreo({id, tipo, listaCorreos});
-    } catch (err) {
-       console.error(err);
-    }*/
-
+  
     const tipo = '02';
     const id = this.idfactura;
     const listaCorreos = [];

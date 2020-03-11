@@ -17,14 +17,50 @@
 <div class="col-12">
     <form method="POST" id="form_cliente">
 
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="cliente_nombre">Nombre</label>
-                <input [(ngModel)]="objCliente.cliente_nombre" type="text" name="cliente_nombre" id="cliente_nombre" class="form-control">
-            </div>
-            <div class="form-group col-md-6">
-                <label for="cliente_nombre_comercial">Nombre Comercial</label>
-                <input [(ngModel)]="objCliente.cliente_nombre_comercial" type="text" name="cliente_nombre_comercial" id="cliente_nombre_comercial" class="form-control">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="cliente_nombre_comercial">Nombre Comercial</label>
+                        <input [(ngModel)]="objCliente.cliente_nombre_comercial" type="text" name="cliente_nombre_comercial" id="cliente_nombre_comercial" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="cliente_nombre">Nombre</label>
+                        <input [(ngModel)]="objCliente.cliente_nombre" type="text" name="cliente_nombre" id="cliente_nombre" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="container">
+                        <div class="row" id="seccionExoneracion">
+                            <div class="col-sm">
+                                <div class="custom-control custom-checkbox">
+                                    <input name="exentoIVA" type="checkbox" class="custom-control-input" id="exentoIVA">
+                                    <label class="custom-control-label" for="exentoIVA">Exento IVA</label>
+                                </div>
+                                <div class="form-group">
+                                    <label>Tipo Exoneracion</label>
+                                    <select name="tipoExoneracion" id="tipoExoneracion" class="form-control">
+                                        <option value="" selected>Seleccione</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Documento Exoneracion</label>
+                                    <input type="text" name="docExoneracion" class="form-control" id="docExoneracion">
+                                </div>
+                            </div>
+                            <div class="col-sm">
+                                <div class="form-group">
+                                    <label>Porcentaje</label>
+                                    <input type="number" name="porcentajeExoneracion" id="porcentajeExoneracion" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>Nombre Institución</label>
+                                    <input type="text" name="nombreInstitucion" id="nombreInstitucion" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-row">

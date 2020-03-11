@@ -292,7 +292,7 @@ export class FacturaComponent implements OnInit {
           this.listaProductos = response;
           console.log(this.listaProductos);
           this.lineaDetalle.idproducto = response[0].idproducto;
-          //this.cargarDatosLinea();
+          // this.cargarDatosLinea();
         },
         err => console.log(err));
     }
@@ -592,7 +592,7 @@ export class FacturaComponent implements OnInit {
 
     this.objFactura.id = '',
     this.objFactura.idcliente = '1',
-    //this.objFactura.idemisor = '1',
+    // this.objFactura.idemisor = '1',
     this.objFactura.nombreCliente = '',
     this.objFactura.condicion_venta = '01',
     this.objFactura.medio_pago = '01',
@@ -826,7 +826,20 @@ export class FacturaComponent implements OnInit {
 
     this.clienteService.guardarCliente(obj)
       .subscribe(response => {
-        (document.getElementById('formNuevoCliente') as HTMLFormElement).reset();
+
+        const {insertId} = response;
+        
+        this.objFactura.idcliente = insertId;
+        this.objFactura.tipo_factura = '01';
+        (document.getElementById('nombreCliente') as HTMLInputElement).value = this.objCliente.cliente_nombre;
+        (document.getElementById('nombreComercialCliente') as HTMLInputElement).value = this.objCliente.cliente_nombre_comercial;
+        (document.getElementById('cedulaCliente') as HTMLInputElement).value = this.objCliente.cedula_cliente;
+        (document.getElementById('correoCliente') as HTMLInputElement).value = this.objCliente.cliente_correo;
+        (document.getElementById('telefonoCliente') as HTMLInputElement).value = this.objCliente.cliente_telefono_numtelefono;
+        
+        // (document.getElementById('formBuscarCliente') as HTMLFormElement).reset();
+        $('#ModalNuevoCliente').modal('hide');
+        // (document.getElementById('formNuevoCliente') as HTMLFormElement).reset();
         // $('#ModalNuevoCliente').hide();
         // this.cargarCliente(this.objCliente.cliente_nombre);
       },
