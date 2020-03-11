@@ -10,6 +10,7 @@ export class ClienteComponent implements OnInit {
 
   constructor(private clienteService: ClienteService) {
     this.obtenerProvincias();
+    this.tipoExoneracion();
     this.tipoIdentificacion = clienteService.tipoIdentificacion();
   }
 
@@ -19,6 +20,7 @@ export class ClienteComponent implements OnInit {
   listaDistritos: object = [];
   listaBarrios: object = [];
   tipoIdentificacion: object = [];
+  listaTipoExoneracion: object = [];
   query = '';
   selected = '';
   objCliente = {
@@ -40,6 +42,11 @@ export class ClienteComponent implements OnInit {
     cliente_fax_codigopais: '',
     cliente_fax_numtelefono: '',
     cliente_correo: '',
+    exentoIVA: 0,
+    tipoExoneracion: '',
+    porcentajeExoneracion: '',
+    NombreInstitucion: '',
+    documentoExoneracion: ''
   };
 
   ngOnInit() {
@@ -71,6 +78,11 @@ export class ClienteComponent implements OnInit {
         this.objCliente.cliente_fax_codigopais = response.cliente[0].cliente_fax_codigopais;
         this.objCliente.cliente_fax_numtelefono = response.cliente[0].cliente_fax_numtelefono;
         this.objCliente.cliente_correo = response.cliente[0].cliente_correo;
+        this.objCliente.exentoIVA = response.cliente[0].exentoIVA;
+        this.objCliente.tipoExoneracion = response.cliente[0].tipoExoneracion;
+        this.objCliente.porcentajeExoneracion = response.cliente[0].porcentajeExoneracion;
+        this.objCliente.NombreInstitucion = response.cliente[0].NombreInstitucion;
+        this.objCliente.documentoExoneracion = response.cliente[0].documentoExoneracion;
         // tslint:disable-next-line: forin
         const idProvincia = response.cliente[0].provincia;
         const idCanton = response.cliente[0].canton;
@@ -127,9 +139,9 @@ export class ClienteComponent implements OnInit {
     if (obj.cedula_cliente.length === 12) {
         numero_emisor = obj.cedula_cliente;
     }
-
+    
     obj.numero_cliente = numero_emisor;
-
+ 
     this.clienteService.guardarCliente(obj)
       .subscribe(response =>  {
         Swal.fire('Nuevo Cliente', response.message, 'success');
@@ -242,5 +254,13 @@ export class ClienteComponent implements OnInit {
       .subscribe(response => {
         this.listaBarrios = response.barrios;
       });
+  }
+
+  tipoExoneracion(){
+    this.clienteService.tipoExoneracion()
+      .subscribe(response => {
+        this.listaTipoExoneracion = response.tipoExoneracion;
+      },
+      err => console.error(err));
   }
 }

@@ -43,7 +43,10 @@ export class ClienteService {
   buscarCliente(query: string){
     return this.http.get(baseURL() +'/cliente/' + query);
   }
-
+  
+  tipoExoneracion() {
+    return this.http.get(baseURL() + '/tipoDocumentoExoneracion');
+  }
   tipoIdentificacion() {
 
     return [

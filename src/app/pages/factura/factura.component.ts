@@ -462,7 +462,7 @@ export class FacturaComponent implements OnInit {
             }
             impuestoLinea = parseFloat(this.arrayDetalles[linea].impuesto);
             totalimpuesto += impuestoLinea;
-            totalgravado = montototal;
+            totalgravado += montototal;
           }
       } 
     }
@@ -471,10 +471,7 @@ export class FacturaComponent implements OnInit {
     totalcomprobante = totalventaneta + totalimpuesto + totalOtrosCargos;
     // CARGAR EL OBJETO PARA GUARDAR LA FACTURA
     this.objFactura.id = '',
-    // this.objFactura.idcliente = '',
     this.objFactura.idemisor = '1',
-    /*this.objFactura.condicion_venta = '',
-    this.objFactura.medio_pago = '',*/
     this.objFactura.porcentaje_descuento_total = porcentaje_descuento_total,
     this.objFactura.monto_descuento_total = monto_descuento_total.toFixed(2),
     this.objFactura.subtotal = subtotal.toString(),
@@ -493,8 +490,6 @@ export class FacturaComponent implements OnInit {
     this.objFactura.totalimpuesto = totalimpuesto.toFixed(2).toString(),
     this.objFactura.totalcomprobante = totalcomprobante.toFixed(2),
     this.objFactura.codigomoneda = 'CRC',
-    /*this.objFactura.tipoCambio = '',
-    this.objFactura.tipo_factura = '',*/
     this.objFactura.objOrdenes = this.generarJsonDetalles();
     this.objFactura.ordenes = this.arrayDetalles;
     
@@ -816,7 +811,13 @@ export class FacturaComponent implements OnInit {
 
     this.productoService.nuevoProducto(obj)
       .subscribe(response => {
-        console.log(response);
+        this.buscarProducto(this.objProducto.descripcion);
+        // this.listaProductos
+
+        (document.getElementById('txt_nombreProducto') as HTMLInputElement).value = this.objProducto.descripcion;
+        $('#ModalNuevoProducto').modal('hide');
+        // agregar el producto, agregar el idproducto a la linea y mostrar los totales
+
       },
       err => console.log(err));
   }
@@ -826,9 +827,8 @@ export class FacturaComponent implements OnInit {
 
     this.clienteService.guardarCliente(obj)
       .subscribe(response => {
-
-        const {insertId} = response;
         
+        const {insertId} = response;
         this.objFactura.idcliente = insertId;
         this.objFactura.tipo_factura = '01';
         (document.getElementById('nombreCliente') as HTMLInputElement).value = this.objCliente.cliente_nombre;
