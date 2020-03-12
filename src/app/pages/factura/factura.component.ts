@@ -169,7 +169,8 @@ export class FacturaComponent implements OnInit {
   totalImpuesto = '0';
   totalDescuento = '0';
   SubtotalComprobante = '0';
-
+  $: any;
+  porcentajeExoneracion = 0;
   ngOnInit() {
   }
 
@@ -395,7 +396,7 @@ export class FacturaComponent implements OnInit {
                   despues del numeroLinea son el codigo del producto, el codigo creado del producto.
                   */
             this.cargarProducto();
-
+               //SE DEBE APLICAR LA EXONERACION POR CADA ORDEN DE LA FACTURA
           }
         }
       }
@@ -414,13 +415,13 @@ export class FacturaComponent implements OnInit {
     const subtotal = Number(this.SubtotalComprobante);
     let totalservgravados = 0;
     let totalservexentos = 0;
-    const totalservexonerado = 0;
+    let totalservexonerado = 0;
     let totalmercanciasgravadas = 0;
     let totalmercanciasexentas = 0;
-    const totalmercanciaexonerada = 0;
+    let totalmercanciaexonerada = 0;
     let totalgravado = 0;
     let totalexento = 0;
-    const totalexonerado = 0;
+    let totalexonerado = 0;
     let totalventa = 0;
     const totaldescuentos = monto_descuento_total;
     let totalventaneta = 0;
@@ -429,36 +430,55 @@ export class FacturaComponent implements OnInit {
     let totalcomprobante = 0;
     let montototal = 0;
     let impuestoLinea = 0;
+    let valorImpuestoExonerado = 0;
     // tslint:disable-next-line: forin
     for (const linea in this.arrayDetalles) {
       console.log(this.arrayDetalles[linea]);
       montototal = parseFloat(this.arrayDetalles[linea].cantidad) *  parseFloat(this.arrayDetalles[linea].precio_linea);
-
+      console.log("% exonerado",this.porcentajeExoneracion)
       if (this.arrayDetalles[linea].codigo == '01' || this.arrayDetalles[linea].codigo == '07') {
+        //Obtener el monto de impuesto exonerado
+          
+        //
           if (this.arrayDetalles[linea].codigo_tarifa == '01'){ // productos exentos del IVA
             if (this.arrayDetalles[linea].tipo_servicio == '01') {
               // servicios
+              // tslint:disable-next-line: max-line-length
               totalservexentos += montototal;
+
+              // tslint:disable-next-line: max-line-length
+              
             }
   
             if (this.arrayDetalles[linea].tipo_servicio == '02') {
               // mercancías
+              // tslint:disable-next-line: max-line-length
               totalmercanciasexentas += montototal; 
+              // tslint:disable-next-line: max-line-length
             }
   
             totalexento  += montototal;
-            impuestoLinea = parseFloat(this.arrayDetalles[linea].impuesto) ;
+            impuestoLinea = parseFloat(this.arrayDetalles[linea].impuesto);
             totalimpuesto += impuestoLinea;
           } else {
               // Aplica IVA
             if (this.arrayDetalles[linea].tipo_servicio == '01') {
               // servicios
+    
+              valorImpuestoExonerado =  (this.arrayDetalles[linea].impuesto * this.porcentajeExoneracion / 100);
+              console.log("servicio exonerado",valorImpuestoExonerado);
+              totalservexonerado += valorImpuestoExonerado;
+              totalexonerado +=totalservexonerado;
               totalservgravados += montototal;
             }
   
             if (this.arrayDetalles[linea].tipo_servicio == '02') {
               // mercancías
+              valorImpuestoExonerado = (this.arrayDetalles[linea].impuesto * this.porcentajeExoneracion / 100);
+              console.log("mercancia exonerada",valorImpuestoExonerado);
+              totalmercanciaexonerada += valorImpuestoExonerado;
               totalmercanciasgravadas += montototal; 
+              totalexonerado +=totalmercanciaexonerada;
             }
             impuestoLinea = parseFloat(this.arrayDetalles[linea].impuesto);
             totalimpuesto += impuestoLinea;
@@ -501,7 +521,7 @@ export class FacturaComponent implements OnInit {
 
     console.log(this.objFactura);
     console.log("detalles ",this.arrayDetalles);
-   
+  
     this.generarFactura(obj);
 
     this.limpiarLineaDetalle();
@@ -892,7 +912,9 @@ export class FacturaComponent implements OnInit {
          this.objDataCliente.nombreComercial = response.cliente[0].cliente_nombre_comercial;
          this.objDataCliente.correo = response.cliente[0].cliente_correo;
          this.objDataCliente.telefono = response.cliente[0].cliente_telefono_numtelefono;
+         this.porcentajeExoneracion = (response.cliente[0].porcentajeExoneracion == null) ? 0 : Number(response.cliente[0].porcentajeExoneracion);
 
+         console.log(this.porcentajeExoneracion);
        },
        err => {
          console.log(err);
@@ -929,7 +951,7 @@ export class FacturaComponent implements OnInit {
       const respuesta = tipoCambio.response;
       let xmlDoc: any;
       const parser = new DOMParser();
-
+      
       if (window.DOMParser) { // PARSEAR el xml para poder leerlo
         xmlDoc = parser.parseFromString(respuesta, 'text/html');
 

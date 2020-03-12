@@ -20,7 +20,7 @@ import { FacturaComponent } from './pages/factura/factura.component';
 import { ConsultaComponent } from './pages/consulta/consulta.component';
 import { ReporteComponent } from './pages/reporte/reporte.component';
 import { SidebarComponent } from './shared/sidebar/sidebar.component';
-
+declare var $: any;
 @NgModule({
   declarations: [
     AppComponent,
