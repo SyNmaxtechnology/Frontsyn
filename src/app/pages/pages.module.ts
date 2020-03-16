@@ -6,7 +6,7 @@ import { PAGES_ROUTES } from './pages.routes';
 
 @NgModule({
     declarations: [
-        PagesComponent
+        PagesComponent,
     ],
     exports: [
 

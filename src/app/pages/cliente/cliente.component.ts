@@ -14,7 +14,6 @@ export class ClienteComponent implements OnInit {
     this.tipoIdentificacion = clienteService.tipoIdentificacion();
   }
 
-  
   listaProvincias: object = [];
   listaCantones: object = [];
   listaDistritos: object = [];
@@ -44,7 +43,7 @@ export class ClienteComponent implements OnInit {
     cliente_correo: '',
     exentoIVA: 0,
     tipoExoneracion: '',
-    porcentajeExoneracion: '',
+    porcentajeExoneracion: 0,
     NombreInstitucion: '',
     documentoExoneracion: ''
   };
@@ -122,31 +121,38 @@ export class ClienteComponent implements OnInit {
   }
 
   nuevoCliente(e,obj){
+
     e.preventDefault();
     this.objCliente.cliente_barrio.toString().trim();
+    const checkExento = (document.getElementById('exentoIVA') as HTMLInputElement);
+    let estaExento = 0;
 
-    let numero_emisor = '';
+    let numero_cliente = '';
 
     if (obj.cedula_cliente.length === 9) {
-        numero_emisor = '000' + obj.cedula_cliente;
+        numero_cliente = '000' + obj.cedula_cliente;
     }
     if (obj.cedula_cliente.length === 10) {
-        numero_emisor = '00' + obj.cedula_cliente;
+        numero_cliente = '00' + obj.cedula_cliente;
     }
     if (obj.cedula_cliente.length === 11) {
-        numero_emisor = '0' + obj.cedula_cliente;
+        numero_cliente = '0' + obj.cedula_cliente;
     }
     if (obj.cedula_cliente.length === 12) {
-        numero_emisor = obj.cedula_cliente;
+        numero_cliente = obj.cedula_cliente;
+    }
+
+    if(checkExento.checked){
+      estaExento = 1;
     }
     
-    obj.numero_cliente = numero_emisor;
- 
+    obj.numero_cliente = numero_cliente;
+    obj.exentoIVA = estaExento;
+
     this.clienteService.guardarCliente(obj)
       .subscribe(response =>  {
         Swal.fire('Nuevo Cliente', response.message, 'success');
-        (document.getElementById("form_cliente") as HTMLFormElement).reset();
-        
+        (document.getElementById('form_cliente') as HTMLFormElement).reset();
       },
       err => {
         console.log(err);
@@ -170,7 +176,10 @@ export class ClienteComponent implements OnInit {
     const cliente_fax_codigopais = (document.getElementById("cliente_fax_codigopais") as HTMLInputElement);
     const cliente_fax_numtelefono = (document.getElementById("cliente_fax_numtelefono") as HTMLInputElement);
     const cliente_correo = (document.getElementById("cliente_correo") as HTMLInputElement);
-
+    const checkExento = (document.getElementById("exentoIVA") as HTMLInputElement);
+    let estaExento = 0;
+    
+  
     if (cedula_cliente.value.length === 9) {
         numero_cliente = '000' + cedula_cliente.value;
     }
@@ -182,6 +191,10 @@ export class ClienteComponent implements OnInit {
     }
     if (cedula_cliente.value.length === 12) {
         numero_cliente = cedula_cliente.value;
+    }
+
+    if(checkExento.checked){
+      estaExento = 1;
     }
 
     obj.numero_cliente = numero_cliente;
@@ -198,8 +211,8 @@ export class ClienteComponent implements OnInit {
     obj.cliente_fax_codigopais = cliente_fax_codigopais.value,
     obj.cliente_fax_numtelefono = cliente_fax_numtelefono.value,
     obj.cliente_correo = cliente_correo.value,
-    
-  console.log(obj); 
+    obj.exentoIVA = estaExento;
+
     this.clienteService.actualizarCliente(obj)
       .subscribe(response =>  {
         console.log(response)
@@ -214,7 +227,6 @@ export class ClienteComponent implements OnInit {
 
   obtenerProvincias() {
     // tslint:disable-next-line: semicolon
-    
     this.clienteService.obtenerProvincias()
       .subscribe(response =>  {
         this.listaProvincias = response.provincias;
@@ -230,8 +242,6 @@ export class ClienteComponent implements OnInit {
       });
   }
   obtenerDistritos(idprovincia, idcanton) {
-  console.log(idprovincia);
-  console.log(idcanton);
   const obj = {
       idprovincia,
       idcanton

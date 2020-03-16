@@ -79,7 +79,6 @@ export class FacturaComponent implements OnInit {
   };
 
   objCliente = {
-    id: '',
     cliente_nombre: '',
     cliente_nombre_comercial: '',
     cliente_tipo_identificacion: '',
@@ -130,7 +129,8 @@ export class FacturaComponent implements OnInit {
     impuesto: '',
     impuesto_neto: '',
     numerodocumento: '',
-    montoitotallinea: ''
+    montoitotallinea: '',
+    MontoExoneracion: ''
   };
 
   objProducto = {
@@ -305,11 +305,9 @@ export class FacturaComponent implements OnInit {
 
       const nombreProducto = (document.getElementById('txt_nombreProducto') as HTMLInputElement).value;
       const campoCantidad = (document.getElementById('cantidadLinea') as HTMLInputElement).value;
-      console.log(campoCantidad);
       const campoDescuento = (document.getElementById('descuentoLinea') as HTMLSelectElement).value;
       let cantidadTotal = 0;
       let descuentoTotal = 0;
-      const porcentajeExoneracionGlobal = 0;
       let impuestoNeto = 0;
 
       if (campoCantidad.length > 0) {
@@ -335,13 +333,12 @@ export class FacturaComponent implements OnInit {
           if (nombreProducto == this.listaProductos[obj].descripcion) {
 
             // tslint:disable-next-line: max-line-length
-            const impuestoTotal = (parseFloat(this.listaProductos[obj].precio_final) - parseFloat(this.listaProductos[obj].precio_producto)).toFixed(2);
             const subtotal = parseFloat(this.listaProductos[obj].precio_producto) * cantidadTotal;
             const descuentoAplicado = (descuentoTotal / 100 ) * Number(this.listaProductos[obj].precio_producto);
-            const totalLinea = subtotal - (descuentoAplicado) + Number(impuestoTotal);
             let monto = 0;
             let baseImponible = 0;
-
+            const impuestoTotal = subtotal * (parseFloat(this.listaProductos[obj].porcentaje_impuesto) / 100);
+            const totalLinea = subtotal - (descuentoAplicado) + Number(impuestoTotal);
             /*if (this.listaProductos[obj].codigo_impuesto == '01' || this.listaProductos[obj].codigo_impuesto == '07') {
                 if (this.listaProductos[obj].codigo_impuesto == '07') {
                   baseImponible = this.listaProductos[obj].precio_producto;
@@ -351,10 +348,11 @@ export class FacturaComponent implements OnInit {
               monto = subtotal * Number(this.listaProductos[obj].porcentaje_impuesto);
             }*/
 
-            baseImponible = this.listaProductos[obj].precio_producto;
-            monto = baseImponible * Number(this.listaProductos[obj].porcentaje_impuesto);
-
-            impuestoNeto = parseFloat(impuestoTotal) - porcentajeExoneracionGlobal;
+            //baseImponible = this.listaProductos[obj].precio_producto;
+            monto = this.listaProductos[obj].precio_producto * Number(this.listaProductos[obj].porcentaje_impuesto);
+            const impuestoExonerado = impuestoTotal * (this.porcentajeExoneracion) / 100;
+            impuestoNeto = impuestoTotal - impuestoExonerado;
+            const montoExonerado = subtotal * this.porcentajeExoneracion / 100;
             this.lineaDetalle.idproducto = this.listaProductos[obj].idproducto,
             this.lineaDetalle.precio_linea = String(parseFloat(this.listaProductos[obj].precio_producto).toFixed(2)),
             this.lineaDetalle.cantidad = cantidadTotal.toString(),
@@ -369,7 +367,7 @@ export class FacturaComponent implements OnInit {
             this.lineaDetalle.codigo_tarifa = this.listaProductos[obj].codigo_impuesto, // codigo de la tarifa para base imponible
             this.lineaDetalle.tarifa = this.listaProductos[obj].porcentaje_impuesto, // porcentaje aplicado para el impuesto
             this.lineaDetalle.monto = monto.toString(),
-            this.lineaDetalle.baseimponible = baseImponible.toString(),
+            this.lineaDetalle.baseimponible = baseImponible.toString(), // baseImponible.toString(),
             // tslint:disable-next-line: max-line-length
             this.lineaDetalle.impuesto = impuestoTotal.toString(),
             this.lineaDetalle.impuesto_neto = impuestoNeto.toString(),
@@ -380,6 +378,7 @@ export class FacturaComponent implements OnInit {
             this.lineaDetalle.codigo_servicio = this.listaProductos[obj].codigo_servicio;
             // tslint:disable-next-line: max-line-length
             this.lineaDetalle.montoitotallinea = totalLinea.toString();
+            this.lineaDetalle.MontoExoneracion = montoExonerado.toString();
             // this.objFactura.ordenes.push(this.lineaDetalle);
 
             console.log('array detallles',this.arrayDetalles);
@@ -491,7 +490,7 @@ export class FacturaComponent implements OnInit {
     totalcomprobante = totalventaneta + totalimpuesto + totalOtrosCargos;
     // CARGAR EL OBJETO PARA GUARDAR LA FACTURA
     this.objFactura.id = '',
-    this.objFactura.idemisor = '1',
+    this.objFactura.idemisor = '1',// el 2 es el id del emisor en produccion
     this.objFactura.porcentaje_descuento_total = porcentaje_descuento_total,
     this.objFactura.monto_descuento_total = monto_descuento_total.toFixed(2),
     this.objFactura.subtotal = subtotal.toString(),
@@ -520,8 +519,8 @@ export class FacturaComponent implements OnInit {
     };
 
     console.log(this.objFactura);
-    console.log("detalles ",this.arrayDetalles);
-  
+    console.log('detalles ', this.arrayDetalles);
+
     this.generarFactura(obj);
 
     this.limpiarLineaDetalle();
@@ -912,9 +911,9 @@ export class FacturaComponent implements OnInit {
          this.objDataCliente.nombreComercial = response.cliente[0].cliente_nombre_comercial;
          this.objDataCliente.correo = response.cliente[0].cliente_correo;
          this.objDataCliente.telefono = response.cliente[0].cliente_telefono_numtelefono;
+         // tslint:disable-next-line: max-line-length
          this.porcentajeExoneracion = (response.cliente[0].porcentajeExoneracion == null) ? 0 : Number(response.cliente[0].porcentajeExoneracion);
 
-         console.log(this.porcentajeExoneracion);
        },
        err => {
          console.log(err);

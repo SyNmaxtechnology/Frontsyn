@@ -19,7 +19,8 @@ import { ClienteComponent } from './pages/cliente/cliente.component';
 import { FacturaComponent } from './pages/factura/factura.component';
 import { ConsultaComponent } from './pages/consulta/consulta.component';
 import { ReporteComponent } from './pages/reporte/reporte.component';
-import { SidebarComponent } from './shared/sidebar/sidebar.component';
+import { UsuarioComponent } from './pages/usuario/usuario.component';
+
 declare var $: any;
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ declare var $: any;
     ClienteComponent,
     FacturaComponent,
     ConsultaComponent,
-    ReporteComponent
+    ReporteComponent,
+    UsuarioComponent
   ],
   imports: [// todos los modulos que se importen en este componente, se deben pasar a el array imports
     BrowserModule,
