@@ -132,10 +132,10 @@ export class ProductoComponent implements OnInit {
     let codigo = '';
     if (this.productoService.UnidadesMedidaServicios().includes(obj.unidad_medida)) {
       codigo = 'Servicio';
-      tipoServicio = '01';
+      tipoServicio = '02';
     } else {
       codigo = 'Mercancía';
-      tipoServicio = '02';
+      tipoServicio = '01';
     }
 
     obj.tipo_servicio = tipoServicio;
