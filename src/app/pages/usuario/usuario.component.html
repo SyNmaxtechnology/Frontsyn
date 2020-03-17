@@ -4,10 +4,10 @@
     <form method="POST" id="formBuscarUsuario">
         <div class="form-row">
             <div class="form-group col-md-8">
-                <input name="query" type="text" id="query" class="form-control" placeholder="Buscar por Email">
+                <input [(ngModel)]="query" name="query" type="text" id="query" class="form-control" placeholder="Buscar por nombre de usuario">
             </div>
             <div class="form-group col-md-3">
-                <button type="submit" class="btn btn-primary">Buscar</button>
+                <button type="submit" class="btn btn-primary" (click)="obtenerUsuario($event,query)">Buscar</button>
             </div>
         </div>
     </form>
@@ -36,7 +36,7 @@
                 </div>
                 <div class="col-sm">
                     <div class="form-group">
-                        <img src="">
+                        <img src="" id="img_usuario" width="200" height="200">
                     </div>
                     <div class="form-group">
                         <label for="imagen">Subir imagen</label>
