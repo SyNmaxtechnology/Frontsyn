@@ -498,7 +498,7 @@ export class FacturaComponent implements OnInit {
     totalcomprobante = totalventaneta + totalimpuesto + totalOtrosCargos;
     // CARGAR EL OBJETO PARA GUARDAR LA FACTURA
     this.objFactura.id = '',
-    this.objFactura.idemisor = '2',// el 2 es el id del emisor en produccion
+    this.objFactura.idemisor = '1',// el 2 es el id del emisor en produccion
     this.objFactura.porcentaje_descuento_total = porcentaje_descuento_total,
     this.objFactura.monto_descuento_total = monto_descuento_total.toFixed(2),
     this.objFactura.subtotal = subtotal.toString(),
