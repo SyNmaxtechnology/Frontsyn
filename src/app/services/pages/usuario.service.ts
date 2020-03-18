@@ -8,8 +8,9 @@ import {baseURL} from '../../config/config';
 @Injectable({
   providedIn: 'root'
 })
-export class UsuarioService {
 
+export class UsuarioService {
+  
   constructor(private http: HttpClient) { }
 
   nuevoUsuario(obj: object) {
@@ -23,7 +24,7 @@ export class UsuarioService {
   }
 
   obtenerUsuario(usuario: string): Observable<Usuario> {
-    return this.http.get(baseURL() + '/usuario/' + usuario).pipe( 
+    return this.http.get(baseURL() + '/usuario/' + usuario).pipe(
       map(data => new Usuario().deserialize(data)),
       catchError(err => throwError(err))
     );

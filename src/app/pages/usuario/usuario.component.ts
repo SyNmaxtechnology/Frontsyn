@@ -5,6 +5,7 @@ import {baseURL} from '../../config/config';
 import { Permiso } from '../../modelos/permiso.model';
 import Swal from 'sweetalert2';
 
+
 @Component({
   selector: 'app-usuario',
   templateUrl: './usuario.component.html',
@@ -80,7 +81,4 @@ export class UsuarioComponent implements OnInit {
       },
       err => console.error(err));
   }
-
-
-
 }

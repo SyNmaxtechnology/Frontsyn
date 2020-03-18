@@ -1,5 +1,5 @@
 
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes} from '@angular/router';
 import { PagesComponent } from './pages.component';
 import { ProductoComponent } from './producto/producto.component';
 import { FacturaComponent } from './factura/factura.component';
@@ -11,20 +11,21 @@ import { ClienteComponent } from './cliente/cliente.component';
 import { ReporteComponent } from './reporte/reporte.component';
 import { ConsultaComponent } from './consulta/consulta.component';
 import { UsuarioComponent } from './usuario/usuario.component';
+import { LoginGuard } from '../services/shared/guard/login.guard';
 
 const pagesRoutes: Routes = [
     {path: '', component: PagesComponent,
     children: [ // subrutas del componente pages
-        {path: 'producto', component: ProductoComponent},
-        {path: 'factura', component: FacturaComponent},
-        {path: 'Emisor', component: EmisorComponent},
-        {path: 'descuento', component: DescuentoComponent},
-        {path: 'categoria', component: CategoriaComponent},
-        {path: 'impuesto', component: ImpuestoComponent},
-        {path: 'cliente', component: ClienteComponent},
-        {path: 'consulta', component: ConsultaComponent},
-        {path: 'usuario', component: UsuarioComponent},
-        {path: 'reporte/comprobantes/:tipoFactura', component: ReporteComponent},
+        {path: 'producto', component: ProductoComponent,canActivate: [LoginGuard]},
+        {path: 'factura', component: FacturaComponent,canActivate: [LoginGuard]},
+        {path: 'Emisor', component: EmisorComponent,canActivate: [LoginGuard]},
+        {path: 'descuento', component: DescuentoComponent,canActivate: [LoginGuard]},
+        {path: 'categoria', component: CategoriaComponent,canActivate: [LoginGuard]},
+        {path: 'impuesto', component: ImpuestoComponent,canActivate: [LoginGuard]},
+        {path: 'cliente', component: ClienteComponent,canActivate: [LoginGuard]},
+        {path: 'consulta', component: ConsultaComponent,canActivate: [LoginGuard]},
+        {path: 'usuario', component: UsuarioComponent,canActivate: [LoginGuard]},
+        {path: 'reporte/comprobantes/:tipoFactura', component: ReporteComponent,canActivate: [LoginGuard]},
         {path: '', redirectTo: '/factura', pathMatch: 'full'}, // si la ruta esta vacía entonces redireccionar a /factura
     ]}
 ];
