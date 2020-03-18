@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {baseURL} from '../../config/config';
 import { Observable } from 'rxjs';
+import { UsuarioService } from './usuario.service';
 
 // emisor
 
 export interface EmisorGetResponse {
-  mensaje: String;
+  mensaje: string;
 }
 
 @Injectable({
@@ -15,29 +16,36 @@ export interface EmisorGetResponse {
 
 export class EmisorService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private usuarioService: UsuarioService) { }
+  token = this.usuarioService.obtenerToken();
 
   obtenerProvincias() {
-    return this.http.get(baseURL() + '/provincias');
+    const headers = new HttpHeaders().set('Authorization', 'bearer ' +this.token);
+    return this.http.get(baseURL() + '/provincias', {headers});
   }
 
   obtenerCantones(idprovincia) {
-    return this.http.get(baseURL() + '/cantones/' + idprovincia  ); //
+    const headers = new HttpHeaders().set('Authorization', 'bearer ' + this.token);
+    return this.http.get(baseURL() + '/cantones/' + idprovincia, {headers}); //
   }
   obtenerDistritos(obj) {
+    const headers = new HttpHeaders().set('Authorization', 'bearer ' + this.token);
     const url = '/distritos/' + obj.idcanton.trim() + '&' + obj.idprovincia;
-    return this.http.get(baseURL() + url);
+    return this.http.get(baseURL() + url, {headers});
   }
   obtenerBarrios(obj) {
+    const headers = new HttpHeaders().set('Authorization', 'bearer ' +this.token);
     const {idcanton, idprovincia, iddistrito} = obj;
     const url = '/barrios/' + idcanton + '&' + idprovincia + '&' + iddistrito;
-    return this.http.get(baseURL() + url);
+    return this.http.get(baseURL() + url, {headers});
   }
 
   guardarEmisor(emisor: object) {
 
-    const headers = new HttpHeaders().set('Content-type', 'application/json');
-    return this.http.post(baseURL() + '/emisor', emisor, {  });
+    // const headers = new HttpHeaders().set('Content-type', 'application/json');
+    // headers.set('Authorization', this.token);
+    const headers = new HttpHeaders().set('Authorization', 'bearer ' +this.token);
+    return this.http.post(baseURL() + '/emisor', emisor, { headers });
 
   }
   
@@ -47,12 +55,13 @@ export class EmisorService {
   }
 
   buscarEmisor(query: string){
-   return this.http.get(baseURL() + '/emisor/' + query); 
+    const headers = new HttpHeaders().set('Authorization', 'bearer ' +this.token);
+    return this.http.get(baseURL() + '/emisor/' + query, { headers });
   }
 
   actualizarEmisor(obj: FormData){
-
-    return this.http.put(baseURL() + '/emisor/' + obj.getAll("id"),obj,{});
+    const headers = new HttpHeaders().set('Authorization', 'bearer ' +this.token);
+    return this.http.put(baseURL() + '/emisor/' + obj.getAll('id'), obj, {headers});
   }
   tipoServicio() {
     return [

@@ -13,11 +13,8 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class LoginService {
 
   private role: any;
-  private usuario: any;
-  private imagen: any;
-  constructor(private http: HttpClient, public jwtHelper: JwtHelperService) { 
-    this.obtenerImagen();
-  }
+
+  constructor(private http: HttpClient, public jwtHelper: JwtHelperService) { }
 
 
   autenticarUsuario(obj: object) {
@@ -26,10 +23,10 @@ export class LoginService {
       map((data: Login) => {
         console.log(data);
         localStorage.setItem('token', data.token);
-        localStorage.setItem('permiso',data.permiso);
+        localStorage.setItem('role', data.permiso);
+        localStorage.setItem('imagenUsuario', data.imagen);
+        localStorage.setItem('usuario', data.usuario);
         this.role = localStorage.getItem('permiso');
-        this.usuario = data.usuario;
-        this.imagen = data.imagen;
         return data.message;
       }),
       catchError(err => throwError(err))
@@ -38,12 +35,6 @@ export class LoginService {
 
   obtenerRole() {
     return this.role;
-  }
-  obtenerUsuario(){
-    return this.usuario;
-  }
-  obtenerImagen(){
-    return this.imagen;
   }
   estaAutenticado() {
     const token = localStorage.getItem('token');

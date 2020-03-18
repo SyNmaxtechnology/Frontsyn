@@ -20,25 +20,25 @@ export class HeaderComponent implements OnInit {
 
   cargarCredencialesUsuario(){
     setTimeout(() => {
-      const imagen = this.loginService.obtenerImagen();
-      console.log(this.loginService.obtenerImagen());
-      console.log(baseURL());
-      const src = this.loginService.obtenerUsuario();
-      const usuario = baseURL() + '/' + imagen;
-
-      console.log(src);
+      const imagen = localStorage.getItem('imagenUsuario');
+      const usuario = localStorage.getItem('usuario');
+      const src = baseURL() + '/' + imagen;
       const imgBox = (document.getElementById('img_header_box') as HTMLImageElement);
       imgBox.src = src;
-
       const img = (document.getElementById('img_header') as HTMLImageElement);
       img.src = src;
+      const h4Usuario = (document.getElementById('nombreUsuario') as HTMLHtmlElement);
+      h4Usuario.innerHTML = usuario;
     }, 500);
 
   }
 
   cerrarSesion(){
-    localStorage.setItem('token','');
-    localStorage.setItem('permiso','');
+    localStorage.setItem('token', '');
+    localStorage.setItem('permiso', '');
+    localStorage.setItem('imagenUsuario', '');
+    localStorage.setItem('imagenUsuario', '');
+    localStorage.setItem('usuario', '');
     this.router.navigate(['/login']);
   }
 

@@ -10,23 +10,29 @@ import {baseURL} from '../../config/config';
 })
 
 export class UsuarioService {
-  
+
   constructor(private http: HttpClient) { }
 
+  token = this.obtenerToken();
+
   nuevoUsuario(obj: object) {
-    console.log(obj);
-    const headers = new HttpHeaders().set('Content-type', 'application/json');
-    return this.http.post(baseURL() + '/usuario', obj, { });
+    const headers = new HttpHeaders().set('Authorization', 'bearer ' + this.token);
+    return this.http.post(baseURL() + '/usuario', obj, { headers });
   }
 
   obtenerPermisos(){
-    return this.http.get(baseURL() + '/permisos');
+    const headers = new HttpHeaders().set('Authorization', 'bearer ' + this.token);
+    return this.http.get(baseURL() + '/permisos', { headers });
   }
 
   obtenerUsuario(usuario: string): Observable<Usuario> {
-    return this.http.get(baseURL() + '/usuario/' + usuario).pipe(
+    const headers = new HttpHeaders().set('Authorization', 'bearer ' + this.token);
+    return this.http.get(baseURL() + '/usuario/' + usuario, { headers }).pipe(
       map(data => new Usuario().deserialize(data)),
       catchError(err => throwError(err))
     );
+  }
+  obtenerToken(){
+    return localStorage.getItem('token');
   }
 }

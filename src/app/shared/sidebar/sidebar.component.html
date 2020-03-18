@@ -44,7 +44,7 @@
                         <li><a [routerLink]="['/Emisor']">Minimal </a></li>
                     </ul>
                 </li>
-                <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="fa fa-user-md"></i><span class="hide-menu">Usuario <span class="label label-rouded label-themecolor pull-right">4</span></span></a>
+                <li *ngIf="mostrar()"> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="fa fa-user-md"></i><span class="hide-menu">Usuario <span class="label label-rouded label-themecolor pull-right">4</span></span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a [routerLink]="['/usuario']">Minimal</a></li>
                     </ul>
