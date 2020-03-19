@@ -32,6 +32,13 @@ export class UsuarioService {
       catchError(err => throwError(err))
     );
   }
+
+  actualizarUsuario(obj){
+    console.log(obj);
+    const contrasena = obj.contrasena.toString();
+    console.log(contrasena);
+  }
+
   obtenerToken(){
     return localStorage.getItem('token');
   }

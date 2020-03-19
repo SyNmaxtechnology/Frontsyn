@@ -14,7 +14,7 @@
 </div>
 <br>
 <div class="col-12">
-    <form method="POST" id="formImpuesto">
+    <form method="POST" id="formUsuario">
         <div class="container">
             <div class="row">
                 <div class="col-sm">
@@ -45,7 +45,7 @@
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary" (click)="nuevoUsuario(objUsuario)">Guardar</button>
+        <button type="submit" class="btn btn-primary" (click)="procesarUsuario($event,objUsuario)">Guardar</button>
 
     </form>
 </div>

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import {baseURL} from '../../config/config';
 import { Router } from '@angular/router';
+import { UsuarioService } from './usuario.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,27 +10,37 @@ import { Router } from '@angular/router';
 
 export class ConsultaService {
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private usuarioService: UsuarioService) { }
+    
+  token = this.usuarioService.obtenerToken(); 
 
   tipoDocumento() {
-    return this.http.get(baseURL() + '/tipoDocumento');
+    const headers = new HttpHeaders().set('Authorization', 'bearer ' + this.token);
+    return this.http.get(baseURL() + '/tipoDocumento', {headers});
   }
 
   condicionVenta() {
-    return this.http.get(baseURL() + '/condicionVenta');
+    const headers = new HttpHeaders().set('Authorization', 'bearer ' + this.token);
+    return this.http.get(baseURL() + '/condicionVenta', {headers});
   }
 
   medioPago() {
-    return this.http.get(baseURL() + '/medioPago');
+    const headers = new HttpHeaders().set('Authorization', 'bearer ' + this.token);
+    return this.http.get(baseURL() + '/medioPago', {headers});
   }
 
   buscarFacturas(obj: any) {
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+    const headers = new HttpHeaders({ // asi se envian varias cabeceras en el mismo objeto de cabecera
+      'Content-type': 'application/json',
+      Authorization: 'bearer ' + this.token
+    });
     return this.http.post(baseURL() + '/facturas/buscar/', obj, {headers});
   }
 
   reporteFactura(id: number) {
-    return this.http.get(baseURL() + '/reportes/facturas/?idfactura=' + id);
+    const headers = new HttpHeaders().set('Authorization', 'bearer ' + this.token);
+    return this.http.get(baseURL() + '/reportes/facturas/?idfactura=' + id, {headers});
   }
 
   descargarPDF(obj: any) {
