@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ConsultaService } from '../../services/pages/consulta.service';
-
+declare var $: any;
 @Component({
   selector: 'app-consulta',
   templateUrl: './consulta.component.html',
@@ -135,7 +135,7 @@ export class ConsultaComponent implements OnInit {
 
   tipoDocumento() {
     this.consultaService.tipoDocumento()
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.tiposDocumento = response.tipoDocumento;
       },
       err => console.error(err));
@@ -144,7 +144,7 @@ export class ConsultaComponent implements OnInit {
   reporteFactura(id: number) {
     console.log(id);
     this.consultaService.reporteFactura(id)
-      .subscribe(response => {
+      .subscribe((response: any) => {
 
         if (response.factura[0].tipo_factura === '01') {
           this.objFacturaResultado.tipoFactura = 'Factura Electrónica';
@@ -189,7 +189,7 @@ export class ConsultaComponent implements OnInit {
 
   medioPago() {
     this.consultaService.medioPago()
-      .subscribe(response =>  {
+      .subscribe((response: any) =>  {
       console.log(response);
       this.mediosPago = response.medioPago;
       }, err => console.error(err));

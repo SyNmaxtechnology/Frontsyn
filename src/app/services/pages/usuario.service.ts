@@ -16,7 +16,7 @@ export class UsuarioService {
   token = this.obtenerToken();
 
   nuevoUsuario(obj: object) {
-    const headers = new HttpHeaders().set('Authorization', 'bearer ' + this.token);
+    const headers = new HttpHeaders().set('Authorization', 'bearer ' +this.token);
     return this.http.post(baseURL() + '/usuario', obj, { headers });
   }
 
@@ -34,9 +34,9 @@ export class UsuarioService {
   }
 
   actualizarUsuario(obj){
-    console.log(obj);
-    const contrasena = obj.contrasena.toString();
-    console.log(contrasena);
+
+    const headers = new HttpHeaders().set('Authorization', 'bearer ' + this.token);
+    return this.http.put(baseURL() +'/usuario/'+ obj.getAll('id'), obj,{headers});
   }
 
   obtenerToken(){

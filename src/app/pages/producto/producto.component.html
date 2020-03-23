@@ -52,22 +52,15 @@
             </div>
         </div>
         <div class="form-row">
-            <div class="form-group col-md-4">
-                <label for="descripcion">Descuento</label>
-                <select [(ngModel)]="objProducto.iddescuento" name="iddescuento" id="iddescuento" class="form-control">
-                    <option value="" disabled selected>--SELECCIONE--</option>
-                    <option *ngFor="let descuento of listaDescuentos" [ngValue]="descuento.id">{{descuento.descripcion}}</option>
-                </select>
-            </div>
             <!---->
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-6">
                 <label for="descripcion">Categoría</label>
                 <select [(ngModel)]="objProducto.idcategoria" name="idcategoria" id="idcategoria" class="form-control">
                     <option value="" disabled selected>--SELECCIONE--</option>
                     <option *ngFor="let categoria of listaCategorias" [ngValue]="categoria.id">{{categoria.descripcion}}</option>
                 </select>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-6">
                 <label for="descripcion">Impuesto</label>
                 <select [(ngModel)]="objProducto.tipo_impuesto" name="tipo_impuesto" id="tipo_impuesto" class="form-control" (change)="obtenerPrecioFinal('precio_producto','tipo_impuesto')">
                     <option value="" disabled selected>--SELECCIONE--</option>

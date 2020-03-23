@@ -14,7 +14,7 @@ export class ProductoComponent implements OnInit {
     this.obtenerImpuestos();
     this.obtenerUnidadesMedida();
     this.obtenerCategorias();
-    this.obtenerDescuentos();
+    
   }
 
   objProducto = {
@@ -30,12 +30,12 @@ export class ProductoComponent implements OnInit {
     codigo_servicio: '',
     tipo_impuesto: '',
     idcategoria: '',
-    iddescuento: ''
+    
   };
 
   query = '';
 
-  listaDescuentos: any = [];
+
   listaCategorias: any = [];
   listaImpuestos: any = [];
   listaUnidadesMedida: any = [];
@@ -85,7 +85,7 @@ export class ProductoComponent implements OnInit {
     } else {
       const type = 'equal';
       this.productoService.obtenerProducto(texto,type)
-      .subscribe(response =>  {
+      .subscribe((response: any) =>  {
 
                 console.log(response);
 
@@ -97,12 +97,10 @@ export class ProductoComponent implements OnInit {
                 this.objProducto.costo_unitario = response.costo_unitario;
                 this.objProducto.unidad_medida_comercial = response.unidad_medida_comercial;
                 this.objProducto.precio_final = response.precio_final;
-                this.objProducto.iddescuento = response.iddescuento;
                 this.objProducto.idcategoria = response.idcategoria; 
                 this.objProducto.tipo_impuesto = response.tipo_impuesto;
                 this.objProducto.unidad_medida = response.unidad_medida;
 
-                this.obtenerDescuentos();
                 this.obtenerImpuestos();
                 this.obtenerUnidadesMedida();
                 this.obtenerCategorias();
@@ -144,7 +142,7 @@ export class ProductoComponent implements OnInit {
 
 
     this.productoService.nuevoProducto(obj)
-      .subscribe(response =>  {
+      .subscribe((response: any) =>  {
 
         Swal.fire('Nuevo Producto', response.message, 'success');
         (document.getElementById('form_producto')  as HTMLFormElement).reset();
@@ -163,7 +161,6 @@ export class ProductoComponent implements OnInit {
     const unidad_medida_comercial = (document.getElementById('unidad_medida_comercial') as HTMLInputElement);
     const precio_final = (document.getElementById('precio_final') as HTMLInputElement);
     const selectUnidadMedida = (document.getElementById('unidad_medida') as HTMLSelectElement);
-    const selectDescuento = (document.getElementById('iddescuento') as HTMLSelectElement);
     const selectCategoria = (document.getElementById('idcategoria') as HTMLSelectElement);
     const selectImpuesto = (document.getElementById('tipo_impuesto') as HTMLSelectElement);
 
@@ -192,11 +189,10 @@ export class ProductoComponent implements OnInit {
     obj.codigo_servicio = codigo;
     obj.tipo_impuesto= selectImpuesto.value.split(': ')[1];
     obj.idcategoria= selectCategoria.value.split(': ')[1];
-    obj.iddescuento= selectDescuento.value.split(': ')[1];
     obj.precio_final = precio_final.value;
     console.log(obj);
     this.productoService.actualizarProducto(obj)
-      .subscribe(response =>  {
+      .subscribe((response: any) =>  {
 
         this.objProducto.id = '';
         Swal.fire('Actualizar Producto', response.message, 'success');
@@ -209,7 +205,8 @@ export class ProductoComponent implements OnInit {
 
   obtenerImpuestos() {
     this.productoService.obtenerImpuestos()
-      .subscribe(response => {
+      .subscribe((response: any) => {
+        console.log(response);
         this.listaImpuestos = response.impuestos;
       },
       err =>{
@@ -219,22 +216,14 @@ export class ProductoComponent implements OnInit {
 
   obtenerCategorias() {
     this.productoService.obtenerCategorias()
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.listaCategorias = response.categorias;
       }, err => console.log(err));
   }
 
-  obtenerDescuentos(){
-    this.productoService.obtenerDescuentos()
-    .subscribe(response => {
-      this.listaDescuentos = response.descuentos;
-    },
-    err => console.error(err));
-  }
-
   obtenerUnidadesMedida(){
     this.productoService.obtenerUnidadesMedida()
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.listaUnidadesMedida = response.unidades;
       },
       err => console.log(err));

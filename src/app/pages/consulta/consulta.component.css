@@ -1,3 +1,7 @@
 #ModalPreFactura {
     width: 800px;
 }
+
+table#tbody_lineas{
+    overflow:scroll;
+}

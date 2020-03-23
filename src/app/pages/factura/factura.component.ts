@@ -3,7 +3,7 @@ import { FacturaService } from '../../services/pages/factura.service';
 import { ClienteService } from '../../services/pages/cliente.service';
 import { DescuentoService } from '../../services/pages/descuento.service';
 import { ProductoService } from '../../services/pages/producto.service';
-
+declare var $: any;
 @Component({
   selector: 'app-factura',
   templateUrl: './factura.component.html',
@@ -169,7 +169,6 @@ export class FacturaComponent implements OnInit {
   totalImpuesto = '0';
   totalDescuento = '0';
   SubtotalComprobante = '0';
-  $: any;
   porcentajeExoneracion = 0;
   ngOnInit() {
   }
@@ -211,7 +210,7 @@ export class FacturaComponent implements OnInit {
 
   obtenerCategorias() {
     this.productoService.obtenerCategorias()
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.listaCategorias = response.categorias;
       },
       err => console.log(err));
@@ -219,7 +218,7 @@ export class FacturaComponent implements OnInit {
 
   obtenerImpuesto() {
     this.productoService.obtenerImpuestos()
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.tipoImpuesto = response.impuestos;
       },
       err => console.error(err));
@@ -227,14 +226,14 @@ export class FacturaComponent implements OnInit {
 
   obtenerUnidadesMedida() {
     this.productoService.obtenerUnidadesMedida()
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.unidadesMedida = response.unidades;
       },
       err => console.log(err));
   }
   obtenerDescuentos() {
     this.descuentoService.obtenerDescuentos()
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.descuentos = response.descuentos;
       },
       err => console.error(err));
@@ -242,7 +241,7 @@ export class FacturaComponent implements OnInit {
 
   obtenerProvincias() {
     this.clienteService.obtenerProvincias()
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.provincia = response.provincias;
       },
       err => console.error(err));
@@ -250,7 +249,7 @@ export class FacturaComponent implements OnInit {
 
   obtenerCantones(idProvincia) {
     this.clienteService.obtenerCantones(idProvincia)
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.canton = response.cantones;
       },
       err => console.error(err));
@@ -263,7 +262,7 @@ export class FacturaComponent implements OnInit {
     };
 
     this.clienteService.obtenerDistritos(obj)
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.distrito = response.distritos;
       },
       err => console.error(err));
@@ -276,7 +275,7 @@ export class FacturaComponent implements OnInit {
     };
 
     this.clienteService.obtenerBarrios(obj)
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.barrio = response.barrios;
       },
       err => console.error(err));
@@ -288,7 +287,7 @@ export class FacturaComponent implements OnInit {
     } else {
       const type = 'like';
       this.productoService.obtenerProducto(texto, type)
-        .subscribe(response => {
+        .subscribe((response: any) => {
           console.log(response);
           this.listaProductos = response;
           console.log(this.listaProductos);
@@ -328,37 +327,34 @@ export class FacturaComponent implements OnInit {
       }
 
       if (nombreProducto != '') {
-
-        for (const obj in this.listaProductos) {
-          if (nombreProducto == this.listaProductos[obj].descripcion) {
-
+        console.log("igual ",nombreProducto);
             // tslint:disable-next-line: max-line-length
-            const montototal = parseFloat(this.listaProductos[obj].precio_producto) * cantidadTotal;
-            const descuentoAplicado = (descuentoTotal / 100 ) * Number(this.listaProductos[obj].precio_producto);
+            const montototal = parseFloat(this.listaProductos[0].precio_producto) * cantidadTotal;
+            const descuentoAplicado = (descuentoTotal / 100 ) * Number(this.listaProductos[0].precio_producto);
             const subtotal = montototal - descuentoAplicado;
             let monto = 0;
             let baseImponible = 0;
-            const impuestoTotal = subtotal * (parseFloat(this.listaProductos[obj].porcentaje_impuesto) / 100);
+            const impuestoTotal = subtotal * (parseFloat(this.listaProductos[0].porcentaje_impuesto) / 100);
             let totalLinea = subtotal + Number(impuestoTotal);
             // const totalLinea = subtotal - (descuentoAplicado) + Number(impuestoTotal);
-            /*if (this.listaProductos[obj].codigo_impuesto == '01' || this.listaProductos[obj].codigo_impuesto == '07') {
-                if (this.listaProductos[obj].codigo_impuesto == '07') {
-                  baseImponible = this.listaProductos[obj].precio_producto;
-                  monto = baseImponible * Number(this.listaProductos[obj].porcentaje_impuesto);
+            /*if (this.listaProductos[0].codigo_impuesto == '01' || this.listaProductos[0].codigo_impuesto == '07') {
+                if (this.listaProductos[0].codigo_impuesto == '07') {
+                  baseImponible = this.listaProductos[0].precio_producto;
+                  monto = baseImponible * Number(this.listaProductos[0].porcentaje_impuesto);
                 }
             } else {
-              monto = subtotal * Number(this.listaProductos[obj].porcentaje_impuesto);
+              monto = subtotal * Number(this.listaProductos[0].porcentaje_impuesto);
             }*/
 
-            //baseImponible = this.listaProductos[obj].precio_producto;
-            monto = this.listaProductos[obj].precio_producto * Number(this.listaProductos[obj].porcentaje_impuesto);
+            //baseImponible = this.listaProductos[0].precio_producto;
+            monto = this.listaProductos[0].precio_producto * Number(this.listaProductos[0].porcentaje_impuesto);
             const impuestoExonerado = impuestoTotal * (this.porcentajeExoneracion) / 100;
             impuestoNeto = impuestoTotal - impuestoExonerado;
             const montoExonerado = impuestoTotal * this.porcentajeExoneracion / 100;
-            this.lineaDetalle.idproducto = this.listaProductos[obj].idproducto,
-            this.lineaDetalle.precio_linea = String(parseFloat(this.listaProductos[obj].precio_producto).toFixed(2)),
+            this.lineaDetalle.idproducto = this.listaProductos[0].idproducto,
+            this.lineaDetalle.precio_linea = String(parseFloat(this.listaProductos[0].precio_producto).toFixed(2)),
             this.lineaDetalle.cantidad = cantidadTotal.toString(),
-            this.lineaDetalle.descripcioDetalle = this.listaProductos[obj].descripcion,
+            this.lineaDetalle.descripcioDetalle = this.listaProductos[0].descripcion,
             // this.lineaDetalle.porcentajedescuento = '0',
             this.lineaDetalle.montodescuento = descuentoAplicado.toString(),
            // this.lineaDetalle.naturalezadescuento = '',
@@ -366,18 +362,18 @@ export class FacturaComponent implements OnInit {
             this.lineaDetalle.subtotal = subtotal.toString(),
             this.lineaDetalle.montototal = montototal.toString(),
             this.lineaDetalle.codigo = '01', // codigo del impuesto, siempre se envia el 01 o 07
-            this.lineaDetalle.codigo_tarifa = this.listaProductos[obj].codigo_impuesto, // codigo de la tarifa para base imponible
-            this.lineaDetalle.tarifa = this.listaProductos[obj].porcentaje_impuesto, // porcentaje aplicado para el impuesto
+            this.lineaDetalle.codigo_tarifa = this.listaProductos[0].codigo_impuesto, // codigo de la tarifa para base imponible
+            this.lineaDetalle.tarifa = this.listaProductos[0].porcentaje_impuesto, // porcentaje aplicado para el impuesto
             this.lineaDetalle.monto = impuestoTotal.toString(),
             this.lineaDetalle.baseimponible = baseImponible.toString(), // baseImponible.toString(),
             // tslint:disable-next-line: max-line-length
             this.lineaDetalle.impuesto = impuestoTotal.toString(),
             this.lineaDetalle.impuesto_neto = impuestoNeto.toString(),
             this.lineaDetalle.numerodocumento = '0',
-            this.lineaDetalle.unidadMedida = this.listaProductos[obj].unidad_medida;
-            this.lineaDetalle.unidadMedidaComercial = this.listaProductos[obj].unidad_medida_comercial;
-            this.lineaDetalle.tipo_servicio = this.listaProductos[obj].tipo_servicio;
-            this.lineaDetalle.codigo_servicio = this.listaProductos[obj].codigo_servicio;
+            this.lineaDetalle.unidadMedida = this.listaProductos[0].unidad_medida;
+            this.lineaDetalle.unidadMedidaComercial = this.listaProductos[0].unidad_medida_comercial;
+            this.lineaDetalle.tipo_servicio = this.listaProductos[0].tipo_servicio;
+            this.lineaDetalle.codigo_servicio = this.listaProductos[0].codigo_servicio;
             // tslint:disable-next-line: max-line-length
             if(this.porcentajeExoneracion > 0){
               this.lineaDetalle.montoitotallinea = totalLinea.toString();
@@ -387,11 +383,13 @@ export class FacturaComponent implements OnInit {
               this.lineaDetalle.montoitotallinea = totalLinea.toString();
               this.lineaDetalle.MontoExoneracion = montoExonerado.toString();
             }
-            // this.objFactura.ordenes.push(this.lineaDetalle);
+            // this.0Factura.ordenes.push(this.lineaDetalle);
 
             console.log('array detallles',this.arrayDetalles);
             console.log('Ordenes',this.objFactura.ordenes);
 
+            this.cargarProducto();
+            
             /*
                   localStorage.setItem('detalles', JSON.stringify(this.arrayDetalles));
                   localStorage.setItem('totalFactura', this.totalPagar);
@@ -402,10 +400,9 @@ export class FacturaComponent implements OnInit {
                   //codigo comercial esta el tipo y codigo, tanto el codigo dentro del codigo comercial como el codigo
                   despues del numeroLinea son el codigo del producto, el codigo creado del producto.
                   */
-            this.cargarProducto();
+            //
                //SE DEBE APLICAR LA EXONERACION POR CADA ORDEN DE LA FACTURA
-          }
-        }
+
       }
     } catch (err) {
       console.log(err);
@@ -756,10 +753,13 @@ export class FacturaComponent implements OnInit {
           descuentos = 0,
           totalPagar = 0;
       const getDetalles = localStorage.getItem('detalles');
+      console.log("Antes de Insertar ", getDetalles);
       let localStorageDetalles = [];
 
       localStorageDetalles = JSON.parse(getDetalles);
+      console.log("despues de que se le pasan los datos del localStorage ",localStorageDetalles);
       localStorageDetalles.push(this.lineaDetalle);
+      console.log("Desoues de insertar ", localStorageDetalles);
       localStorage.setItem('detalles', JSON.stringify(localStorageDetalles));
       this.arrayDetalles = localStorageDetalles;
 
@@ -853,7 +853,7 @@ export class FacturaComponent implements OnInit {
     console.log(obj);
 
     this.clienteService.guardarCliente(obj)
-      .subscribe(response => {
+      .subscribe((response: any) => {
         
         const {insertId} = response;
         this.objFactura.idcliente = insertId;
@@ -865,6 +865,8 @@ export class FacturaComponent implements OnInit {
         (document.getElementById('telefonoCliente') as HTMLInputElement).value = this.objCliente.cliente_telefono_numtelefono;
         
         // (document.getElementById('formBuscarCliente') as HTMLFormElement).reset();
+        
+        //($('#ModalNuevoCliente') as any).modal('hide');
         $('#ModalNuevoCliente').modal('hide');
         // (document.getElementById('formNuevoCliente') as HTMLFormElement).reset();
         // $('#ModalNuevoCliente').hide();
@@ -911,7 +913,7 @@ export class FacturaComponent implements OnInit {
       return;
     } else {
      this.clienteService.buscarCliente(query)
-       .subscribe(response =>  {
+       .subscribe((response: any) =>  {
 
          this.objDataCliente.nombre = response.cliente[0].cliente_nombre;
          this.objDataCliente.cedula = response.cliente[0].cedula_cliente;
@@ -953,16 +955,18 @@ export class FacturaComponent implements OnInit {
 
   obtenerTipoCambio() {
     this.facturaService.obtenerTipoCambio()
-      .subscribe(tipoCambio => {
+      .subscribe((tipoCambio: any) => {
 
       const respuesta = tipoCambio.response;
       let xmlDoc: any;
+      //let window: any;
       const parser = new DOMParser();
       
-      if (window.DOMParser) { // PARSEAR el xml para poder leerlo
+      //if (window.DOMParser) { // PARSEAR el xml para poder leerlo
         xmlDoc = parser.parseFromString(respuesta, 'text/html');
 
-      } /*else {
+      //} 
+      /*else {
         // EN EL CASO QUE SEA INTERNET EXPLORER
         xmlDoc = new ActiveXObject('Microsoft.XMLDOM');
         xmlDoc.async = false;
@@ -979,7 +983,7 @@ export class FacturaComponent implements OnInit {
 
   obtenerMonedas() {
     this.facturaService.obtenerMonedas()
-      .subscribe(monedas => {
+      .subscribe((monedas: any) => {
        this.listaMonedas = monedas.response;
       },
       err => console.log(err));
@@ -987,7 +991,7 @@ export class FacturaComponent implements OnInit {
 
   TipoDocumento() {
     this.facturaService.tipoDocumento()
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.tipoDocumento = response.tipoDocumento;
       },
       err => console.error(err));
@@ -995,7 +999,7 @@ export class FacturaComponent implements OnInit {
 
   MedioPago() {
     this.facturaService.medioPago()
-      .subscribe(response =>  {
+      .subscribe((response: any) =>  {
         this.medioPago = response.medioPago;
       },
       err => console.error(err));
@@ -1003,7 +1007,7 @@ export class FacturaComponent implements OnInit {
 
   CondicionVenta() {
     this.facturaService.condicionVenta()
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.condicionVenta = response.condicionVenta;
       },
       err => console.error(err));

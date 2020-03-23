@@ -34,7 +34,7 @@ export class ImpuestoComponent implements OnInit {
     e.preventDefault();
 
     this.impuestoService.nuevoImpuesto(obj)
-      .subscribe(response => {
+      .subscribe((response: any) => {
         console.log(response);
         Swal.fire('Nuevo Impuesto', response.message,'success');
         (document.getElementById('formImpuesto') as HTMLFormElement).reset();
@@ -48,7 +48,7 @@ export class ImpuestoComponent implements OnInit {
     e.preventDefault();
 
     this.impuestoService.actualizarImpuesto(obj)
-      .subscribe(response =>  {
+      .subscribe((response:any) =>  {
         Swal.fire('Editar Impuesto', response.message,'success');
         (document.getElementById('formImpuesto') as HTMLFormElement).reset();
       },
@@ -62,8 +62,8 @@ export class ImpuestoComponent implements OnInit {
       return;
     } else {
       this.impuestoService.buscarImpuesto(texto)
-        .subscribe(response =>  {
-          console.log(response);
+        .subscribe((response: any) =>  {
+          console.log((response));
           this.objImpuesto.id = response.id;
           this.objImpuesto.descripcion = response.descripcion;
           this.objImpuesto.codigo = response.codigo_impuesto;

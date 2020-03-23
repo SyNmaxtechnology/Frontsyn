@@ -218,6 +218,7 @@ export class ConsultaService {
   }
 
   anularComprobante(id: number) {
-    return this.http.get(baseURL() + '/notacredito-anular/ ' + id);
+    const headers = new HttpHeaders().set('Authorization', 'bearer ' + this.token);
+    return this.http.get(baseURL() + '/notacredito-anular/ ' + id, {headers});
   }
 }

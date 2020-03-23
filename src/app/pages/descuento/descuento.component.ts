@@ -33,7 +33,7 @@ export class DescuentoComponent implements OnInit {
     console.log(obj);
     e.preventDefault();
     this.descuentoService.guardarDescuento(obj)
-      .subscribe(response => {
+      .subscribe((response: any) => {
         Swal.fire('Nuevo Descuento',
         response.message,
         'success');
@@ -46,7 +46,7 @@ export class DescuentoComponent implements OnInit {
     e.preventDefault();
 
     this.descuentoService.actualizarDescuento(obj)
-      .subscribe(response => {
+      .subscribe((response: any) => {
         Swal.fire('Editar Descuento',
         response.message,
         'success');
@@ -59,9 +59,15 @@ export class DescuentoComponent implements OnInit {
     e.preventDefault();
     if(texto===''){
       return;
+
+
+
+
+
+      
     }else{
     this.descuentoService.buscarDescuento(texto)
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.objDescuento.id = response.id;
         this.objDescuento.descripcion = response.descripcion;
         this.objDescuento.porcentaje = response.porcentaje

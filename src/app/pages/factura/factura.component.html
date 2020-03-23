@@ -81,7 +81,7 @@
                     </datalist>
                     <input type="number" name="cantidadLinea" id="cantidadLinea" class="form-control col-md-8 mt-2 mb-2" placeholder="Cantidad">
                     <select class="form-control col-md-8 mt-1" id="descuentoLinea">
-                      <option value="" disabled selected>--Descuento--</option>
+                      <option value="" selected>--Descuento--</option>
                       <option *ngFor="let item of descuentos" [ngValue]="item.id">{{item.descripcion}}</option>
                     </select>
                 </div>
@@ -90,7 +90,7 @@
                     <!--<button type="submit" class="btn btn-success col-md-2 mr-1" data-toggle="modal" data-target="#ModalBuscarProducto">
                     <i class="fa fa-search"></i>
                   </button>-->
-                    <button type="submit" class="btn btn-success col-md-2 mr-1" (click)="cargarDatosLinea()">
+                    <button type="submit" class="btn btn-success col-md-2 mr-1" (click)="cargarDatosLinea();">
                     <i class="fa fa-cubes"></i>
                 </button>
                     <button type="submit" class="btn btn-primary col-md-2 mr-1" data-toggle="modal" data-target="#ModalNuevoProducto">

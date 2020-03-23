@@ -35,7 +35,7 @@ export class CategoriaComponent implements OnInit {
     console.log(obj);
 
     this.categoriaService.guardarCategoria(obj)
-      .subscribe(response => {
+      .subscribe((response: any) => {
          Swal.fire('Nueva Categoría', response.message, 'success');
          (document.getElementById("formCategoria") as HTMLFormElement).reset();
       },
@@ -46,7 +46,7 @@ export class CategoriaComponent implements OnInit {
     e.preventDefault();
 
     this.categoriaService.actualizarCategoria(obj)
-      .subscribe(response => {
+      .subscribe((response: any) => {
         Swal.fire('Editar Categoría', response.message, 'success');
         (document.getElementById("formCategoria") as HTMLFormElement).reset();
       }, 
@@ -60,7 +60,7 @@ export class CategoriaComponent implements OnInit {
       return;
     }else {
       this.categoriaService.obtenerCategoria(texto)
-        .subscribe(response =>{
+        .subscribe((response: any) =>{
           console.log(response);
           (document.getElementById("form_buscar_categoria") as HTMLFormElement).reset();
            

@@ -59,7 +59,7 @@ export class ClienteComponent implements OnInit {
       return;
     } else {
     this.clienteService.buscarCliente(texto)
-      .subscribe(response => {
+      .subscribe((response: any) => {
         console.log(response);
           // cargar los datos en el formulario de cliente
         this.objCliente.id = response.cliente[0].id;
@@ -150,7 +150,7 @@ export class ClienteComponent implements OnInit {
     obj.exentoIVA = estaExento;
 
     this.clienteService.guardarCliente(obj)
-      .subscribe(response =>  {
+      .subscribe((response: any) =>  {
         Swal.fire('Nuevo Cliente', response.message, 'success');
         (document.getElementById('form_cliente') as HTMLFormElement).reset();
       },
@@ -214,7 +214,7 @@ export class ClienteComponent implements OnInit {
     obj.exentoIVA = estaExento;
 
     this.clienteService.actualizarCliente(obj)
-      .subscribe(response =>  {
+      .subscribe((response: any) =>  {
         console.log(response)
         this.objCliente.id = '';
         Swal.fire('Actualizar Cliente', response.message, 'success');
@@ -228,7 +228,7 @@ export class ClienteComponent implements OnInit {
   obtenerProvincias() {
     // tslint:disable-next-line: semicolon
     this.clienteService.obtenerProvincias()
-      .subscribe(response =>  {
+      .subscribe((response: any) =>  {
         this.listaProvincias = response.provincias;
       });
   }
@@ -237,7 +237,7 @@ export class ClienteComponent implements OnInit {
     console.log(this.objCliente);
     const idprovincia = this.objCliente.provincia;
     this.clienteService.obtenerCantones(idprovincia.trim())
-      .subscribe(response =>  {
+      .subscribe((response: any) =>  {
         this.listaCantones = response.cantones;
       });
   }
@@ -248,7 +248,7 @@ export class ClienteComponent implements OnInit {
     };
 
   this.clienteService.obtenerDistritos(obj)
-      .subscribe(response =>  {
+      .subscribe((response: any) =>  {
         this.listaDistritos= response.distritos;
       });
   }
@@ -261,14 +261,14 @@ export class ClienteComponent implements OnInit {
     };
 
     this.clienteService.obtenerBarrios(obj)
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.listaBarrios = response.barrios;
       });
   }
 
   tipoExoneracion(){
     this.clienteService.tipoExoneracion()
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.listaTipoExoneracion = response.tipoExoneracion;
       },
       err => console.error(err));

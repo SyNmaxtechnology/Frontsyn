@@ -14,7 +14,12 @@ import Swal from 'sweetalert2';
 
 export class UsuarioComponent implements OnInit {
 
-  objUsuario = new Usuario();
+  objUsuario = {
+    usuario: '',
+    idpermiso: '',
+    contrasena: '',
+    imagen: null
+  };
   query: '';
   listaPermisos: any = [];
   idusuario: number = 0;
@@ -40,14 +45,15 @@ export class UsuarioComponent implements OnInit {
     } else {
       obj.imagen = null;
     }
-
+    console.log(obj);
+    
     const formData = new FormData();
     formData.append('idpermiso', obj.idpermiso);
     formData.append('usuario', obj.usuario);
     formData.append('contrasena', obj.contrasena);
     formData.append('imagen', obj.imagen);
 
-    this.usuarioService.nuevoUsuario(formData)
+    this.usuarioService.nuevoUsuario(obj)
       .subscribe((response: any) => {
       const {message} = response;
       Swal.fire('Nuevo Usuario', message, 'success');
@@ -68,12 +74,11 @@ export class UsuarioComponent implements OnInit {
           const usuario: any = response.usuario[0];
           this.objUsuario.usuario = usuario.usuario;
           this.objUsuario.idpermiso = usuario.idpermiso;
-          this.objUsuario.imagen = usuario.imagen;
+          //this.objUsuario.imagen = usuario.imagen;
           this.idusuario = usuario.id;
-          console.log(usuario.imagen);
+          //console.log(usuario.imagen);
           let imagen = baseURL() + '/' + usuario.imagen;
-         /* const imgUsuario = (document.getElementById('img_usuario') as HTMLImageElement);
-          imgUsuario.src = imagen;*/
+          this.objUsuario.imagen = imagen;
 
         },
       err => console.error(err));
@@ -117,14 +122,20 @@ export class UsuarioComponent implements OnInit {
     if(typeof contrasena !== 'undefined' || contrasena != ''){
       objActualizarUsuario.contrasena = contrasena;
     }
-    console.log(objActualizarUsuario); return;
+
     const formData = new FormData();
     formData.append('usuario', objActualizarUsuario.usuario);
     formData.append('id', objActualizarUsuario.id.toString());
     formData.append('contrasena', objActualizarUsuario.contrasena);
     formData.append('imagen', objActualizarUsuario.imagen);
     formData.append('idpermiso', objActualizarUsuario.idpermiso.toString());
-
+    this.usuarioService.actualizarUsuario(formData)
+      .subscribe((response: any) =>  {
+        const {message} = response;
+        Swal.fire('Usuario actualizado', message, 'success');
+        (document.getElementById('formUsuario') as HTMLFormElement).reset();
+      },
+      err => console.error(err));
   }
   obtenerPermisos() {
     this.usuarioService.obtenerPermisos()

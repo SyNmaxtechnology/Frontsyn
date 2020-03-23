@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EmisorService } from '../../services/pages/emisor.service';
 import Swal from 'sweetalert2';
-
+declare var $: any;
 @Component({
   selector: 'app-emisor',
   templateUrl: './emisor.component.html',
@@ -77,7 +77,7 @@ export class EmisorComponent implements OnInit {
       return;
     } else {
       this.emisorService.buscarEmisor(texto)
-        .subscribe(response => {
+        .subscribe((response: any) => {
 
           (document.getElementById("formBuscarEmisor") as HTMLFormElement).reset();
           this.objEmisor.id = response.emisor[0].id;
@@ -171,7 +171,7 @@ export class EmisorComponent implements OnInit {
           formData.append('key_password_hacienda', obj.password_hacienda);
           formData.append('casaMatriz', obj.casamatriz);
           formData.append('puntoVenta', obj.puntoventa);
-          formData.append('codigo_actividad', '99999');
+          formData.append('codigo_actividad', obj.codigo_actividad);
           formData.append('tipo_codigo_servicio', '01');
           formData.append('codigo_servicio', obj.codigo_servicio);
           formData.append('Client_ID', obj.client_id);
@@ -180,7 +180,7 @@ export class EmisorComponent implements OnInit {
           formData.append('numeroresolucion', obj.numero_resolucion);
           formData.append('fecharesolucion', obj.fecha_resolucion);
           this.emisorService.guardarEmisor(formData)
-            .subscribe(response => {
+            .subscribe((response: any) => {
 
               Swal.fire('Nuevo Emisor',response.message,'success');
               (document.getElementById("formEmisor") as HTMLFormElement).reset();
@@ -209,7 +209,7 @@ export class EmisorComponent implements OnInit {
     } else {
     console.log(query);
     this.emisorService.obtenerCodigosActividad(query)
-      .subscribe(response =>  {
+      .subscribe((response: any) =>  {
         this.objDataActividad.nombre = response.nombre;
         this.objDataActividad.codigo = response.actividades[0].codigo;
         this.objDataActividad.descripcion = response.actividades[0].descripcion;
@@ -225,86 +225,92 @@ export class EmisorComponent implements OnInit {
   }
   actualizarEmisor(e,obj){
     e.preventDefault();
-
-    const formData = new FormData();
-    const selectTipoServicio = (document.getElementById("codigo_servicio") as HTMLSelectElement);
-    const codigo = selectTipoServicio.options[selectTipoServicio.selectedIndex].text;
-    const tipo = selectTipoServicio.options[selectTipoServicio.selectedIndex].value;
     const File = (document.getElementById('file_p12') as HTMLInputElement);
-
-    let numero_emisor = '';
-
-    if (obj.emisor_cedula.length === 9) {
-            numero_emisor = '000' + obj.emisor_cedula;
-          }
-    if (obj.emisor_cedula.length === 10) {
-            numero_emisor = '00' + obj.emisor_cedula;
-          }
-    if (obj.emisor_cedula.length === 11) {
-            numero_emisor = '0' + obj.emisor_cedula;
-          }
-    if (obj.emisor_cedula.length === 12) {
-            numero_emisor = obj.emisor_cedula;
-          }
-
-    obj.numero_emisor = numero_emisor;
-          
+    if(File.value.length > 0){
+      if(File.files[0].type !== 'application/x-pkcs12'){
+       return  alert("El tipo de archivo que intenta subir no está permitido");
+      } else {
+        const formData = new FormData();
+        const selectTipoServicio = (document.getElementById("codigo_servicio") as HTMLSelectElement);
+        const codigo = selectTipoServicio.options[selectTipoServicio.selectedIndex].text;
+        const tipo = selectTipoServicio.options[selectTipoServicio.selectedIndex].value;
+        const File = (document.getElementById('file_p12') as HTMLInputElement);
     
-    //INFORMACION FORMATEADA
-    obj.codigo_servicio = codigo;
-    obj.tipo_codigo_servicio= tipo.split(": ")[1];
-
-    formData.append("id",obj.id);
-    formData.append('emisor_nombre', obj.emisor_nombre);
-    formData.append('emisor_nombrecomercial', obj.emisor_nombrecomercial);
-    formData.append('emisor_tipo_identificacion', obj.tipoIdentificacion);
-    formData.append('cedula_emisor', obj.emisor_cedula);
-    formData.append('numero_emisor', obj.numero_emisor);
-    formData.append('emisor_barrio', obj.barrio);
-    formData.append('emisor_otras_senas', obj.otras_senas);
-    formData.append('emisor_telefono_codigopais', obj.tel_codigo_pais);
-    formData.append('emisor_telefono_numtelefono', obj.num_telefono);
-    formData.append('emisor_fax_codigopais', obj.fax_codigo_pais);
-    formData.append('emisor_fax_numtelefono', obj.fax_num_telefono);
-    formData.append('emisor_correo', obj.correo);
-    formData.append('file_p12', File.files[0]);
-    formData.append('pin_p12', obj.contrasenaP12);
-    formData.append('key_username_hacienda', obj.user_hacienda);
-    formData.append('key_password_hacienda', obj.password_hacienda);
-    formData.append('casaMatriz', obj.casamatriz);
-    formData.append('puntoVenta', obj.puntoventa);
-    formData.append('codigo_actividad', obj.codigo_actividad);
-    formData.append('tipo_codigo_servicio', obj.tipo_codigo_servicio);
-    formData.append('codigo_servicio', obj.codigo_servicio);
-    formData.append('Client_ID', obj.client_id);
-    formData.append('API', obj.API);
-    formData.append('TOKEN_API', obj.API_TOKEN);
-    formData.append('numeroresolucion', obj.numero_resolucion);
-    formData.append('fecharesolucion', obj.fecha_resolucion);
+        let numero_emisor = '';
+    
+        if (obj.emisor_cedula.length === 9) {
+                numero_emisor = '000' + obj.emisor_cedula;
+              }
+        if (obj.emisor_cedula.length === 10) {
+                numero_emisor = '00' + obj.emisor_cedula;
+              }
+        if (obj.emisor_cedula.length === 11) {
+                numero_emisor = '0' + obj.emisor_cedula;
+              }
+        if (obj.emisor_cedula.length === 12) {
+                numero_emisor = obj.emisor_cedula;
+              }
+    
+        obj.numero_emisor = numero_emisor;
+              
         
-    this.emisorService.actualizarEmisor(formData)
-      .subscribe(response => {
-        Swal.fire('Editar Emisor',
-        response.message,
-        'success');
-        (document.getElementById("formEmisor") as HTMLFormElement).reset();
-      },err => {
-        console.log(err);
-        if(err.status == 500){
-          Swal.fire('Actualizar Emisor',
-          'No se pudo actualizar el emisor',
-          'error');
-          (document.getElementById("formEmisor") as HTMLFormElement).reset();
-        }
-
-      })
+        //INFORMACION FORMATEADA
+        obj.codigo_servicio = codigo;
+        obj.tipo_codigo_servicio= tipo.split(": ")[1];
+    
+        formData.append("id",obj.id);
+        formData.append('emisor_nombre', obj.emisor_nombre);
+        formData.append('emisor_nombrecomercial', obj.emisor_nombrecomercial);
+        formData.append('emisor_tipo_identificacion', obj.tipoIdentificacion);
+        formData.append('cedula_emisor', obj.emisor_cedula);
+        formData.append('numero_emisor', obj.numero_emisor);
+        formData.append('emisor_barrio', obj.barrio);
+        formData.append('emisor_otras_senas', obj.otras_senas);
+        formData.append('emisor_telefono_codigopais', obj.tel_codigo_pais);
+        formData.append('emisor_telefono_numtelefono', obj.num_telefono);
+        formData.append('emisor_fax_codigopais', obj.fax_codigo_pais);
+        formData.append('emisor_fax_numtelefono', obj.fax_num_telefono);
+        formData.append('emisor_correo', obj.correo);
+        formData.append('file_p12', File.files[0]);
+        formData.append('pin_p12', obj.contrasenaP12);
+        formData.append('key_username_hacienda', obj.user_hacienda);
+        formData.append('key_password_hacienda', obj.password_hacienda);
+        formData.append('casaMatriz', obj.casamatriz);
+        formData.append('puntoVenta', obj.puntoventa);
+        formData.append('codigo_actividad', obj.codigo_actividad);
+        formData.append('tipo_codigo_servicio', obj.tipo_codigo_servicio);
+        formData.append('codigo_servicio', obj.codigo_servicio);
+        formData.append('Client_ID', obj.client_id);
+        formData.append('API', obj.API);
+        formData.append('TOKEN_API', obj.API_TOKEN);
+        formData.append('numeroresolucion', obj.numero_resolucion);
+        formData.append('fecharesolucion', obj.fecha_resolucion);
+            
+        this.emisorService.actualizarEmisor(formData)
+          .subscribe((response: any) => {
+            Swal.fire('Editar Emisor',
+            response.message,
+            'success');
+            (document.getElementById("formEmisor") as HTMLFormElement).reset();
+          },err => {
+            console.log(err);
+            if(err.status == 500){
+              Swal.fire('Actualizar Emisor',
+              'No se pudo actualizar el emisor',
+              'error');
+              (document.getElementById("formEmisor") as HTMLFormElement).reset();
+            }
+    
+          })
+      }
+    }
   } 
 
   obtenerProvincias() {
     // tslint:disable-next-line: semicolon
 
     this.emisorService.obtenerProvincias()
-      .subscribe(response =>  {
+      .subscribe((response: any) =>  {
         this.listaProvincias = response.provincias;
       })
   }
@@ -312,7 +318,7 @@ export class EmisorComponent implements OnInit {
   obtenerCantones() {
     const idprovincia = this.objEmisor.provincia;
     this.emisorService.obtenerCantones(idprovincia.trim())
-    .subscribe(response =>  {
+    .subscribe((response: any) =>  {
       this.listaCantones = response.cantones;
     });
   }
@@ -323,7 +329,7 @@ export class EmisorComponent implements OnInit {
       idcanton
     };
     this.emisorService.obtenerDistritos(obj)
-      .subscribe(response =>  {
+      .subscribe((response: any) =>  {
         this.listaDistritos= response.distritos;
       })
   }
@@ -336,7 +342,7 @@ export class EmisorComponent implements OnInit {
     };
 
     this.emisorService.obtenerBarrios(obj)
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.listaBarrios = response.barrios;
       })
   }
