@@ -513,7 +513,7 @@ export class FacturaComponent implements OnInit {
     this.objFactura.totalventaneta = totalventaneta.toString(),
     this.objFactura.totalimpuesto = totalimpuesto.toFixed(2).toString(),
     this.objFactura.totalcomprobante = totalcomprobante.toFixed(2),
-    this.objFactura.codigomoneda = 'CRC',
+    //this.objFactura.codigomoneda = ,
     this.objFactura.objOrdenes = this.generarJsonDetalles();
     this.objFactura.ordenes = this.arrayDetalles;
     
@@ -525,7 +525,7 @@ export class FacturaComponent implements OnInit {
 
     console.log(this.objFactura);
     console.log('detalles ', this.arrayDetalles);
-
+    return;
     this.generarFactura(obj);
 
     this.limpiarLineaDetalle();
@@ -951,6 +951,7 @@ export class FacturaComponent implements OnInit {
     this.objFactura.tipo_factura = '04';
     this.objFactura.condicion_venta = '01';
     this.objFactura.medio_pago = '01';
+    this.objFactura.codigomoneda = 'CRC';
   }
 
   obtenerTipoCambio() {
@@ -983,8 +984,9 @@ export class FacturaComponent implements OnInit {
 
   obtenerMonedas() {
     this.facturaService.obtenerMonedas()
-      .subscribe((monedas: any) => {
-       this.listaMonedas = monedas.response;
+      .subscribe((response: any) => {
+        
+       this.listaMonedas = response.monedas;
       },
       err => console.log(err));
   }

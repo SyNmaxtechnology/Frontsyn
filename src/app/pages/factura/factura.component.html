@@ -4,6 +4,18 @@
 <div class="container">
     <!-- Stack the columns on mobile by making one full-width and the other half-width -->
     <div class="row">
+        <div class="col-md-7">
+            <div class="form-group">
+                <input type="number" id="buscarFactura" class="form-control" placeholder="Buscar Factura por consecutivo o clave">
+                <br>
+                <br>
+                <button type="submit" class="btn btn-success col-md-2" data-toggle="modal" data-target="#ModalBuscarCliente">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-12 col-md-8">
             <div class="form-row">
                 <div class="form-group col-md-11">
@@ -23,14 +35,14 @@
                     <input type="text" name="telefonoCliente" id="telefonoCliente" readonly class="form-control col-md-11" placeholder="Teléfono">
                 </div>
                 <div class="form-group col-md-8 mt-0">
-                    <button type="submit" class="btn btn-success col-md-2 mr-1" data-toggle="modal" data-target="#ModalBuscarCliente">
-                    <i class="fa fa-search"></i>
+                    <button type="submit" class="btn btn-success col-md-3 mr-1 funcionesCliente" data-toggle="modal" data-target="#ModalBuscarCliente">
+                    Buscar <br> Cliente
                 </button>
-                    <button type="submit" class="btn btn-danger col-md-2 mr-1" (click)="quitarCliente()">
-                    <i class="fa fa-times-circle-o"></i>
+                    <button type="submit" class="btn btn-danger col-md-3 mr-1 funcionesCliente" (click)="quitarCliente()">
+                    Quitar <br> Cliente
                 </button>
-                    <button type="submit" class="btn btn-primary col-md-2 mr-1" data-toggle="modal" data-target="#ModalNuevoCliente">
-                    <i class="fa fa-user-plus"></i>
+                    <button type="submit" class="btn btn-primary col-md-3 mr-1 funcionesCliente" data-toggle="modal" data-target="#ModalNuevoCliente">
+                    Nuevo <br> Cliente
                 </button>
 
                 </div>
@@ -65,7 +77,7 @@
             <div class="form-group mb-1">
                 <select [(ngModel)]="objFactura.codigomoneda" name="codigomoneda" class="form-control">
               <option value="" disabled selected>--Moneda--</option>
-              <option *ngFor="let item of listaMonedas" [value]="item.monedaISO">{{item.nombreMoneda}}</option>
+              <option *ngFor="let item of listaMonedas" [value]="item.codigo">{{item.descripcion}}</option>
             </select>
             </div>
         </div>
@@ -90,11 +102,11 @@
                     <!--<button type="submit" class="btn btn-success col-md-2 mr-1" data-toggle="modal" data-target="#ModalBuscarProducto">
                     <i class="fa fa-search"></i>
                   </button>-->
-                    <button type="submit" class="btn btn-success col-md-2 mr-1" (click)="cargarDatosLinea();">
-                    <i class="fa fa-cubes"></i>
+                    <button type="submit" class="btn btn-success col-md-2 mr-1 funcionesProductos" (click)="cargarDatosLinea();">
+                    Cargar <br> Producto
                 </button>
-                    <button type="submit" class="btn btn-primary col-md-2 mr-1" data-toggle="modal" data-target="#ModalNuevoProducto">
-                      <i class="fa fa-plus"></i>
+                    <button type="submit" class="btn btn-primary col-md-2 mr-1 funcionesProductos" data-toggle="modal" data-target="#ModalNuevoProducto">
+                      Nuevo <br> Producto
                   </button>
                 </div>
             </div>
@@ -169,15 +181,15 @@
             </div>
             <hr>
             <div class="form-group col-md-8 mt-0">
-                <button type="submit" class="btn btn-success col-md-2 mr-1">
-            <i class="fa fa-search"></i>
-        </button>
-                <button type="submit" class="btn btn-danger col-md-2 mr-1">
-            <i class="fa fa-times-circle-o" (click)="obtenerTotalesFactura()"></i>
-        </button>
-                <button type="submit" class="btn btn-danger col-md-2 mr-1">
-            <i class="fa fa-times-circle-o"></i>
-        </button>
+                <button type="submit" class="btn btn-success col-md-2 mr-1 funcionesFactura">
+                    Guadar <br> Factura
+                </button>
+                <button type="submit" class="btn btn-danger col-md-2 mr-1 funcionesFactura" (click)="obtenerTotalesFactura()">
+                    Enviar <br> Factura 
+                </button>
+                <button type="submit" class="btn btn-danger col-md-2 mr-1 funcionesFactura">
+                    Eliminar <br> Factura 
+                </button>
             </div>
         </div>
 

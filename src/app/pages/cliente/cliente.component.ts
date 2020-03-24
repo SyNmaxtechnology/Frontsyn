@@ -273,4 +273,8 @@ export class ClienteComponent implements OnInit {
       },
       err => console.error(err));
   }
+
+  obtenerTipoCedulaCliente(cedula: String){
+      
+  }
 }

@@ -56,6 +56,11 @@ export class ClienteService {
     const headers = new HttpHeaders().set('Authorization', 'bearer ' +this.token);
     return this.http.get(baseURL() +'/cliente/' + query,{ headers });
   }
+
+  obtenertipoCedula(cedula: string) {
+    const url = 'https://api.hacienda.go.cr/fe/ae?identificacion=' + cedula;
+    return this.http.get(url);
+  }
   
   tipoExoneracion() {
     const headers = new HttpHeaders().set('Authorization', 'bearer ' +this.token);
