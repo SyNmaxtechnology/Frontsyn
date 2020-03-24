@@ -530,7 +530,7 @@ export class FacturaComponent implements OnInit {
 
     this.limpiarLineaDetalle();
     this.limpiarTotalesFactura();
-
+    this.quitarCliente();
     // localStorage.setItem('detalles','[]');
     localStorage.setItem('totalFactura', '0');
     localStorage.setItem('subtotalFactura', '0');

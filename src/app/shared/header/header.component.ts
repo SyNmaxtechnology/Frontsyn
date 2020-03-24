@@ -23,6 +23,7 @@ export class HeaderComponent implements OnInit {
       const imagen = localStorage.getItem('imagenUsuario');
       const usuario = localStorage.getItem('usuario');
       const src = baseURL() + '/' + imagen;
+      console.log(src);
       const imgBox = (document.getElementById('img_header_box') as HTMLImageElement);
       imgBox.src = src;
       const img = (document.getElementById('img_header') as HTMLImageElement);

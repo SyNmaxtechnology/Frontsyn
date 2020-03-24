@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
         } else if(status === 403){
           Swal.fire('Iniciar Sesión', error.message , 'error');
         } else {
+          console.log(error);
           Swal.fire('Iniciar Sesión', 'Ha ocurrido un error en el servidor' , 'error');
         }
       });

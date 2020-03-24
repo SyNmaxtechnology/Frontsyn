@@ -53,13 +53,16 @@ export class UsuarioComponent implements OnInit {
     formData.append('contrasena', obj.contrasena);
     formData.append('imagen', obj.imagen);
 
-    this.usuarioService.nuevoUsuario(obj)
+    this.usuarioService.nuevoUsuario(formData)
       .subscribe((response: any) => {
       const {message} = response;
       Swal.fire('Nuevo Usuario', message, 'success');
       (document.getElementById('formUsuario') as HTMLFormElement).reset();
       },
-      err => console.error(err));
+      err => {
+        console.error(err)
+        Swal.fire('Nuevo Usuario', err.error.err, 'error');
+      });
   }
   
   obtenerUsuario(e,texto) {
@@ -79,6 +82,8 @@ export class UsuarioComponent implements OnInit {
           //console.log(usuario.imagen);
           let imagen = baseURL() + '/' + usuario.imagen;
           this.objUsuario.imagen = imagen;
+          const File = (document.getElementById('img_usuario') as HTMLInputElement);
+          File.src = imagen;
 
         },
       err => console.error(err));
@@ -127,8 +132,9 @@ export class UsuarioComponent implements OnInit {
     formData.append('usuario', objActualizarUsuario.usuario);
     formData.append('id', objActualizarUsuario.id.toString());
     formData.append('contrasena', objActualizarUsuario.contrasena);
-    formData.append('imagen', objActualizarUsuario.imagen);
     formData.append('idpermiso', objActualizarUsuario.idpermiso.toString());
+    formData.append('imagen', objActualizarUsuario.imagen);
+
     this.usuarioService.actualizarUsuario(formData)
       .subscribe((response: any) =>  {
         const {message} = response;
@@ -143,6 +149,8 @@ export class UsuarioComponent implements OnInit {
         // tslint:disable-next-line: forin
         this.listaPermisos = response.permisos;
       },
-      err => console.error(err));
+      err => {
+        console.log(err);
+      });
   }
 }
