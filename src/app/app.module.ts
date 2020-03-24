@@ -1,3 +1,4 @@
+import { NopagefoundComponent } from './pages/nopagefound/nopagefound.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { PagesModule } from './pages/pages.module';
@@ -35,7 +36,8 @@ declare var $: any;
     FacturaComponent,
     ConsultaComponent,
     ReporteComponent,
-    UsuarioComponent
+    UsuarioComponent,
+    NopagefoundComponent
   ],
   imports: [// todos los modulos que se importen en este componente, se deben pasar a el array imports
     BrowserModule,
