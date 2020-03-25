@@ -108,18 +108,28 @@
                 <td>
                     {{factura.status_factura}}
                 </td>
-                <td><button type="button" class="btn btn-danger btn-xs mr-1" (click)="descargarPDF(factura.id,'01')">
-                        <i class="fa fa-download"></i>
-                    </button>
-                    <button type="button" class="btn btn-default btn-xs" (click)="anularComprobante(factura.id)">
-                        <i class="fa fa-ban"></i>
-                    </button>
-                    <button type="button" class="btn btn-default btn-xs mr-1" data-toggle="modal" data-target="#ModalCorreos" (click)="cargarFactura(factura.id)">
-                        <i class="fa fa-envelope-o"></i>
-                    </button>
-                    <button type="button" class="btn btn-default btn-xs" (click)="reporteFactura(factura.id)" data-toggle="modal" data-target="#ModalPreFactura">
-                        <i class="fa fa-search-plus"></i>
-                    </button>
+                <td>
+                    <div *ngIf="filtroFactura != 'SI';else listaProformas">
+                        <button type="button" class="btn btn-danger btn-xs mr-1" (click)="descargarPDF(factura.id,'01')">
+                            <i class="fa fa-download"></i>
+                        </button>
+                        <button type="button" class="btn btn-default btn-xs" (click)="anularComprobante(factura.id)">
+                            <i class="fa fa-ban"></i>
+                        </button>
+                        <button type="button" class="btn btn-default btn-xs mr-1" data-toggle="modal" data-target="#ModalCorreos" (click)="cargarFactura(factura.id)">
+                            <i class="fa fa-envelope-o"></i>
+                        </button>
+                        <button type="button" class="btn btn-default btn-xs" (click)="reporteFactura(factura.id)" data-toggle="modal" data-target="#ModalPreFactura">
+                            <i class="fa fa-search-plus"></i>
+                        </button>
+                    </div>
+
+                    <ng-template #listaProformas>
+                        <button type="button" class="btn btn-default btn-xs" (click)="reporteFactura(factura.id)" data-toggle="modal" data-target="#ModalPreFactura">
+                            <i class="fa fa-search-plus"></i>
+                        </button>
+                    </ng-template>
+
                 </td>
             </tr>
         </tbody>

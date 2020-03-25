@@ -25,7 +25,7 @@ export class ConsultaComponent implements OnInit {
     consecutivo: '',
     tipoFactura: ''
   };
-
+  filtroFactura: any;
   objFacturaResultado = {
     id: '',
     clave: '',
@@ -125,6 +125,7 @@ export class ConsultaComponent implements OnInit {
 
     this.consultaService.buscarFacturas(objetoFactura)
       .subscribe((response: any) =>  {
+        this.filtroFactura = this.objBusquedaFacturas.tipoFactura;
         console.log(response.data);
         this.arrayComprobantes =response.data;
         localStorage.setItem('comprobantes', JSON.stringify(response.data));

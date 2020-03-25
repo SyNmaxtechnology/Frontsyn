@@ -1,8 +1,10 @@
+import Swal  from 'sweetalert2';
 import { Component, OnInit } from '@angular/core';
 import { FacturaService } from '../../services/pages/factura.service';
 import { ClienteService } from '../../services/pages/cliente.service';
 import { DescuentoService } from '../../services/pages/descuento.service';
 import { ProductoService } from '../../services/pages/producto.service';
+
 declare var $: any;
 @Component({
   selector: 'app-factura',
@@ -74,6 +76,7 @@ export class FacturaComponent implements OnInit {
     codigomoneda: '',
     tipocambio: '',
     tipo_factura: '',
+    prefactura: '',
     ordenes: [],
     objOrdenes: {}
   };
@@ -117,6 +120,7 @@ export class FacturaComponent implements OnInit {
     numerolineadetalle: '',
     subtotal: '',
     montototal: '',
+    codigobarra_producto: '',
     codigo: '',
     codigo_tarifa: '',
     codigo_servicio: '',
@@ -382,6 +386,7 @@ export class FacturaComponent implements OnInit {
               totalLinea = subtotal + Number(impuestoNeto)
               this.lineaDetalle.montoitotallinea = totalLinea.toString();
               this.lineaDetalle.MontoExoneracion = montoExonerado.toString();
+              this.lineaDetalle.codigobarra_producto = this.listaProductos[0].codigobarra_producto;
             }
             // this.0Factura.ordenes.push(this.lineaDetalle);
 
@@ -516,40 +521,72 @@ export class FacturaComponent implements OnInit {
     //this.objFactura.codigomoneda = ,
     this.objFactura.objOrdenes = this.generarJsonDetalles();
     this.objFactura.ordenes = this.arrayDetalles;
-    
+  
     const obj = {
       ordenes: this.objFactura.ordenes,
       factura: this.objFactura,
       objOrdenes: this.objFactura.objOrdenes
     };
-
-    console.log(this.objFactura);
-    console.log('detalles ', this.arrayDetalles);
-    return;
-    this.generarFactura(obj);
-
-    this.limpiarLineaDetalle();
-    this.limpiarTotalesFactura();
-    this.quitarCliente();
-    // localStorage.setItem('detalles','[]');
-    localStorage.setItem('totalFactura', '0');
-    localStorage.setItem('subtotalFactura', '0');
-    localStorage.setItem('descuentosFactura', '0');
-    localStorage.setItem('impuestosFactura', '0');
-    this.arrayDetalles = [];
-    localStorage.setItem('detalles', '[]');
-    this.totalPagar = localStorage.getItem('totalFactura');
-    this.totalImpuesto = localStorage.getItem('subtotalFactura');
-    this.totalDescuento = localStorage.getItem('descuentosFactura');
-    this.SubtotalComprobante = localStorage.getItem('impuestosFactura');
+    console.log(obj.factura);
+    return obj
   }
 
-  generarFactura(obj) {
+  generarFactura() {
+    
+    console.log(this.objFactura);
+    console.log('detalles ', this.arrayDetalles);
+    
+    const obj = this.obtenerTotalesFactura();
     this.facturaService.nuevoComprobante(obj)
-      .subscribe(response => {
-        console.log(response);
+      .subscribe((response: any) => {
+        
+        Swal.fire('Comprobante enviado', response.message, 'success');
+        this.limpiarLineaDetalle();
+        this.limpiarTotalesFactura();
+        this.quitarCliente();
+        // localStorage.setItem('detalles','[]');
+        localStorage.setItem('totalFactura', '0');
+        localStorage.setItem('subtotalFactura', '0');
+        localStorage.setItem('descuentosFactura', '0');
+        localStorage.setItem('impuestosFactura', '0');
+        this.arrayDetalles = [];
+        localStorage.setItem('detalles', '[]');
+        this.totalPagar = localStorage.getItem('totalFactura');
+        this.totalImpuesto = localStorage.getItem('subtotalFactura');
+        this.totalDescuento = localStorage.getItem('descuentosFactura');
+        this.SubtotalComprobante = localStorage.getItem('impuestosFactura');
       },
       err => console.error(err));
+      //return;
+      //this.generarFactura(obj);
+  }
+
+  guardarComprobante(){
+    
+    console.log(this.objFactura);
+    console.log('detalles ', this.arrayDetalles);
+    this.objFactura.prefactura = 'SI';
+
+    const obj = this.obtenerTotalesFactura();
+    this.facturaService.guardarFactura(obj)
+      .subscribe((response: any) => {
+        console.log(response);
+        Swal.fire('Factura Guardada', response.message, 'success');
+        this.limpiarLineaDetalle();
+        this.limpiarTotalesFactura();
+        this.quitarCliente();
+        // localStorage.setItem('detalles','[]');
+        localStorage.setItem('totalFactura', '0');
+        localStorage.setItem('subtotalFactura', '0');
+        localStorage.setItem('descuentosFactura', '0');
+        localStorage.setItem('impuestosFactura', '0');
+        this.arrayDetalles = [];
+        localStorage.setItem('detalles', '[]');
+        this.totalPagar = localStorage.getItem('totalFactura');
+        this.totalImpuesto = localStorage.getItem('subtotalFactura');
+        this.totalDescuento = localStorage.getItem('descuentosFactura');
+        this.SubtotalComprobante = localStorage.getItem('impuestosFactura');
+      })
   }
 
   quitarOrden(idorden) {

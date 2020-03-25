@@ -44,6 +44,15 @@ export class FacturaService {
     });
     return this.http.post(baseURL() + '/factura', obj, {headers});
   }
+
+  guardarFactura(obj: any){
+   
+    const headers = new HttpHeaders({ // asi se envian varias cabeceras en el mismo objeto de cabecera
+      'Content-type': 'application/json',
+      Authorization: 'bearer ' + this.token
+    });
+    return this.http.post(baseURL() + '/guardar-factura',obj,{headers});
+  }
 }
 
 

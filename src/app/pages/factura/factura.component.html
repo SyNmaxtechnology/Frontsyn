@@ -4,18 +4,6 @@
 <div class="container">
     <!-- Stack the columns on mobile by making one full-width and the other half-width -->
     <div class="row">
-        <div class="col-md-7">
-            <div class="form-group">
-                <input type="number" id="buscarFactura" class="form-control" placeholder="Buscar Factura por consecutivo o clave">
-                <br>
-                <br>
-                <button type="submit" class="btn btn-success col-md-2" data-toggle="modal" data-target="#ModalBuscarCliente">
-                    <i class="fa fa-search"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="row">
         <div class="col-12 col-md-8">
             <div class="form-row">
                 <div class="form-group col-md-11">
@@ -181,13 +169,13 @@
             </div>
             <hr>
             <div class="form-group col-md-8 mt-0">
-                <button type="submit" class="btn btn-success col-md-2 mr-1 funcionesFactura">
+                <button type="submit" class="btn btn-success col-md-2 mr-1 funcionesFactura" (click)="guardarComprobante()">
                     Guadar <br> Factura
                 </button>
-                <button type="submit" class="btn btn-danger col-md-2 mr-1 funcionesFactura" (click)="obtenerTotalesFactura()">
+                <button type="submit" class="btn btn-danger col-md-2 mr-1 funcionesFactura" (click)="generarFactura()">
                     Enviar <br> Factura 
                 </button>
-                <button type="submit" class="btn btn-danger col-md-2 mr-1 funcionesFactura">
+                <button type="submit" class="btn btn-primary col-md-2 mr-1 funcionesFactura">
                     Eliminar <br> Factura 
                 </button>
             </div>
