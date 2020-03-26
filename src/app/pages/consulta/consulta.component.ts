@@ -1,3 +1,4 @@
+import  Swal from 'sweetalert2';
 import { Component, OnInit } from '@angular/core';
 import { ConsultaService } from '../../services/pages/consulta.service';
 declare var $: any;
@@ -234,10 +235,14 @@ export class ConsultaComponent implements OnInit {
     $('#ModalCorreos').modal('hide');
 
     this.consultaService.enviarCorreo({id, tipo, listaCorreos})
-      .subscribe(response => {
+      .subscribe((response: any) => {
         console.log(response);
+        Swal.fire('Correo enviado',response.message,'success');
       },
-      err => console.log(err));
+      err => {
+        console.log(err);
+        Swal.fire('Correo enviado','Falló el envío de correos','error');
+      });
   }
 
   cargarFactura(id) {
@@ -267,8 +272,8 @@ export class ConsultaComponent implements OnInit {
 
   anularComprobante(id) {
     this.consultaService.anularComprobante(id)
-      .subscribe(response => {
-        console.log(response);
-      }, err => console.error(err));
+      .subscribe((response: any) => {
+        Swal.fire('Notá de crédito enviada', response.message,'success');
+      }, err => Swal.fire('Envío de nota de crédito', 'No se pudo enviar la nota de crédito', 'error'));
   }
 }

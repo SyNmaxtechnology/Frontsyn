@@ -36,9 +36,18 @@ export class LoginService {
   obtenerRole() {
     return this.role;
   }
-  estaAutenticado() {
-    const token = localStorage.getItem('token');
+  estaAutenticado(token) {
     return !this.jwtHelper.isTokenExpired(token);
+  }
+
+  existeToken(){
+    const token = localStorage.getItem('token');
+
+    if(token != null){
+      return token;
+    } else {
+      return false;
+    }
   }
 }
 

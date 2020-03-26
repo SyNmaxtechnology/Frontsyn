@@ -69,7 +69,7 @@
                 <th>Subtotal</th>
                 <th>Impuesto</th>
                 <th>Total</th>
-                <th>Estado</th>
+                <th *ngIf="filtroFactura != 'SI'">Estado</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -105,32 +105,48 @@
                 <td>
                     {{factura.totalcomprobante}}
                 </td>
-                <td>
+                <td *ngIf="filtroFactura != 'SI'">
                     {{factura.status_factura}}
                 </td>
-                <td>
-                    <div *ngIf="filtroFactura != 'SI';else listaProformas">
-                        <button type="button" class="btn btn-danger btn-xs mr-1" (click)="descargarPDF(factura.id,'01')">
-                            <i class="fa fa-download"></i>
-                        </button>
-                        <button type="button" class="btn btn-default btn-xs" (click)="anularComprobante(factura.id)">
-                            <i class="fa fa-ban"></i>
-                        </button>
-                        <button type="button" class="btn btn-default btn-xs mr-1" data-toggle="modal" data-target="#ModalCorreos" (click)="cargarFactura(factura.id)">
-                            <i class="fa fa-envelope-o"></i>
-                        </button>
-                        <button type="button" class="btn btn-default btn-xs" (click)="reporteFactura(factura.id)" data-toggle="modal" data-target="#ModalPreFactura">
-                            <i class="fa fa-search-plus"></i>
-                        </button>
-                    </div>
+                <td *ngIf="filtroFactura == '03'"> <!-- NOtas de credito de anulacion de comprobante -->
 
-                    <ng-template #listaProformas>
-                        <button type="button" class="btn btn-default btn-xs" (click)="reporteFactura(factura.id)" data-toggle="modal" data-target="#ModalPreFactura">
-                            <i class="fa fa-search-plus"></i>
-                        </button>
-                    </ng-template>
+                    <button type="button" class="btn btn-danger btn-xs mr-1" (click)="descargarPDF(factura.id,'01')">
+                        <i class="fa fa-download"></i>
+                    </button>
+                    <button *ngIf="factura.status_factura == 'rechazado' || factura.status_factura == null" type="button" class="btn btn-default btn-xs" (click)="anularComprobante(factura.id)">
+                        <i class="fa fa-mail-forward"></i>
+                    </button>
 
+                    <button *ngIf="factura.status_factura == 'aceptado'" type="button" class="btn btn-default btn-xs mr-1" data-toggle="modal" data-target="#ModalCorreos" (click)="cargarFactura(factura.id)">
+                        <i class="fa fa-envelope-o"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs" (click)="reporteFactura(factura.id)" data-toggle="modal" data-target="#ModalPreFactura">
+                        <i class="fa fa-search-plus"></i>
+                    </button>
+                </td><!-- FIN DE NOTAS DE CREDITO DE ANULACION DE COMPROBANTE -->
+                <!-- Facturas y Tiquetes -->
+                <td *ngIf="filtroFactura != 'SI' && filtroFactura != '03'; else opcionesProforma">
+                    <button type="button" class="btn btn-danger btn-xs mr-1" (click)="descargarPDF(factura.id,'01')">
+                        <i class="fa fa-download"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs" (click)="anularComprobante(factura.id)">
+                        <i class="fa fa-ban"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs mr-1" data-toggle="modal" data-target="#ModalCorreos" (click)="cargarFactura(factura.id)">
+                        <i class="fa fa-envelope-o"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs" (click)="reporteFactura(factura.id)" data-toggle="modal" data-target="#ModalPreFactura">
+                        <i class="fa fa-search-plus"></i>
+                    </button>
                 </td>
+                <!-- FIN Facturas y Tiquetes -->
+                <!-- OPCIONES DE PROFORMA, aqui se ver y enviar la proforma-->
+                <td *ngIf="filtroFactura == 'SI'">
+                    <button type="button" class="btn btn-default btn-xs" (click)="reporteFactura(factura.id)" data-toggle="modal" data-target="#ModalPreFactura">
+                        <i class="fa fa-search-plus"></i>
+                    </button>
+                </td>
+                <!--FIN OPCIONES DE PROFORMA, aqui se ver y enviar la proforma-->
             </tr>
         </tbody>
     </table>

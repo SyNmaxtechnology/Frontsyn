@@ -49,6 +49,8 @@ export class FacturaComponent implements OnInit {
     nombreComercial: ''
   };
 
+  tipoCambio: string =  '';
+
   objFactura =  {
     id: '',
     idcliente: '1',
@@ -521,13 +523,22 @@ export class FacturaComponent implements OnInit {
     //this.objFactura.codigomoneda = ,
     this.objFactura.objOrdenes = this.generarJsonDetalles();
     this.objFactura.ordenes = this.arrayDetalles;
+    let tipocambioFinal = ''; 
+    if(this.objFactura.codigomoneda == 'USD'){
+    
+      tipocambioFinal = '1'
+    }else {
+       tipocambioFinal=this.tipoCambio;
+    }
+
+    this.objFactura.tipocambio = tipocambioFinal;
   
     const obj = {
       ordenes: this.objFactura.ordenes,
       factura: this.objFactura,
       objOrdenes: this.objFactura.objOrdenes
     };
-    console.log(obj.factura);
+    console.log(obj.factura); 
     return obj
   }
 
@@ -1012,10 +1023,11 @@ export class FacturaComponent implements OnInit {
       }*/
 
       const tipocambio = Number(xmlDoc.getElementsByTagName('NUM_VALOR')[0].innerHTML).toFixed(2);
-      this.objFactura.tipocambio = tipocambio.toString();
+      //this.objFactura.tipocambio = tipocambio.toString();
+      this.tipoCambio = tipocambio.toString();
     },
      err => {
-        this.objFactura.tipocambio = '1.00';
+      this.tipoCambio  = '1.00';
      });
   }
 

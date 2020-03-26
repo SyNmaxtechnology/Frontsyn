@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../services/pages/login.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -20,13 +21,12 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  autenticarUsuario(e,obj) {
-    e.preventDefault();
-
-    if(obj.usuario === '' || obj.contrasena === ''){
+  autenticarUsuario(forma: NgForm) {
+    if(forma.invalid){
       return;
     } else {
-      this.loginService.autenticarUsuario(obj)
+
+      this.loginService.autenticarUsuario(this.objLogin)
       .subscribe(response => {
         if(response === 'Autenticado'){
           this.router.navigate(['/factura']);
@@ -47,5 +47,13 @@ export class LoginComponent implements OnInit {
         }
       });
     }
+    
   }
 }
+
+
+/*
+
+
+ 
+*/
