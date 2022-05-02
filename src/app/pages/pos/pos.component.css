@@ -1,0 +1,93 @@
+
+.table .thead-dark th {
+    color: white;
+    background-color: black;
+  
+  }
+
+  .listaProductos:hover {
+      cursor: pointer;
+  }
+
+  .descripcionProducto {
+    width: 100%;
+    font-weight: bold;
+    overflow-wrap: break-word;
+  }
+
+  #categorias {
+    display: inline;
+    border: 1px solid #D9D9D9;
+    border-radius: 3px;
+  }
+
+  .scrollable{
+    white-space: nowrap;
+    overflow-x: visible;
+    overflow-y: hidden;
+  }
+
+  #divTxtBusquedaProducto {
+
+  }
+
+  .btn-categoria {
+    width: 40px;
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: #1C2128;
+    color: white;
+    font-size: 12px;
+  }
+
+  #selectCategoria {
+    border: 1px solid #D9D9D9;
+    border-radius: 5px;
+  }
+
+  input::-webkit-input-placeholder {
+        font-size: 10px;
+    }
+    input::-moz-placeholder {
+        font-size: 10px;
+    }
+
+#selectCategoria {
+    font-size: 10px;
+}
+
+
+#Lineas table {
+  
+}
+
+#selectCategoria {
+
+}
+
+#buscarProducto {
+  outline: none;
+}
+
+#buscarProducto:focus {
+  background-color: #F4F6F9;
+}
+
+
+.altura {
+  height: auto;
+}
+
+.divProducto {
+  word-break: break-word;
+}
+
+.opcionesPago {
+
+  width: 50%;
+}
+
+.divOpciones {
+
+  margin-right: 5px solid black;
+}

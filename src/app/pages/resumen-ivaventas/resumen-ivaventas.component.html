@@ -1,0 +1,91 @@
+<h1><i class="fa fa-file-text"></i>Resumen IVA Ventas</h1>
+<hr>
+<br>
+<div class="row" style="display: flex; align-items: stretch;">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="fechaInicio" class="col-form-label">Fecha Inicio:</label>
+            <input [(ngModel)]="objResumenIVA.fechaInicio" type="date" name="fechaInicio" id="fechaInicio" class="form-control">
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="fechaFin" class="col-form-label">Fecha Fin:</label>
+            <input [(ngModel)]="objResumenIVA.fechaFin" type="date" name="fechaFin" id="fechaFin" class="form-control">
+        </div>
+    </div>
+    <div class="col-md-4" *ngIf="false">
+            <div class="form-group">
+                <label for="selectMoneda" class="col-form-label">Moneda:</label>
+                <select name="" id="selectMoneda" class="form-control">
+                    <option value="">--Moneda--</option>
+                </select>
+            </div>           
+        </div>
+</div>
+<hr>
+<div class="table" >
+    <div class="row" style="align-items: center;">
+        <div class="col-md-6">
+            <button type="button" class="btn btn-success mr-1" id="reporteExcel"><i class="fa fa-file-excel-o"></i>Excel</button>
+            <button type="button" class="btn btn-info" id="btnBuscar"><i class="fa fa-search"></i>Buscar</button>
+        </div>
+    </div>
+    <br>
+    <table class="table table-hover table-striped" id="tabla_resumen_iva_ventas" *ngIf="tablaPequena == false">
+        <thead>
+            <tr>
+                <th>Tarifa</th>
+                <th>Subtotal</th>
+                <th>Subtotal Mercancías</th>
+                <th>Subtotal Servicios</th>
+                <th>Impuestos Mercancías</th>
+                <th>Impuestos Servicios</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let resumen of listaResumenIVA">
+                <td>{{resumen.descripcion}}</td>
+                <td>{{resumen.subtotal}}</td>
+                <td>{{resumen.subMercancias}}</td>
+                <td>{{resumen.subServicios}}</td>
+                <td>{{resumen.impMercancias}}</td>
+                <td>{{resumen.impServicios}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="table" *ngIf="tablaPequena == true"> 
+    <table class="table-bordered">
+        <tbody *ngFor="let resumen of listaResumenIVA">
+            <tr>
+                <th>Tarifa</th>
+                <td>{{resumen.descripcion}}</td>
+            </tr>
+
+            <tr>
+                <th>Subtotal</th>
+                <td>{{resumen.subtotal}}</td>
+            </tr>
+            
+            <tr> 
+                <th>Subtotal Mercancías</th>
+                <td>{{resumen.subMercancias}}</td>
+            </tr> 
+            <tr> 
+                <th>Subtotal Servicios</th>
+                <td>{{resumen.subServicios}}</td>
+            </tr> 
+            <tr> 
+                <th>Impuesto Mercancías</th>
+                <td>{{resumen.impMercancias}}</td>
+            <tr> 
+            <tr> 
+                <th>Impuesto Servicios</th>
+                <td>{{resumen.impServicios}}</td>
+            <tr> 
+        </tbody>
+    </table>
+</div>
+

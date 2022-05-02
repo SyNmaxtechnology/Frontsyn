@@ -1,0 +1,24 @@
+<h1><i class="fa fa-file-text"></i>Reporte Depósitos</h1>
+<hr>
+<div class="row" style="display: flex; align-items: stretch;">
+    <div class="col-md-5">
+        <div class="form-group">
+            <label for="fechaInicio" class="col-form-label">Fecha Inicio:</label>
+            <input [(ngModel)]="objDeposito.fechaInicio" type="date" name="fechaInicio" id="fechaInicio" class="form-control">
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="form-group">
+            <label for="fechaFin" class="col-form-label">Fecha Fin:</label>
+            <input [(ngModel)]="objDeposito.fechaFin" type="date" name="fechaFin" id="fechaFin" class="form-control">
+        </div>
+    </div>
+</div>
+<hr>
+<br>
+<div class="row" style="align-items: center;">
+    <div class="col-md-6">
+        <button type="button" class="btn btn-success mr-1" id="reporteExcel"><i class="fa fa-file-excel-o"></i>Excel</button>
+        <button type="button" class="btn btn-primary mr-1" id="reporteWeb"><i class="fa fa-search-plus"></i>Web</button>
+    </div>
+</div>

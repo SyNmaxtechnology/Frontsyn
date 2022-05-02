@@ -1,0 +1,34 @@
+<h1><i class="fa fa-dollar"></i> Estado de Cuenta</h1>
+<hr>
+<br>
+<div class="col-12">
+    <div class="form-row">
+        <div class="form-group col-12">
+            <label for="">Cliente:</label>
+            <input  [(ngModel)]="proveedorSeleccionado" type="text" name="proveedorSeleccionado" list="proveedores" class="form-control"
+                id="proveedoresListados"
+                (ngModelChange)="seleccionarProveedor(proveedorSeleccionado)"
+            >
+            <datalist id="proveedores"> 
+                <option *ngFor="let proveedor of listaProveedores" [value]="proveedor.cedula_proveedor+' '+proveedor.proveedor_nombre"></option>
+            </datalist>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="">Fecha Inicio:</label>
+            <input [(ngModel)]="objEntradasCredito.fechaInicio" type="date" name="fechaInicio" id="fechaInicio" class="form-control">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="">Fecha Fin:</label>
+            <input [(ngModel)]="objEntradasCredito.fechaFin" type="date" name="fechaFin" id="fechaFin" class="form-control">
+        </div>
+    </div>
+    <button class="btn btn-success mr-1" id="btnbuscarFacturas">
+        <i class="fa fa-file-excel-o"></i>
+        Excel
+    </button> 
+    <button class="btn btn-info" id="btnLimpiarForm">
+        Limpiar
+    </button> 
+</div>

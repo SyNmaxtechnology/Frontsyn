@@ -1,0 +1,437 @@
+<h1>Usuario</h1>
+<br>
+<div class="col-12">
+    <form method="POST" id="formBuscarUsuario">
+        <div class="form-row">
+            <div class="form-group col-sm">
+                <input [(ngModel)]="query" name="query" type="text" id="query" class="form-control" placeholder="Buscar por nombre de usuario">
+            </div>
+            <div class="form-group col-md-3">
+                <button type="submit" class="btn btn-primary" (click)="obtenerUsuario($event,query)">Buscar</button>
+            </div>
+        </div>
+    </form>
+</div>
+<br>
+<div class="col-12">
+    <form method="POST" id="formUsuario">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="usuario">Usuario</label>
+                        <input [(ngModel)]="objUsuario.usuario" type="text" name="usuario" id="usuario" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="contrasena">Contraseña</label>
+                        <input [(ngModel)]="objUsuario.contrasena" type="password" name="contrasena" id="contrasena" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Permiso">Bodega</label>
+                        <select [(ngModel)]="objUsuario.idbodega" name="idbodega" id="idbodega" class="form-control">
+                                <option selected value="">--Seleccione--</option>
+                                <option *ngFor="let bodega of listaBodegas" [ngValue]="bodega.id">{{bodega.descripcion}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Permiso">Permiso</label>
+                        <select [(ngModel)]="objUsuario.idpermiso" name="idpermiso" id="permiso" class="form-control"
+                          (change)="asignarPermisos()"
+                        >
+                                <option selected value="">--Seleccione--</option>
+                                <option *ngFor="let permiso of this.listaPermisos" [ngValue]="permiso.id">{{permiso.descripcion}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- 
+
+
+              <div class="row">
+                <legend>Accesos</legend>
+                
+                <div class="form-group col-md-3">
+                    <div class="form-check">
+                        <input [(ngModel)]="this.objPermisos.documentos.activo" name="documentos.activo" class="form-check-input" type="checkbox" value="" id="idDocumentos" [checked]="this.objPermisos.documentos.activo" (change)="habilitarDeshabilitarDocumentos()">
+                        <label class="form-check-label" for="idDocumentos">
+                          <b>Documentos</b>
+                        </label>
+                      </div>
+                    <div class="form-check">
+                    <input [(ngModel)]="this.objPermisos.documentos.facturar" name="documentos.facturar" class="form-check-input" type="checkbox" value="" id="idFacturar" [checked]="this.objPermisos.documentos.facturar">
+                    <label class="form-check-label" for="idFacturar">
+                      Facturar
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input [(ngModel)]="this.objPermisos.documentos.consultar" name="documentos.consultar" class="form-check-input" type="checkbox" value="" id="idconsulta" [checked]="this.objPermisos.documentos.consultar">
+                    <label class="form-check-label" for="idconsulta">
+                      Consulta
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input [(ngModel)]="this.objPermisos.documentos.recepcion" name="documentos.recepcion" class="form-check-input" type="checkbox" value="" id="idrecepcion" [checked]="this.objPermisos.documentos.recepcion">
+                    <label class="form-check-label" for="idrecepcion">
+                      Recepción
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input [(ngModel)]="this.objPermisos.documentos.recepciones" name="documentos.recepciones" class="form-check-input" type="checkbox" value="" id="idrecepciones" [checked]="this.objPermisos.documentos.recepciones">
+                    <label class="form-check-label" for="idrecepciones">
+                      Recepciones
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input [(ngModel)]="this.objPermisos.documentos.compra" name="documentos.compra" class="form-check-input" type="checkbox" value="" id="idcompra" [checked]="this.objPermisos.documentos.compra">
+                    <label class="form-check-label" for="idcompra">
+                      Compra
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input [(ngModel)]="this.objPermisos.documentos.credito" name="documentos.credito" class="form-check-input" type="checkbox" value="" id="idcredito" [checked]="this.objPermisos.documentos.credito">
+                    <label class="form-check-label" for="idcredito">
+                      Crédito
+                    </label>
+                  </div>
+                </div>
+
+                  ACCESOS DE LOS REPORTES 
+
+                <div class="form-group col-md-3">
+                  <div class="form-check">
+                      <input [(ngModel)]="this.objPermisos.reportes.activo" name="reportes.activo" class="form-check-input" type="checkbox" value="" id="idreportes" (change)=" habilitarDeshabilitarReportes()" [checked]="this.objPermisos.reportes.activo">
+                      <label class="form-check-label" for="idreportes">
+                        <b>Reportes</b>
+                      </label>
+                    </div>
+                  <div class="form-check">
+                    <!-- [(ngModel)]="objPermisos.pos.activo" name="pos.activo"  [checked]="objPermisos.pos.activo" 
+                  <input [(ngModel)]="objPermisos.reportes.ventas.activo" name="reportes.ventas.activo" [checked]="objPermisos.reportes.ventas.activo" class="form-check-input" type="checkbox" value="" id="idrptVentas" (change)="habilitarDeshabilitarReportesVentas()" 
+                    [checked]="objPermisos.reportes.ventas.activo">
+                  <label class="form-check-label" for="idrptVentas" >
+                    Ventas
+                  </label>
+                </div>
+                <div class="form-group ml-5" *ngIf="objPermisos.reportes.ventas.activo == true">
+
+                  <div class="form-check">
+                      <input [(ngModel)]="objPermisos.reportes.ventas.facturacion" name="reportes.ventas.facturacion" class="form-check-input" type="checkbox" value="" id="idrptVentasFac">
+                      <label class="form-check-label" for="idrptVentasFac">
+                        Facturacion
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input [(ngModel)]="objPermisos.reportes.ventas.detallado" name="reportes.ventas.detallado"  class="form-check-input" type="checkbox" value="" id="idrptVentasconsul">
+                      <label class="form-check-label" for="idrptVentasconsul">
+                        Factura Detallado
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input [(ngModel)]="objPermisos.reportes.ventas.productos" name="reportes.ventas.productos"  class="form-check-input" type="checkbox" value="" id="idrptVentasrecep">
+                      <label class="form-check-label" for="idrptVentasrecep">
+                        Productos
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input [(ngModel)]="objPermisos.reportes.ventas.cliente" name="reportes.ventas.cliente"  class="form-check-input" type="checkbox" value="" id="idrptVentasreceps">
+                      <label class="form-check-label" for="idrptVentasreceps">
+                        Ventas Cliente
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input [(ngModel)]="objPermisos.reportes.ventas.formaPago" name="reportes.ventas.formaPago"  class="form-check-input" type="checkbox" value="" id="idrptVentasformp">
+                      <label class="form-check-label" for="idrptVentasformp">
+                        Forma Pago
+                      </label>
+                    </div>
+                </div>
+                <div class="form-check">
+                  <input [(ngModel)]="objPermisos.reportes.compras.activo" name="reportes.compras.activo" class="form-check-input" type="checkbox" value="" id="idrptCompras" (change)="habilitarDeshabilitarReportesCompras()" [checked]="objPermisos.reportes.compras.activo">
+                  <label class="form-check-label" for="idrptCompras" >
+                    Compras
+                  </label>
+                </div>
+                  <div class="form-group ml-5"  *ngIf="objPermisos.reportes.compras.activo == true">
+                      <div class="form-check">
+                          <input [(ngModel)]="objPermisos.reportes.compras.compras" name="reportes.compras.compras" class="form-check-input" type="checkbox" value="" id="idrptComprasComp">
+                          <label class="form-check-label" for="idrptComprasComp">
+                            Compras
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input [(ngModel)]="objPermisos.reportes.compras.articulo" name="reportes.compras.articulo"  class="form-check-input" type="checkbox" value="" id="idrptComprasCompArt">
+                          <label class="form-check-label" for="idrptComprasCompArt">
+                            Compras Articulo
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input [(ngModel)]="objPermisos.reportes.compras.proveedor" name="reportes.compras.proveedor"  class="form-check-input" type="checkbox" value="" id="idrptComprasCompPro">
+                          <label class="form-check-label" for="idrptComprasCompPro">
+                            Compras Proveedor
+                          </label>
+                        </div>
+                </div>
+
+
+                <div class="form-check">
+                  <input [(ngModel)]="objPermisos.reportes.inventario.activo" name="reportes.inventario.activo" class="form-check-input" type="checkbox" value="" id="idrptInventarios" (change)="habilitarDeshabilitarReportesInventario()" [checked]="objPermisos.reportes.inventario.activo">
+                  <label class="form-check-label" for="idrptInventarios">
+                    Inventarios
+                  </label>
+                </div>
+              
+                <div class="form-group ml-5" *ngIf="objPermisos.reportes.inventario.activo">
+                  <div class="form-group">
+                    <div class="form-check">
+                      <input [(ngModel)]="objPermisos.reportes.inventario.existencia" name="reportes.inventario.existencia"  class="form-check-input" type="checkbox" value="" id="idrptInventariosExist">
+                      <label class="form-check-label" for="idrptInventariosExist">
+                        Existencia
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input [(ngModel)]="objPermisos.reportes.inventario.ajuste" name="reportes.inventario.ajuste"  class="form-check-input" type="checkbox" value="" id="idrptInventariosAJust">
+                      <label class="form-check-label" for="idrptInventariosAJust">
+                        Ajustes
+                      </label>
+                    </div>
+                </div>
+                </div>
+
+                <div class="form-check">
+                  <input [(ngModel)]="objPermisos.reportes.credito.activo" name="reportes.credito.activo" class="form-check-input" type="checkbox" value="" id="idrptCredito" (change)="habilitarDeshabilitarReportesCredito()" [checked]="objPermisos.reportes.credito.activo">
+                  <label class="form-check-label" for="idrptCredito" >
+                    Crédito
+                  </label>
+                </div>
+                <div class="form-group ml-5" *ngIf="objPermisos.reportes.credito.activo">   
+                  <div class="form-group">
+                    <div class="form-check">
+                      <input [(ngModel)]="objPermisos.reportes.credito.estadoCuenta" name="reportes.credito.estadoCuenta"  class="form-check-input" type="checkbox" value="" id="idrptCreditoEstC">
+                      <label class="form-check-label" for="idrptCreditoEstC">
+                        Estado Cuenta
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="form-check">
+                  <input [(ngModel)]="objPermisos.reportes.visita.activo" name="reportes.visita.activo" class="form-check-input" type="checkbox" value="" id="idrptVisita" (change)="habilitarDeshabilitarReportesVisitas()"
+                  [checked]="objPermisos.reportes.visita.activo">
+                  <label class="form-check-label" for="idrptVisita" >
+                    Visitas
+                  </label>
+                </div>
+                <div class="form-group ml-5" *ngIf="objPermisos.reportes.visita.activo">
+                  <div class="form-group">
+                    <div class="form-check">
+                      <input [(ngModel)]="objPermisos.reportes.visita.visitaCliente" name="reportes.visita.visitaCliente"  class="form-check-input" type="checkbox" value="" id="idrptVisitaVist">
+                      <label class="form-check-label" for="idrptVisitaVist">
+                        Visita Cliente
+                      </label>
+                    </div>
+                  </div>
+              </div>
+                
+              </div>
+
+              <!-- Accesos POS
+
+              <div class="form-group col-md-3">
+                  <div class="form-check">
+                      <input [(ngModel)]="objPermisos.pos.activo" name="pos.activo"  [checked]="objPermisos.pos.activo" 
+                      class="form-check-input" type="checkbox" value="" id="idpos"
+                       (change)="habilitarDeshabilitarPOS()" >
+                      <label class="form-check-label" for="idpos">
+                        <b>POS</b>
+                      </label>
+                    </div>
+                  <div class="form-check">
+                  <input [(ngModel)]="objPermisos.pos.venta" name="pos.venta" class="form-check-input" type="checkbox" value="" id="idposventa" [checked]="objPermisos.pos.venta">
+                  <label class="form-check-label" for="idposventa">
+                    Ventas
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group col-md-3">
+                  <div class="form-check">
+                      <input [(ngModel)]="objPermisos.cliente.activo" name="cliente.activo"  [checked]="objPermisos.cliente.activo"  class="form-check-input" type="checkbox" value="" id="idcliente" (change)="habilitarDeshabilitarCliente()" >
+                      <label class="form-check-label" for="idcliente">
+                        <b>Cliente</b>
+                      </label>
+                    </div>
+                  <div class="form-check">
+                  <input [(ngModel)]="objPermisos.cliente.listado"  name="cliente.listado" class="form-check-input" type="checkbox" value="" id="idclListado">
+                  <label class="form-check-label" for="idclListado">
+                    Listado
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group col-md-3">
+                  <div class="form-check">
+                      <input [(ngModel)]="objPermisos.proveedor.activo" name="proveedor.activo"  [checked]="objPermisos.proveedor.activo"  class="form-check-input" type="checkbox" value="" id="idproveedor" (change)="  habilitarDeshabilitarProveedor()">
+                      <label class="form-check-label" for="idproveedor">
+                        <b>Proveedor</b>
+                      </label>
+                    </div>
+                  <div class="form-check">
+                  <input [(ngModel)]="objPermisos.proveedor.listado" name="proveedor.listado" class="form-check-input" type="checkbox" value="" id="idprListado">
+                  <label class="form-check-label" for="idprListado">
+                    Listado
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group col-md-3">
+                  <div class="form-check">
+                      <input [(ngModel)]="objPermisos.producto.activo" name="producto.activo"  [checked]="objPermisos.producto.activo"  class="form-check-input" type="checkbox" value="" id="idproducto" (change)=" habilitarDeshabilitarProducto()" >
+                      <label class="form-check-label" for="idproducto">
+                        <b>Producto</b>
+                      </label>
+                    </div>
+                  <div class="form-check">
+                  <input [(ngModel)]="objPermisos.producto.listado" name="producto.listado" class="form-check-input" type="checkbox" value="" id="idprdListado">
+                  <label class="form-check-label" for="idprdListado">
+                    Listado
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input [(ngModel)]="objPermisos.producto.receta" name="producto.receta" class="form-check-input" type="checkbox" value="" id="idprdReceta">
+                  <label class="form-check-label" for="idprdReceta">
+                    Receta
+                  </label>
+                </div>
+              </div>
+
+
+              <div class="form-group col-md-3">
+                  <div class="form-check">
+                      <input [(ngModel)]="objPermisos.articulo.activo" name="articulo.activo"  [checked]="objPermisos.articulo.activo"  class="form-check-input" type="checkbox" value="" id="idArticulo" (change)="habilitarDeshabilitarArticulo()">
+                      <label class="form-check-label" for="idArticulo">
+                        <b>Articulo</b>
+                      </label>
+                    </div>
+                  <div class="form-check">
+                  <input [(ngModel)]="objPermisos.articulo.listado" name="articulo.listado" class="form-check-input" type="checkbox" value="" id="idartListado">
+                  <label class="form-check-label" for="idartListado">
+                    Listado
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input [(ngModel)]="objPermisos.articulo.existencia" name="articulo.existencia" class="form-check-input" type="checkbox" value="" id="idartExistencia">
+                  <label class="form-check-label" for="idartExistencia">
+                    Existencia
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input [(ngModel)]="objPermisos.articulo.movimiento" name="articulo.movimiento" class="form-check-input" type="checkbox" value="" id="idartMovimiento">
+                  <label class="form-check-label" for="idartMovimiento">
+                    Movimiento
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group col-md-3">
+                  <div class="form-check">
+                      <input [(ngModel)]="objPermisos.impuesto.activo" name="impuesto.activo"  [checked]="objPermisos.impuesto.activo"  class="form-check-input" type="checkbox" value="" id="idimpuesto" (change)="habilitarDeshabilitarImpuesto()">
+                      <label class="form-check-label" for="idimpuesto">
+                        <b>Impuesto</b>
+                      </label>
+                    </div>
+                  <div class="form-check">
+                  <input [(ngModel)]="objPermisos.impuesto.listado" name="impuesto.listado" class="form-check-input" type="checkbox" value="" id="idimpListado">
+                  <label class="form-check-label" for="idimpListado">
+                    Listado
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group col-md-3">
+                  <div class="form-check">
+                      <input [(ngModel)]="objPermisos.categoria.activo" name="categoria.activo"  [checked]="objPermisos.categoria.activo"  class="form-check-input" type="checkbox" value="" id="idcategoria" (change)="habilitarDeshabilitarCategoria()">
+                      <label class="form-check-label" for="idcategoria">
+                        <b>Categoria</b>
+                      </label>
+                    </div>
+                  <div class="form-check">
+                  <input [(ngModel)]="objPermisos.categoria.listado" name="categoria.listado" class="form-check-input" type="checkbox" value="" id="idcatListado">
+                  <label class="form-check-label" for="idcatListado">
+                    Listado
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group col-md-3">
+                  <div class="form-check">
+                      <input [(ngModel)]="objPermisos.descuento.activo" name="descuento.activo"  [checked]="objPermisos.descuento.activo"  class="form-check-input" type="checkbox" value="" id="iddescuento" (change)="habilitarDeshabilitarDescuento()">
+                      <label class="form-check-label" for="iddescuento">
+                        <b>Descuento</b>
+                      </label>
+                    </div>
+                  <div class="form-check">
+                  <input [(ngModel)]="objPermisos.descuento.listado"  name="descuento.listado" class="form-check-input" type="checkbox" value="" id="iddescListado">
+                  <label class="form-check-label" for="iddescListado">
+                    Listado
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group col-md-3">
+                  <div class="form-check">
+                      <input [(ngModel)]="objPermisos.emisor.activo" name="emisor.activo"  [checked]="objPermisos.emisor.activo"  class="form-check-input" type="checkbox" value="" id="idemisor" (change)="habilitarDeshabilitarEmisor()">
+                      <label class="form-check-label" for="idemisor" >
+                        <b>Emisor</b>
+                      </label>
+                    </div>
+                  <div class="form-check">
+                  <input [(ngModel)]="objPermisos.emisor.configuracion" name="emisor.configuracion" class="form-check-input" type="checkbox" value="" id="idemConfiguracion">
+                  <label class="form-check-label" for="idemConfiguracion">
+                    Configuración
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group col-md-3">
+                  <div class="form-check">
+                      <input [(ngModel)]="objPermisos.visita.activo" name="visita.activo"  [checked]="objPermisos.visita.activo"  class="form-check-input" type="checkbox" value="" id="idvisita" (change)="  habilitarDeshabilitarVisita()">
+                      <label class="form-check-label" for="idvisita">
+                        <b>Visita</b>
+                      </label>
+                    </div>
+                  <div class="form-check">
+                  <input [(ngModel)]="objPermisos.visita.registro" name="visita.registro" class="form-check-input" type="checkbox" value="" id="idvisRegistro">
+                  <label class="form-check-label" for="idvisRegistro">
+                      Registro
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group col-md-3">
+                  <div class="form-check">
+                      <input [(ngModel)]="objPermisos.usuario.activo" name="usuario.activo"  [checked]="objPermisos.usuario.activo"  class="form-check-input" type="checkbox" value="" id="idusuario" (change)=" habilitarDeshabilitarUsuario()">
+                      <label class="form-check-label" for="idusuario">
+                        <b>Usuario</b>
+                      </label>
+                    </div>
+                  <div class="form-check">
+                  <input [(ngModel)]="objPermisos.usuario.listado" name="usuario.listado" class="form-check-input" type="checkbox" value="" id="idusListado">
+                  <label class="form-check-label" for="idusListado">
+                      Listado
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input [(ngModel)]="objPermisos.usuario.bodegas" name="usuario.bodegas" class="form-check-input" type="checkbox" value="" id="idusBodegas">
+                  <label class="form-check-label" for="idusBodegas">
+                      Bodegas
+                  </label>
+                </div>
+              </div>
+          </div>-->
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary" (click)="procesarUsuario($event,objUsuario)">Guardar Cambios</button>
+    </form>
+</div>

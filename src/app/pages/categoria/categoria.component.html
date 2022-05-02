@@ -1,0 +1,222 @@
+<div class="col-12">
+    <h1>Listado de Categorías</h1>
+    <button (click)= "titulo = 'Nueva Categoría'" type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalNuevaCategoria">Crear</button>
+</div>
+<br>
+<div class="col-12">
+    <form method="POST" id="form_buscar_categoria">
+        <div class="form-row" id="buscador_categoria">
+            <div class="form-group col-sm-12 col-md-9">
+                <input [(ngModel)]="query" name="query" type="text" id="query" list="categorias" class="form-control" 
+                    placeholder="Buscar..." (ngModelChange)="buscarCategoria(query)" (keyup)="recargarCategorias(query)">
+
+                    <datalist id="categorias">
+                        <option *ngFor="let categoria of listaCategorias" [value]="categoria.descripcion"></option>
+                    </datalist>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="col-12" *ngIf="tablaPequena == false">
+    <table class="table table-responsive" id="tabla_detalles">
+        <thead>
+            <tr>
+                <td>#</td>
+                <th>Descripción</th>
+                <th>Código</th>
+                <th>Activo</th>
+                <th>Auditoría</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let categoria of collection.data | paginate: config">
+           <tr>
+               <td>{{categoria.id}}</td>
+               <td>{{categoria.descripcion}}</td>
+               <td>{{categoria.codigo}}</td>
+               <td>{{categoria.estado_categoria}}</td>
+               <td>{{categoria.usuario}}</td>
+               <td>
+                <button type="button" class="btn btn-danger btn-xs mr-1" (click)="actualizarEstado(categoria)" >
+                    <i class="fa fa-ban"></i>
+                </button>
+            
+                <button type="button" class="btn btn-default btn-xs" (click) ="obtenerCategoriaPorId(categoria.id)"
+                    data-toggle="modal" data-target="#ModalNuevaCategoria"
+                > 
+                    <i class="fa fa-pencil-square-o"></i>
+                </button>
+            </td>
+           </tr>
+        </tbody>
+    </table>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> 
+</div>
+
+
+<ng-container *ngIf="tablaPequena">
+    <div class="table-responsive"  *ngFor="let categoria of collection.data | paginate: config">
+        <table class="table table-hover" id="tabla_detalles">
+            <tbody >
+                <tr>
+                    <th>#</th>
+                    <td>{{categoria.id}}</td>
+                </tr>
+                <tr>
+                    <th>Descripción</th>
+                    <td>{{categoria.descripcion}}</td>
+                </tr>
+                <tr>
+                    <th>Código</th>
+                    <td>{{categoria.codigo}}</td>
+                </tr>
+                <tr>
+                    <th>Activo</th>
+                    <td>{{categoria.estado_categoria}}</td>
+                </tr>
+                <tr>
+                    <th>Auditoría</th>
+                    <td>{{categoria.usuario}}</td>
+                </tr>
+                <tr>
+                    <th>Acciones</th>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-xs mr-1" (click)="actualizarEstado(categoria)" >
+                            <i class="fa fa-ban"></i>
+                        </button>
+                    
+                        <button type="button" class="btn btn-default btn-xs" (click) ="obtenerCategoriaPorId(categoria.id)"
+                            data-toggle="modal" data-target="#ModalNuevaCategoria"
+                        > 
+                            <i class="fa fa-pencil-square-o"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> 
+</ng-container>
+
+
+<div class="modal fade" id="ModalNuevaCategoria" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{titulo}}</h5>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="formNuevaCategoria">
+                    <div class="form-group">
+
+                        <label for="">Descripción</label>
+                        <input [(ngModel)]="queryDescripcionCodigoCabys" type="text" name="queryDescripcionCodigoCabys" id="txtqueryDescripcionCodigoCabysBusqueda" class="form-control">
+                        <br>
+                        <br>
+                        <button type="button" class="btn btn-primary" id="btnBuscarCodigo">Buscar</button>
+                    </div>
+                    <div class="table-responsive">
+                        <div class="table table-hover table-bordered tableFixHead">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Descripción</th>
+                                    <th>Impuesto</th>
+                                </tr>
+                            </thead>
+                            <tbody style=" height: 200px;">
+                                <tr *ngFor="let linea of listaCodigos" (click)="cargarLinea(linea)">
+                                    <td>{{linea.codigo}}</td>
+                                    <td>{{linea.descripcion}}</td>
+                                    <td>{{linea.impuesto}}</td>
+                                </tr>
+                            </tbody>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion" class="col-form-label">Descripción:</label>
+                        <input [(ngModel)]="objCategoria.descripcion" name="descripcion" type="text" class="form-control" id="descripcion">
+                    </div>
+                    <div class="form-group">
+                        <label for="codigo" class="col-form-label">Código</label>
+                        <input [(ngModel)]="objCategoria.codigo" name="codigo" type="text" class="form-control" id="codigo">
+                    </div>
+                    <div class="form-group">
+                        <label for="codigo" class="col-form-label">Código Cabys</label>
+                        <input [(ngModel)]="objCategoria.codigocabys" name="codigocabys" id="txtcodigocabys" type="text" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="codigo" class="col-form-label"> Descripción código cabys</label>
+                        <textarea [(ngModel)]="objCategoria.descripcioncodigo" name="descripcioncodigo" id="txtdescripcioncodigo"  class="form-control" required cols="30" rows="4" required></textarea>
+                    </div>
+                    
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="limpiarDatos()" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="nuevaCategoria" (click)="procesarCategoria(objCategoria)">Guardar</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="ModalActualizarCategoria" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Actualizar Categoria</h5>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" id="formActualizarDescuento">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label for="">Descripción</label>
+                                <input [(ngModel)]="queryDescripcionCodigoCabys" type="text" name="queryDescripcionCodigoCabys" id="txtqueryDescripcionCodigoCabysBusqueda" class="form-control">
+                                <br>
+                                <br>
+                                <button type="button" class="btn btn-primary" id="btnBuscarCodigo">Buscar</button>
+                            </div>
+                            <div class="table-responsive">
+                                <div class="table table-hover table-bordered tableFixHead">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Descripción</th>
+                                            <th>Impuesto</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style=" height: 200px;">
+                                        <tr *ngFor="let linea of listaCodigos" (click)="cargarLinea(linea)">
+                                            <td>{{linea.codigo}}</td>
+                                            <td>{{linea.descripcion}}</td>
+                                            <td>{{linea.impuesto}}</td>
+                                        </tr>
+                                    </tbody>
+                                </div>
+                            </div>
+                            <label for="descripcion" class="col-form-label">Descripción:</label>
+                            <input [(ngModel)]="objCategoria.descripcion" name="descripcion" type="text" class="form-control" id="descripcionActualizar">
+                        </div>
+                        <div class="form-group">
+                            <label for="codigo" class="col-form-label">Código</label>
+                            <input [(ngModel)]="objCategoria.codigo" name="codigo" type="text" class="form-control" id="codigoActualizar">
+                        </div>
+                        <div class="form-group">
+                            <label for="codigo" class="col-form-label">Código Cabys</label>
+                            <input [(ngModel)]="objCategoria.codigocabys" name="codigocabys" id="txtcodigocabysActualizar" type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="codigo" class="col-form-label"> Descripción código cabys</label>
+                            <textarea [(ngModel)]="objCategoria.descripcioncodigo" name="descripcioncodigo" id="txtdescripcioncodigoActualizar"  class="form-control" required cols="30" rows="4" required></textarea>
+                        </div>
+                        
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="actualizarDescuento">Guardar</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>

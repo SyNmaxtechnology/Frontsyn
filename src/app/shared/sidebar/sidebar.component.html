@@ -1,0 +1,227 @@
+<!-- Left Sidebar - style you can find in sidebar.scss  style="background-color:#38114b"-->
+<!-- ============================================================== -->
+<aside class="left-sidebar"  style="background-color:#38114b">
+    
+    <!-- Sidebar scroll-->
+    <div class="scroll-sidebar" style="background-color:#38114b" >
+        <!-- Sidebar navigation-->
+        <nav class="sidebar-nav"  style="background-color:#38114b"> 
+            <ul id="sidebarnav" style="background-color:#38114b" >
+                <li class="nav-devider"></li>
+                <li class="nav-small-cap">MENU</li>
+                
+                <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="fa fa-credit-card" aria-hidden="true"></i><span class="hide-menu">Documentos</span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'ruteo1' || mostrar() == 'integrador'"><a [routerLink]="['/factura']">Facturar</a></li>
+
+                        <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador' || mostrar() == 'ruteo1'" ><a [routerLink]="['/consulta']">Consultar</a></li>
+
+                        <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador'"><a [routerLink]="['/recepcion']">Recepción</a></li>
+                        
+                        <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador'"><a [routerLink]="['/recepciones']">Recepciónes</a></li>
+
+                        <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador'">
+                            <a [routerLink]="['/compra']">Compra</a></li>
+                        
+                        <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador'"><a [routerLink]="['/recibos-credito']">Aplicación facturas crédito</a></li>
+
+                        <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador'"><a [routerLink]="['/entradas-credito']">Aplicación compras crédito</a></li>
+                    </ul>
+                </li>
+                <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador' || mostrar() == 'ruteo1'"> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="fa fa-credit-card" aria-hidden="true"></i><span class="hide-menu">Reportes</span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador'"><a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">Ventas</a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li><a [routerLink]="['/reporte-facturacion']">Facturación</a></li>
+                                <li><a [routerLink]="['/reporte-factura-detallado']">Factura Detallado</a></li>
+                                <li><a [routerLink]="['/reporte-producto']">Productos</a></li>
+                                <li><a [routerLink]="['/reporte-cliente']">Ventas por Cliente</a></li>
+                                <li><a [routerLink]="['/reporte-forma-pago']">Forma de Pago</a></li>
+                                <li><a [routerLink]="['/resumen-iva-ventas']">Resumen IVA Ventas</a></li>
+                            </ul>
+                        </li>
+                        <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador'"><a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">Compras</a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li><a [routerLink]="['/reporte-compra']">Compras</a></li>
+                                <li><a [routerLink]="['/reporte-articulo']">Compras por Artículo</a></li>
+                                <li><a [routerLink]="['/reporte-proveedor']">Compras por Proveedor</a></li>
+                                <li><a [routerLink]="['/resumen-iva-compras']">Resumen IVA compras</a></li>
+                            </ul>
+                        </li>
+
+                        <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador' || mostrar() == 'ruteo1'"><a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">Inventarios</a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador' || mostrar() == 'ruteo1'">
+                                    <a [routerLink]="['/reporte-existencia']">Existencia de Artículos</a>
+                                </li>
+                                <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador'">
+                                    <a [routerLink]="['/reporte-ajuste']"> Ajustes</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador' || mostrar() == 'ruteo1'"><a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">CXC</a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li><a [routerLink]="['/facturas-credito-canceladas']">Estado de <br> Cuenta</a></li>
+                            </ul>
+                        </li>
+                        <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador' "><a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">CXP</a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li><a [routerLink]="['/entradas-credito-canceladas']">Estado de <br> Cuenta</a></li>
+                            </ul>
+                        </li>
+                        <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador'"><a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">Visitas</a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li><a [routerLink]="['/reporte-visitas']">Visitas a Clientes</a></li>
+                                <li><a [routerLink]="['/reporte-razones-no-venta']">Razones No Venta</a></li>
+                            </ul>
+                        </li>
+
+                        <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador'"><a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">D151</a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li >
+                                    <a [routerLink]="['/d151-ventas']" *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador'">D151 ventas detallado</a>
+                                </li>
+                                <li >
+                                    <a [routerLink]="['/d151-ventas-resumido']" *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador'">D151 ventas resumido</a>
+                                </li>
+
+                                <li>
+                                    <a [routerLink]="['/d151-compras']" *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador'">D151 compras detallado</a>
+                                </li>
+                                <li>
+                                    <a [routerLink]="['/d151-compras-resumido']" *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador'">D151 compras resumido</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador'"><a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">Bancos</a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li><a [routerLink]="['/reporte-depositos']">Depósitos</a></li>
+                                <li><a [routerLink]="['/reporte-transferencias']">Transferencias</a></li>
+                                <li><a [routerLink]="['/reporte-movimientos-cuenta']">Movimientos por cuenta</a></li>
+                            </ul>
+                        </li>
+
+                        <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador' && idemisor === 41">
+                            <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">Encuestas</a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li
+                                    *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador'"
+                                ><a [routerLink]="['/reporte-encuesta-servicio']">Encuesta Servicio</a></li>
+                                <li
+                                    *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador'"
+                                >
+                                    <a [routerLink]="['/reporte-encuesta-requerimiento']">Encuesta requerimiento por requerimiento</a></li>
+                                <li
+                                    *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador'"
+                                >
+                                    <a [routerLink]="['/reporte-encuesta-requerimiento-por-cliente']">Encuesta requerimiento por cliente</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- MODULO DE VENTAS-->
+                <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador'"> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="fa fa-credit-card" aria-hidden="true"></i><span class="hide-menu">POS</span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a [routerLink]="['/venta']">venta</a></li>
+                    </ul>
+                </li>
+
+                <!--- FIN MODULO DE VENTAS-->
+                <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador'"> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Cliente </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a [routerLink]="['/cliente']">Listado</a></li>
+                    </ul>
+                </li>
+
+                <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador'"> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Proveedor </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a [routerLink]="['/proveedor']">Listado </a></li>
+                    </ul>
+                </li>
+
+                <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador'"> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="fa fa-cube"></i><span class="hide-menu">Producto </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a [routerLink]="['/producto']">Listado </a></li>
+                        <li><a [routerLink]="['/receta']">Receta </a></li>
+                    </ul>
+                </li>
+                <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador'"> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="fa fa-cube"></i><span class="hide-menu">Artículo </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a [routerLink]="['/articulo']">Listado </a></li>
+                        <li><a [routerLink]="['/existencia']">Existencia </a></li>
+                        <li><a [routerLink]="['/movimiento']">Movimiento </a></li>
+                    </ul>
+                </li>
+                <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador'"> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Impuesto </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a [routerLink]="['/impuesto']">Listado </a></li>
+                    </ul>
+                </li>
+                <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador'"> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Categoria </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a [routerLink]="['/categoria']">Listado </a></li>
+                    </ul>
+                </li>
+                <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador'"> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Descuento </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a [routerLink]="['/descuento']">Listado </a></li>
+                    </ul>
+                </li>
+                <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador'"> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="fa fa-user-md"></i><span class="hide-menu">Emisor </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a [routerLink]="['/Emisor']">Configuración Emisor </a></li>
+                    </ul>
+                </li>
+                <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador'"> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="fa fa-user-md"></i><span class="hide-menu">Bancos</span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a [routerLink]="['/cuentas']">Cuentas </a></li>
+                        <li><a [routerLink]="['/movimientos-banco']">Movimientos</a></li>
+                    </ul>
+                </li>
+                <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador' || mostrar() == 'ruteo1'"> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="fa fa-user-md"></i><span class="hide-menu">Visita </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a [routerLink]="['/visita']">Vista a Clientes</a></li>
+                        <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador' || mostrar() == 'ruteo1'">
+                            <a [routerLink]="['/razon']">Razones no venta</a>
+                        </li>
+                    </ul>
+                </li>
+                <li *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'ruteo1' && idemisor === 41"> 
+                    <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="fa fa-user-md"></i><span class="hide-menu">Encuestas </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a [routerLink]="['/encuesta-requerimiento']">Listado Encuesta Requerimiento</a></li>
+                        
+                        <li
+                            *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador'"
+                        >
+                            <a [routerLink]="['/listado-encuesta-servicio']">Listado Encuesta Servicio</a>
+                        </li>
+
+                        <li><a [routerLink]="['/resultado-encuesta-requerimiento']">Encuesta Requerimiento</a></li>
+                        
+                        <li>
+                            <a [routerLink]="['/encuesta-servicio']"
+                            *ngIf="mostrar() == 'superusuario' || mostrar() == 'facturador' || mostrar() == 'integrador'"
+                            >Encuesta Servicio</a>
+                        </li>
+                    </ul>
+                </li>
+                <li *ngIf="mostrar() == 'superusuario'"> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="fa fa-user-md"></i><span class="hide-menu">Usuario </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a [routerLink]="['/usuario']">Listado</a></li>
+                        <li><a [routerLink]="['/bodega']">Bodegas</a></li>
+                        <!-- <li><a [routerLink]="['/roles']">Roles</a></li> -->
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <!-- End Sidebar navigation -->
+    </div>
+    <!-- End Sidebar scroll-->
+</aside>
+<!-- ============================================================== -->
+<!-- End Left Sidebar - style you can find in sidebar.scss  -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->

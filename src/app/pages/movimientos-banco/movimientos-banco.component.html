@@ -1,0 +1,46 @@
+<div class="col-12">
+    <h1><i class="fa fa-money"></i>Movimientos</h1>
+    <!--<button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalNuevaCuenta" id="nuevaCuenta">Crear</button>-->
+</div>
+<br>
+
+<div class="col-12">
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label for="">Cuentas</label>
+            <select [(ngModel)]="objMovimiento.idcuenta" name="idcuenta" id="selectCuentas" class="form-control">
+                <option value="">--Seleccione--</option>
+                <option *ngFor="let cuenta of listaCuentas" [value]="cuenta.id"> {{cuenta.numctabanco}} </option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label for="">Tipo Movimiento</label>
+            <select [(ngModel)]="objMovimiento.tipomovimiento" name="tipomovimiento" id="selectTipoMovimiento" class="form-control">
+                <option value="">--Seleccione--</option>
+                <option *ngFor="let movimiento of listaTiposMovimientos" [value]="movimiento.tipo"> {{movimiento.tipo}} </option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label for="">Monto</label>
+            <input [(ngModel)]="objMovimiento.monto" name="monto" type="text" id="monto" class="form-control">
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label for="">Fecha</label>
+            <input [(ngModel)]="objMovimiento.fecha" name="fecha" type="date" name="" id="fecha" class="form-control">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="">Descripción</label>
+            <textarea [(ngModel)]="objMovimiento.descripcion" name="descripcion" class="form-control" id="descripcion" rows="3"></textarea>
+        </div>
+    </div>
+</div>
+<br>
+
+<div class="row">
+    <div class="col-md-6">
+        <button type="button" class="btn btn-success mr-1" id="btnAgregarMovimiento">Agregar</button>
+        <button type="button" class="btn btn-primary mr-1" id="btnLimpiarForm">Limpiar</button>
+    </div>
+</div>

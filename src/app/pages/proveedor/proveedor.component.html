@@ -1,0 +1,336 @@
+<div class="col-12">
+    <h1>Listado de Proveedores</h1>
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalNuevoProveedor">Crear</button>
+</div>
+<br>
+
+<div class="col-8">
+    <form method="POST" id="form_buscar_proveedor">
+        <div class="form-row" id="buscar_proveedor">
+            <div class="form-group col-md-10">
+                <input [(ngModel)]="query" name="query" type="text" id="query" list="proveedores" class="form-control" placeholder="Buscar por cédula o nombre" (ngModelChange)="buscarProveedor(query)" (keyup)="recargarProveedores(query)">
+                <datalist id="proveedores">
+                    <option *ngFor="let proveedor of listaProveedores" [value]="proveedor.proveedor_nombre"></option>
+                </datalist>
+            </div>
+        </div>
+    </form>
+</div>
+<br>
+<br>
+
+<div class="col-12" *ngIf="tablaPequena == false">
+    <table class="table table-responsive" id="tabla_proveedores">
+        <thead>
+            <tr>
+                <th>Identificación</th>
+                <th>Nombre <br> Proveedor</th>
+                <th>Correo</th>
+                <th>Activo</th>
+                <th>Auditoría</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let proveedor of collection.data | paginate: config">
+            <tr>
+                <td>
+                    <b>Tipo</b><br>
+                    <b>Identificación</b><br>
+                    {{proveedor.proveedor_tipo_identificacion}}<br>
+                    <b>Identificación</b><br>
+                    {{proveedor.cedula_proveedor}}
+                </td>
+                <td>{{proveedor.proveedor_nombre}}</td>
+                <td>{{proveedor.proveedor_correo}}</td>
+                <td>{{proveedor.estado_proveedor}}</td>
+                <td>{{proveedor.usuario}}</td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-xs mr-1" (click) ="actualizarEstado(proveedor)">
+                        <i class="fa fa-ban"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#ModalActualizarProveedor" 
+                     (click) ="obtenerProveedorPorId(proveedor.id)"
+                    >
+                        <i class="fa fa-pencil-square-o"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+
+<ng-container *ngIf="tablaPequena">
+    <div class="table-responsive"  *ngFor="let proveedor of collection.data | paginate: config">
+        <table class="table table-hover" id="tabla_detalles">
+            <tbody >
+                <tr>
+                    <th>Identificación</th>
+                    <td>
+                        <b>Tipo</b><br>
+                        <b>Identificación</b><br>
+                        {{proveedor.proveedor_tipo_identificacion}}<br>
+                        <b>Identificación</b><br>
+                        {{proveedor.cedula_proveedor}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Proveedor</th>
+                    <td style="max-width: auto; word-break: break-all">{{proveedor.proveedor_nombre}}</td>
+                </tr>
+                <tr>
+                    <th>Correo</th>
+                    <td style="max-width: auto; word-break: break-all">{{proveedor.proveedor_correo}}</td>
+                </tr>
+                <tr>
+                    <th>Estado</th>
+                    <td>{{proveedor.estado_proveedor}}</td>
+                </tr>
+                <tr>
+                    <th>Auditoría</th>
+                    <td>{{proveedor.usuario}}</td>
+                </tr>
+                <tr>
+                    <th>Acciones</th>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-xs mr-1" (click) ="actualizarEstado(proveedor)">
+                            <i class="fa fa-ban"></i>
+                        </button>
+                        <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#ModalActualizarProveedor" 
+                         (click) ="obtenerProveedorPorId(proveedor.id)"
+                        >
+                            <i class="fa fa-pencil-square-o"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> 
+</ng-container>
+
+<!--MODAL PARA CREAR UN PROVEEDOR-->
+<div class="modal fade" id="ModalNuevoProveedor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nuevo Proveedor</h5>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="formNuevoProveedor">
+                    <div class="form-group">
+                        <label for="proveedor_nombre" class="col-form-label">Nombre:</label>
+                        <input [(ngModel)]="objProveedor.proveedor_nombre" name="proveedor_nombre" type="text" class="form-control" id="proveedor_nombre">
+                    </div>
+                    <div class="form-group">
+                        <label for="proveedor_nombre_comercial" class="col-form-label">Nombre Comercial</label>
+                        <input [(ngModel)]="objProveedor.proveedor_nombre_comercial" name="proveedor_nombre_comercial" type="text" class="form-control" id="proveedor_nombre_comercial">
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="proveedor_tipo_identificacion" class="col-form-label">Tipo Identificación:</label>
+                        <select [(ngModel)]="objProveedor.proveedor_tipo_identificacion"  name="proveedor_tipo_identificacion" id="proveedor_tipo_identificacion" class="form-control">
+                            <option value="">--Seleccione--</option>
+                            <option *ngFor= "let cedula of listaTipoCedulas" [value]="cedula.codigo">{{cedula.descripcion}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cedula_proveedor" class="col-form-label">Cédula</label>
+                        <input [(ngModel)]="objProveedor.cedula_proveedor" name="cedula_proveedor" type="number" class="form-control" id="cedula_proveedor">
+                    </div>
+                    <!--<div class="form-group" *ngIf= "objProveedor.codigo_actividad != null || objProveedor.codigo_actividad !== ''">
+                        <label for="codigo_actividad" class="col-form-label">Código Actividad</label><br>
+                        <input [(ngModel)]="cedulaProveedorBusqueda" name="cedulaProveedorBusqueda" type="number" class="form-control mr-1 mb-2" style="width: 50%;" placeholder="Cédula del proveedor"> 
+                        <button type="button" class="btn btn-success btn-sm mb-2"><i class="fa fa-search" id="buscarActividad"></i></button>
+                        
+                        <input [(ngModel)]="objProveedor.codigo_actividad" name="codigo_actividad" type="number" class="form-control mb-2" id="codigo_actividad" placeholder="Codigo de actividad">
+    
+                        <input [(ngModel)]="descripcionActividad" name="descripcionActividad" type="text" class="form-control" id="descripcionActividad" placeholder="Descripcion de la actividad">
+                        
+                    </div>-->
+                    <div class="form-group" id="divIdentificacionExtranjero" style="display: none;">
+                        <label for="identificacion_extranjero" class="col-form-label">Identificación extranjero</label>
+                        <input name="identificacion_extranjero" type="number" class="form-control" id="identificacion_extranjero">
+                    </div>
+                    <div class="form-group">
+                        <label for="codigoProvincia" class="col-form-label">Provincia:</label>
+                        <select name="codigoProvincia" id="codigoProvincia" class="form-control">
+                        <option value="" disabled selected>--Seleccione--</option>
+                        <option *ngFor= "let provincia of provincias" [value]="provincia.provincia">{{provincia.nPro}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="codigoCanton" class="col-form-label">Cantón</label>
+                        <select name="codigoCanton" id="codigoCanton" class="form-control">
+                            <option value="" disabled selected>--Seleccione--</option>
+                            <option *ngFor= "let canton of cantones" [value]="canton.canton">{{canton.nCan}}</option>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="codigoDistrito" class="col-form-label">Distrito</label>
+                        <select name="codigoDistrito" id="codigoDistrito" class="form-control">
+                    <option value="" disabled selected>--Seleccione--</option>
+                    <option *ngFor= "let distrito of distritos" [value]="distrito.distrito">{{distrito.nDis}}</option>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="proveedor_barrio" class="col-form-label">Barrio</label>
+                        <select [(ngModel)]="objProveedor.proveedor_barrio" name="proveedor_barrio" id="proveedor_barrio" class="form-control">
+                            <option value="" disabled selected>--Seleccione--</option>
+                            <option *ngFor= "let barrio of barrios" [value]="barrio.CodNew">{{barrio.nHac}}</option>
+                </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="otras_senas" class="col-form-label">Otras Señas</label>
+                        <input [(ngModel)]="objProveedor.otras_senas" name="otras_senas" type="text" class="form-control" id="otras_senas">
+                    </div>
+                    <div class="form-group" id="divOtrasSenasExtranjero" style="display: none;">
+                        <label for="otras_senas_extranjero" class="col-form-label">Otras Señas Extranjero</label>
+                        <input name="otras_senas_extranjero" type="text" class="form-control" id="otras_senas_extranjero">
+                    </div>
+                    <div class="form-group">
+                        <label for="proveedor_telefono_codigopais" class="col-form-label">Código País</label>
+                        <input [(ngModel)]="objProveedor.proveedor_telefono_codigopais" name="proveedor_telefono_codigopais" type="number" class="form-control" id="proveedor_telefono_codigopais">
+                    </div>
+                    <div class="form-group">
+                        <label for="proveedor_telefono_numtelefono" class="col-form-label">Teléfono</label>
+                        <input [(ngModel)]="objProveedor.proveedor_telefono_numtelefono" name="proveedor_telefono_numtelefono" type="number" class="form-control" id="proveedor_telefono_numtelefono">
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="proveedor_fax_codigopais" class="col-form-label">Código País</label>
+                        <input [(ngModel)]="objProveedor.proveedor_fax_codigopais" name="proveedor_fax_codigopais" type="number" class="form-control" id="proveedor_fax_codigopais">
+                    </div>
+                    <div class="form-group">
+                        <label for="proveedor_fax_numtelefono" class="col-form-label">Fax</label>
+                        <input [(ngModel)]="objProveedor.proveedor_fax_numtelefono" name="proveedor_fax_numtelefono" type="number" class="form-control" id="proveedor_fax_numtelefono">
+                    </div>
+                    <div class="form-group">
+                        <label for="proveedor_correo" class="col-form-label">Correo</label>
+                        <input [(ngModel)]="objProveedor.proveedor_correo" name="proveedor_correo" type="email" class="form-control" id="proveedor_correo">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="limpiarModalNUevoProveedor()" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="guardarProveedor">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+
+<!---->
+
+<!-- MODAL DE ACTUALIZAR EL PROVEEDOR -->
+<div class="modal fade" id="ModalActualizarProveedor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Actualizar Proveedor</h5>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="formActualizarProveedorActualizar">
+                    <div class="form-group">
+                        <label for="proveedor_nombre" class="col-form-label">Nombre:</label>
+                        <input [(ngModel)]="objProveedor.proveedor_nombre" name="proveedor_nombre" type="text" class="form-control" id="proveedor_nombreActualizar">
+                    </div>
+                    <div class="form-group">
+                        <label for="proveedor_nombre_comercial" class="col-form-label">Nombre Comercial</label>
+                        <input [(ngModel)]="objProveedor.proveedor_nombre_comercial" name="proveedor_nombre_comercial" type="text" class="form-control" id="proveedor_nombre_comercialActualizar">
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="proveedor_tipo_identificacion" class="col-form-label">Tipo Identificación:</label>
+                        <select [(ngModel)]="objProveedor.proveedor_tipo_identificacion"  name="proveedor_tipo_identificacion" id="tipoCedulaActualizar" class="form-control">
+                            <option value="">--Seleccione--</option>
+                            <option *ngFor= "let cedula of listaTipoCedulas" [value]="cedula.codigo">{{cedula.descripcion}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cedula_proveedor" class="col-form-label">Cédula</label>
+                        <input [(ngModel)]="objProveedor.cedula_proveedor" name="cedula_proveedor" type="number" class="form-control" id="cedula_proveedorActualizar">
+                    </div>
+                    <div class="form-group" *ngIf= "objProveedor.codigo_actividad != ''">
+                        <form method="POST" id="formBuscarActividad">
+                            <label for="codigo_actividad" class="col-form-label">Código Actividad</label><br>
+                            <input [(ngModel)]="cedulaProveedorBusqueda" name="cedulaProveedorBusqueda" type="number" class="form-control mr-1 mb-2" style="width: 50%;" placeholder="Cédula del proveedor"> 
+                            <button type="button" class="btn btn-success btn-sm mb-2"><i class="fa fa-search" id="buscarActividadActualizar" (click)="obtenerActividad(cedulaProveedorBusqueda)"></i></button>
+                            
+                            <input [(ngModel)]="codigoActividadBusqueda" name="codigoActividadBusqueda" type="number" class="form-control mb-2" id="codigo_actividad" placeholder="Codigo de actividad">
+        
+                            <input [(ngModel)]="descripcionActividad" name="descripcionActividad" type="text" class="form-control" id="descripcionActividadActualizar" placeholder="Descripcion de la actividad">
+                        </form>
+                        
+                    </div>
+                    <div class="form-group" id="divIdentificacionExtranjeroActualizar" style="display: none;">
+                        <label for="identificacion_extranjero" class="col-form-label">Identificación extranjero</label>
+                        <input [(ngModel)]="objProveedor.identificacion_extranjero" name="identificacion_extranjero" type="number" class="form-control" id="identificacion_extranjeroActualizar">
+                    </div>
+                    <div class="form-group">
+                        <label for="codigoProvincia" class="col-form-label">Provincia:</label>
+                        <select [(ngModel)]="codigoProvincia" name="codigoProvincia" id="codigoProvinciaActualizar" class="form-control">
+                        <option value="" disabled selected>--Seleccione--</option>
+                        <option *ngFor= "let provincia of provincias" [value]="provincia.provincia">{{provincia.nPro}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="codigoCanton" class="col-form-label">Cantón</label>
+                        <select [(ngModel)]="codigoCanton" name="codigoCanton" id="codigoCantonActualizar" class="form-control">
+                            <option value="" disabled selected>--Seleccione--</option>
+                            <option *ngFor= "let canton of cantones" [value]="canton.canton">{{canton.nCan}}</option>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="codigoDistrito" class="col-form-label">Distrito</label>
+                        <select [(ngModel)]="codigoDistrito" name="codigoDistrito" id="codigoDistritoActualizar" class="form-control">
+                    <option value="" disabled selected>--Seleccione--</option>
+                    <option *ngFor= "let distrito of distritos" [value]="distrito.distrito">{{distrito.nDis}}</option>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="codigoBarrio" class="col-form-label">Barrio</label>
+                        <select [(ngModel)]="codigoBarrio" name="codigoBarrio" id="codigoBarrioActualizar" class="form-control">
+                            <option value="" disabled selected>--Seleccione--</option>
+                            <option *ngFor= "let barrio of barrios" [value]="barrio.CodNew">{{barrio.nHac}}</option>
+                </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="otras_senas" class="col-form-label">Otras Señas</label>
+                        <input [(ngModel)]="objProveedor.otras_senas" name="otras_senas" type="text" class="form-control" id="otras_senasActualizar">
+                    </div>
+                    <div class="form-group" id="divOtrasSenasExtranjeroActualizar" style="display: none;">
+                        <label for="otras_senas_extranjero" class="col-form-label">Otras Señas Extranjero</label>
+                        <input [(ngModel)]="objProveedor.otras_senas_extranjero" name="otras_senas_extranjero" type="text" class="form-control" id="otras_senas_extranjeroActualizar">
+                    </div>
+                    <div class="form-group">
+                        <label for="proveedor_telefono_codigopais" class="col-form-label">Código País</label>
+                        <input [(ngModel)]="objProveedor.proveedor_telefono_codigopais" name="proveedor_telefono_codigopais" type="number" class="form-control" id="proveedor_telefono_codigopaisActualizar">
+                    </div>
+                    <div class="form-group">
+                        <label for="proveedor_telefono_numtelefono" class="col-form-label">Teléfono</label>
+                        <input [(ngModel)]="objProveedor.proveedor_telefono_numtelefono" name="proveedor_telefono_numtelefono" type="number" class="form-control" id="proveedor_telefono_numtelefonoActualizar">
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="proveedor_fax_codigopais" class="col-form-label">Código País</label>
+                        <input [(ngModel)]="objProveedor.proveedor_fax_codigopais" name="proveedor_fax_codigopais" type="number" class="form-control" id="proveedor_fax_codigopaisActualizar">
+                    </div>
+                    <div class="form-group">
+                        <label for="proveedor_fax_numtelefono" class="col-form-label">Fax</label>
+                        <input [(ngModel)]="objProveedor.proveedor_fax_numtelefono" name="proveedor_fax_numtelefono" type="number" class="form-control" id="proveedor_fax_numtelefonoActualizar">
+                    </div>
+                    <div class="form-group">
+                        <label for="proveedor_correo" class="col-form-label">Correo</label>
+                        <input [(ngModel)]="objProveedor.proveedor_correo" name="proveedor_correo" type="email" class="form-control" id="proveedor_correoActualizar">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="limpiarModalActualizarProveedor()" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="actualizarProveedor">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+<!---->

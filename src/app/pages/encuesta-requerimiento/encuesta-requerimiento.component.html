@@ -1,0 +1,179 @@
+<div class="col-12">
+    <h1>Listado de Encuesta Requerimiento</h1>
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalNuevaPregunta">Crear</button>
+</div>
+<br>
+<div class="col-12">
+    <form method="POST" id="form_buscar_descuento">
+        <div class="form-row" id="buscador_descuento">
+            <div class="form-group col-sm-12 col-md-8">
+                <input [(ngModel)]="query" 
+                    name="query" 
+                    type="text" 
+                    id="query" 
+                    class="form-control" 
+                    placeholder="Buscar razón" 
+                    list="preguntas"
+                    (ngModelChange)="buscarRazon(query)"
+                    (keyup)="recargarRazones(query)"
+                >
+                <datalist id="preguntas">
+                    <option *ngFor="let pregunta of collection.data" [value]="pregunta.pregunta"></option>
+                </datalist>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="col-12" *ngIf="tablaPequena == false">
+    <table class="table table-responsive" id="tabla_detalles">
+        <thead>
+            <tr>
+                <td>#</td>
+                <th>Razón</th>
+                <th>Auditoría</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let pregunta of collection.data | paginate: config">
+            <tr>
+                <td>{{pregunta.id}}</td>
+                <td>{{pregunta.pregunta}}</td>
+                <td>{{pregunta.auditoria}}</td>
+                <td>                
+                    <button type="button" class="btn btn-default btn-xs mr-1" (click) ="obtenerPreguntaPorId(pregunta.id)"
+                        data-toggle="modal" data-target="#ModalActualizarPregunta"
+                    > 
+                        <i class="fa fa-pencil-square-o"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-danger btn-xs" (click) ="eliminarLinea(pregunta.id)"> 
+                        <i class="fa fa-times-circle"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> 
+</div>
+
+<ng-container *ngIf="tablaPequena">
+    <div class="table-responsive"  *ngFor="let pregunta of this.collection.data | paginate: config">
+        <table class="table table-hover" id="tabla_detalles">
+            <tbody >
+                <tr>
+                    <th>#</th>
+                    <td>{{pregunta.id}}</td>
+                </tr>
+                <tr>
+                    <th>Descripción</th>
+                    <td>{{pregunta.pregunta}}</td>
+                </tr>
+                <tr>
+                    <th>Auditoría</th>
+                    <td>{{pregunta.auditoria}}</td>
+                </tr>
+                <tr>
+                    <th>Acciones</th>
+                    <td>
+                    
+                        <button type="button" class="btn btn-default btn-xs mr-1" (click) ="obtenerPreguntaPorId(pregunta.id)"
+                            data-toggle="modal" data-target="#ModalActualizarPregunta"
+                        > 
+                            <i class="fa fa-pencil-square-o"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-default btn-xs" (click) ="eliminarLinea(pregunta.id)"> 
+                            <i class="fa fa-times-circle"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> 
+</ng-container>
+
+
+<div class="modal fade" id="ModalNuevaPregunta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nueva Pregunta</h5>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="formNuevaPregunta">
+                    <div class="form-group">
+                        <label for="descripcion" class="col-form-label">Descripción:</label>
+                        <input [(ngModel)]="objPregunta.pregunta" name="pregunta" type="text" class="form-control" id="pregunta" 
+                        (keyup)="validarExpresion(objPregunta.pregunta)">
+                    </div>                    
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelar" data-dismiss="modal">Cancelar</button>
+                    <button 
+                        (click)="agregarPregunta(objPregunta)" 
+                        type="button" class="btn btn-primary" 
+                        id="nuevaPregunta" 
+                        [disabled]="disable" 
+                    >Guardar</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!------------------------------------------------------------------------------------------>
+
+<div class="modal fade" id="ModalActualizarPregunta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Actualizar Razón</h5>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="formActualizarPregunta">
+                    <div class="form-group">
+                        <label for="descripcion" class="col-form-label">Descripción:</label>
+                        <input [(ngModel)]="objPregunta.pregunta" name="pregunta" 
+                            type="text" class="form-control" 
+                            id="pregunta" 
+                            (keyup)="validarExpresion(objPregunta.pregunta)">
+                    </div>                    
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelar" data-dismiss="modal">Cancelar</button>
+                    <button 
+                        (click)="actualizaPregunta(objPregunta)" 
+                        type="button" class="btn btn-primary" 
+                        id="actualizarPregunta" 
+                        [disabled]="disable"
+                    >Guardar</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!---
+
+<td>{{descuento.id}}</td>
+                <td>{{descuento.descripcion}}</td>
+                <td>{{descuento.porcentaje}}</td>
+                <td>{{descuento.estado_descuento}}</td>
+                <td>{{descuento.usuario}}</td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-xs mr-1" (click)="actualizarEstado(descuento)" >
+                        <i class="fa fa-ban"></i>
+                    </button>
+                
+                    <button type="button" class="btn btn-default btn-xs" (click) ="obtenerDescuentoPorId(descuento.id)"
+                        data-toggle="modal" data-target="#ModalNuevoDescuento"
+                    > 
+                        <i class="fa fa-pencil-square-o"></i>
+                    </button>
+                </td>
+
+
+-->

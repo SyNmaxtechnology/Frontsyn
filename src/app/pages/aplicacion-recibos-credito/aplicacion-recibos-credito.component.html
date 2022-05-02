@@ -1,0 +1,176 @@
+<h1><i class="fa fa-file-text"></i>Mantenimiento de Recibos</h1>
+<hr>
+<br>
+<div class="col-12">
+    <div class="form-row">
+        <div class="form-group col-xs-12 col-sm-10 col-md-10">
+            <input [(ngModel)]="nombreCliente" list="clientes" name="nombreCliente" class="form-control" id="txtCliente" placeholder="Buscar cliente por cédula o nombre" (ngModelChange)="obtenerFacturas(nombreCliente)">
+
+            <datalist id="clientes"> 
+                <option *ngFor="let cliente of listaClientes" [value]="cliente.cedula_cliente+' '+cliente.cliente_nombre"></option>
+            </datalist>
+        </div>
+    </div>
+    <br>
+    <div class="form-row">
+        <div class="form-group col-xs-12 col-sm-6 col-md-5">
+            <label for="nombreCliente">Nombre Cliente: </label>
+            <input [(ngModel)]="nombreCliente" type="text" name="nombreCliente" id="nombreCliente" class="form-control">
+        </div>
+
+        <div class="form-group col-xs-12 col-sm-6 col-md-5">
+            <label for="idcuenta">Cuentas: </label>
+            <select [(ngModel)]="idcuenta" name="idcuenta" id="idcuenta" class="form-control">
+                <option value="">--Seleccione--</option>
+                <option *ngFor="let cuenta of listaCuentas" [value]="cuenta.id">{{cuenta.numctabanco}}</option>
+            </select>
+        </div>
+
+    </div>
+    <div class="form-row">
+        <div class="form-group col-xs-12 col-sm-6 col-md-5">
+            <label for="formaPago">Forma Pago: </label>
+            <select name="formaPago" id="formaPago" class="form-control">
+                <option *ngFor="let medio of listaMedioPago" [value]="medio.id">{{medio.medio}}</option>
+            </select>
+        </div>
+        <div class="form-group col-xs-12 col-sm-6 col-md-5">
+            <label for="fecha">Fecha: </label>
+            <input [(ngModel)]="fechaActual" type="date" name="fecha" id="fecha" class="form-control">
+        </div>
+        <!--<div class="form-group col-xs-12 col-sm-6 col-md-5">
+            <label for="moneda">Moneda: </label>
+            <select [(ngModel)]="moneda" name="moneda" id="moneda" class="form-control">
+                <option *ngFor="let moneda of listaMonedas" [value]="moneda.codigo">{{moneda.descripcion}}</option>
+            </select>
+        </div> -->
+    </div>
+    <div class="form-row">
+        <div class="form-group col-xs-12 col-sm-6 col-md-3">
+            <label for="monto">Monto: </label>
+            <input [(ngModel)]="monto" type="text" name="monto" id="monto" class="form-control">
+        </div>
+
+        <div class="form-group col-xs-12 col-sm-6 col-md-3">
+            <label for="saldo">Saldo: </label>
+            <input [(ngModel)]="saldo" type="text" name="saldo" id="saldo" class="form-control">
+        </div>
+        <div class="form-group col-xs-12 col-sm-6 col-md-4">
+            <label for="saldo">Monto a aplicar: </label>
+            <input [(ngModel)]="montoAplicado" type="text" name="montoAplicado" id="montoAplicado" class="form-control">
+        </div>
+    </div>
+    <div class="form-row">
+        <button class="btn btn-danger mr-1" id="resetDatos" [disabled]="bloquear">
+            Reset
+        </button>
+        <button class="btn btn-info" id="limpiarCampos" [disabled]="bloquear">
+            Limpiar
+        </button>
+    </div>
+</div>
+<hr>
+<br>
+
+<div class="col-12">
+    <div class="form-row">
+        <legend>Listado de Facturas</legend>
+    </div>
+    <div class="form-row">
+        <div class="alert alert-success text-center col-md-6" *ngIf="mostrar == true">
+            Guardando recibo. Espere...
+            <div class="spinner-border text-muted"></div>
+        </div>
+        <table class="table table-responsive table-hover" *ngIf="tablaPequena == false">
+            <thead>
+                <tr>
+                    <th>Factura</th>
+                    <th>Tipo Cambio</th>
+                    <th>Fecha</th>
+                    <th>Monto</th>
+                    <th>Saldo</th>
+                    <th>Moneda</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let factura of listaFacturas">
+                    <td>{{factura.numfactura}}</td>
+                    <td>{{factura.tipocambio}}</td>
+                    <td>{{factura.fecha}}</td>
+                    <td>{{factura.montototal}}</td>
+                    <td>{{factura.saldoactual}}</td>
+                    <td>{{factura.codigomoneda}}</td>
+                    <td>
+
+                        <button class="btn-success" (click)="agregarFactura(factura)" *ngIf="factura.selected == false">
+                            <i class="fa fa-plus" ></i>
+                        </button>
+                        <button class="btn-danger" (click)="quitarFactura(factura)" *ngIf="factura.selected">
+                            <i class="fa fa-times-circle"></i>
+                        </button>
+                        
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-responsive table-hover" *ngIf="tablaPequena == true">
+            <tbody *ngFor="let factura of listaFacturas">
+                <tr>
+                    <th>Factura</th>
+                    <td style="max-width: auto; word-break: break-all">
+                        {{factura.numfactura}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Tipo Cambio</th>
+                    <td style="max-width: auto; word-break: break-all">
+                        {{factura.tipocambio}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Fecha</th>
+                    <td style="max-width: auto; word-break: break-all">
+                        {{factura.fecha}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Monto</th>
+                    <td>{{factura.montototal}}</td>
+                </tr>
+                <tr>
+                    <th>Saldo</th>
+                    <td>{{factura.saldoactual}}</td>
+                </tr>
+                <tr>
+                    <th>Moneda</th>
+                    <td>{{factura.codigomoneda}}</td>
+                </tr>
+                <tr>
+                    <th>Acción</th>
+                    <td>
+                        <button class="btn-success btn-sm mr-1" (click)="agregarFactura(factura)" *ngIf="factura.selected">
+                            <i class="fa fa-plus" ></i>
+                        </button>
+                        <button class="btn-danger btn.sm" (click)="quitarFactura(factura)" *ngIf="factura.selected == false">
+                            <i class="fa fa-times-circle"></i>
+                        </button>
+                    </td>
+                </tr>
+                <br>
+            </tbody>
+        </table>
+       
+        <div class="form-group col-xs-12 col-sm-6 col-md-6">
+            
+            <div class="form-group">
+                <label for="txtTotal">Total Recibo: </label>
+                <input [(ngModel)]="totalPagado" type="text" name="totalPagado" id="txtTotal" class="form-control">
+            </div>
+            <button class="btn btn-info" id="pagarFacturas" [disabled]="bloquear">
+                Guardar Recibo
+            </button>
+        </div>
+    </div>
+</div>

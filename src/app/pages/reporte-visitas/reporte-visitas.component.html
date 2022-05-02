@@ -1,0 +1,65 @@
+<div class="col-12">
+    <h1><i class="fa fa-file-text"></i> Reporte de Visitas</h1>
+</div>
+<br>
+<hr>
+
+<div class="container">
+    <div class="form-row">
+        <div class="form-group col-md-5">
+            <label for="">Usuario</label>
+            <select [(ngModel)]="idusuario" name="idusuario" class="form-control" id="selectUsuario">
+                <option value="">Seleccione</option>
+                <option *ngFor="let usuario of listaUsuarios" [value]="usuario.id" >{{usuario.usuario}}</option>
+            </select>
+        </div>
+        <div class="form-group col-md-5">
+            <label for="">Cliente</label>
+            <select [(ngModel)]="idcliente" name="idcliente" class="form-control" id="selectCliente">
+                <option value="">Seleccione</option>
+                <option *ngFor="let cliente of listaClientes" [value]="cliente.id" >{{cliente.cliente_nombre}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-5">
+            <label for="">Fecha Inicio</label>
+            <input [(ngModel)]="objVistas.fechaInicio" type="date" name="fechaIncio" class="form-control" id="">
+        </div>
+        <div class="form-group col-md-5">
+            <label for="">Fecha Fin</label>
+            <input [(ngModel)]="objVistas.fechaFin" type="date" name="fechaFin" class="form-control" id="">
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-5">
+            <label for="">Tipo Visita</label>
+            <select [(ngModel)]="objVistas.visita" name="visita" class="form-control" id="visita">
+                <option value="">Seleccione</option>
+                <option value="1">VÁLIDA</option>
+                <option value="0">NO VÁLIDA</option>
+            </select>
+        </div>
+
+        <div class="form-group col-md-5">
+            <label for="">Zona</label>
+            <select [(ngModel)]="objVistas.zona" name="zona" class="form-control" id="zona">
+                <option value="">Seleccione</option>
+                <option *ngFor="let zona of listaZonas" [value]="zona.c_zona">{{zona.d_zona}}</option>
+            </select>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-6">
+    <button class="btn btn-success mr-1" id="btnExcel">
+        <i class="fa fa-file-excel-o"></i>Excel
+    </button>
+
+    <button class="btn btn-info mr-1" id="btnWeb">
+        <i class="fa fa-plus"></i>Web
+    </button>
+    </div>
+</div>

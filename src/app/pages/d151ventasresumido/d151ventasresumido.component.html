@@ -1,0 +1,31 @@
+<h1><i class="fa fa-file-text"></i>Reporte D151 Ventas Resumido</h1>
+<hr>
+
+
+<div class="container">
+    <div class="row">
+        <div class="form-group col-md-5">
+            <label for="">Fecha Inicio</label>
+            <input [(ngModel)]="objDatos.fechaInicio" type="date" name="fechaInicio" id="" class="form-control">
+        </div>
+        <div class="form-group col-md-5">
+            <label for="">Fecha Fin</label>
+            <input [(ngModel)]="objDatos.fechaFin" type="date" name="fechaFin" id="" class="form-control">
+        </div>
+        
+    </div>
+    <div class="row">
+        <div class="form-group col-md-5">
+            <label for="">Monto Venta</label>
+            <input [(ngModel)]="objDatos.montoVenta" type="number" name="montoVenta" id="" class="form-control">
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-6">
+            <button type="button" class="btn btn-success mr-1" id="reporteExcel"><i class="fa fa-file-excel-o"></i>Excel</button>
+            <button type="button" class="btn btn-primary mr-1" id="reporteWeb"><i class="fa fa-search-plus"></i>Web</button>
+    </div>
+</div>
+
+</div>

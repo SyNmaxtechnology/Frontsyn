@@ -1,0 +1,130 @@
+<div class="col-12">
+    <h1>Listado de Impuestos</h1>
+    <button type="button" (click)="limpiarValores()" class="btn btn-success" data-toggle="modal" data-target="#ModalNuevoImpuesto">Crear</button>
+</div>
+<br>
+<div class="col-12">
+    <form method="POST" id="form_buscar_impuesto">
+        <div class="form-row" id="buscador_impuesto">
+            <div class="form-group col-sm-12 col-md-8">
+                <input [(ngModel)]="query" name="query" type="text" id="query" class="form-control" placeholder="Buscar por descripción" >
+            </div>
+            <div class="form-group col-md-3">
+                <button type="submit" class="btn btn-primary" (click)="buscarImpuesto($event,query)">Buscar</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="col-12" *ngIf="tablaPequena == false">
+    <table class="table table-responsive" id="tabla_detalles">
+        <thead>
+            <tr>
+                <td>#</td>
+                <th>Descripción</th>
+                <th>Porcentaje</th>
+                <th>Activo</th>
+                <th>Auditoría</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let impuesto of collection.data | paginate: config">
+            <tr>
+
+            </tr>
+            <td>{{impuesto.id}}</td>
+            <td>{{impuesto.descripcion}}</td>
+            <td>{{impuesto.porcentaje_impuesto}}</td>
+            <td>{{impuesto.estado_impuesto}}</td>
+            <td>{{impuesto.usuario}}</td>
+            <td>
+                <button type="button" class="btn btn-danger btn-xs mr-1" (click)="actualizarEstado(impuesto)" >
+                    <i class="fa fa-ban"></i>
+                </button>
+            
+                <button type="button" class="btn btn-default btn-xs" (click) ="obtenerImpuestoPorId(impuesto.id)"
+                    data-toggle="modal" data-target="#ModalNuevoImpuesto"
+                > 
+                    <i class="fa fa-pencil-square-o"></i>
+                </button>
+            </td>
+        </tbody>
+    </table>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> 
+</div>
+  
+
+<ng-container *ngIf="tablaPequena">
+    <div class="table-responsive"  *ngFor="let impuesto of collection.data | paginate: config">
+        <table class="table table-hover" id="tabla_detalles">
+            <tbody >
+                <tr>
+                    <th>#</th>
+                    <td>{{impuesto.id}}</td>
+                </tr>
+                <tr>
+                    <th>Descripción</th>
+                    <td>{{impuesto.descripcion}}</td>
+                </tr>
+                <tr>
+                    <th>Código</th>
+                    <td>{{impuesto.porcentaje_impuesto}}</td>
+                </tr>
+                <tr>
+                    <th>Activo</th>
+                    <td>{{impuesto.estado_impuesto}}</td>
+                </tr>
+                <tr>
+                    <th>Auditoría</th>
+                    <td>{{impuesto.usuario}}</td>
+                </tr>
+                <tr>
+                    <th>Acciones</th>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-xs mr-1" (click)="actualizarEstado(impuesto)" >
+                            <i class="fa fa-ban"></i>
+                        </button>
+                    
+                        <button type="button" class="btn btn-default btn-xs" (click) ="obtenerImpuestoPorId(impuesto.id)"
+                            data-toggle="modal" data-target="#ModalNuevoImpuesto"
+                        > 
+                            <i class="fa fa-pencil-square-o"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> 
+</ng-container>
+
+<div class="modal fade" id="ModalNuevoImpuesto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{titulo}}</h5>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="formNuevoImpuesto">
+                    <div class="form-group">
+                        <label for="descripcion" class="col-form-label">Descripción:</label>
+                        <input [(ngModel)]="objImpuesto.descripcion" name="descripcion" type="text" class="form-control" id="descripcion">
+                    </div>
+                    <div class="form-group">
+                        <label for="codigo" class="col-form-label">Codigo</label>
+                        <input [(ngModel)]="objImpuesto.codigo" name="codigo" type="text" class="form-control" id="codigo">
+                    </div>
+                    <div class="form-group">
+                        <label for="porcentaje" class="col-form-label">Porcentaje</label>
+                        <input [(ngModel)]="objImpuesto.porcentaje" name="porcentaje" type="number" class="form-control" id="porcentaje">
+                    </div>
+                    
+                <div class="modal-footer">
+                    <button click="limpiarValores()" type="button" class="btn btn-secondary" id="cancelar" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="nuevoImpuesto" (click)="procesarImpuesto(objImpuesto)">Guardar</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+

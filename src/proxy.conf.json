@@ -1,0 +1,7 @@
+{
+    "/": {
+        "target": "https://appsyn.herokuapp.com",
+        "secure": false,  
+        "logLevel": "debug"
+    }
+}

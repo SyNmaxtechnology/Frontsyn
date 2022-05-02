@@ -1,0 +1,410 @@
+<h1>Emisor</h1>
+<div class="col-12" *ngIf="obtenerPermiso() == 'superusuario'">
+    <form method="POST" id="formBuscarEmisor">
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <input [(ngModel)]="query" name="query" type="text" id="query" class="form-control"
+                    placeholder="Buscar por cédula o nombre del emisor" list="emisores"
+                    (ngModelChange)="buscarEmisor(query)">
+                <datalist id="emisores">
+                    <option *ngFor="let emisor of this.listaEmisores" [ngValue]="emisor.id">{{emisor.emisor_nombre}}
+                    </option>
+                </datalist>
+            </div>
+            <!-- 
+            <div class="form-group col-md-3">
+                <button type="submit" class="btn btn-primary" >Buscar</button>
+            </div>
+            -->
+        </div>
+    </form>
+</div>
+<div class="col-12" *ngIf="role === 'superusuario'">
+    <div class="form-group col-md-3">
+        <button type="button" class="btn btn-outline-danger" data-toggle="modal"
+            data-target="#ModalEliminarFacturas">Eliminar Facturas</button>
+    </div>
+
+    <div class="form-group col-md-3" *ngIf="botonPrioridad">
+        <label for="" class="w-100">Dar prioridad</label>
+        <button type="button" class="btn btn-outline-info" (click)="actualizarPrioridad(objEmisor.prioridad)"
+            *ngIf="objEmisor.prioridad === 1">
+            Activar
+        </button>
+
+        <button type="button" class="btn btn-outline-warning" (click)="actualizarPrioridad(objEmisor.prioridad)"
+            *ngIf="objEmisor.prioridad === 0">
+            Desactivar
+        </button>
+
+    </div>
+</div>
+<br>
+<br>
+<!--<div class="wrap">
+    <ul class="tabs">
+        <li><a href="#tab1"><span class="fa fa-home"></span><span class="tab-text">Información Personal</span></a></li>
+        <li><a href="#tab2"><span class="fa fa-group"></span><span class="tab-text">Información Jurídica</span></a></li>
+        <li><a href="#tab3"><span class="fa fa-briefcase"></span><span class="tab-text">Configuración</span></a></li>
+
+    </ul>
+
+    <div class="secciones">
+        <article id="tab1">
+
+
+        </article>
+        <article id="tab2">
+
+        </article>
+        <article id="tab3">
+
+        </article>
+    </div>
+</div>-->
+
+<div class="col-12">
+    <form method="POST" #formEmisor="ngForm" id="formEmisor">
+
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="emisor_nombre">Nombre</label>
+                <input [(ngModel)]="objEmisor.emisor_nombre" name="emisor_nombre" type="text" class="form-control"
+                    id="emisor_nombre" placeholder="Nombre del Emisor">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="emisor_nombre">Nombre Comercial</label>
+                <input [(ngModel)]="objEmisor.emisor_nombrecomercial" name="nombrecomercial" type="text"
+                    class="form-control" id="emisor_nombrecomercial" placeholder="Nombre Comercial del Emisor">
+            </div>
+            <div class="form-group col-md-4" *ngIf="objEmisor.logo && objEmisor.logo != ''">
+                <div class="card">
+                    <label for="emisor_nombre">Ícono</label>
+                    <img style="width: 50px; width: 50px; object-fit: contain;" class="card-img-top"
+                        [src]="objEmisor.logo">
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="emisor_nombre">Tipo de Identificación</label>
+                <select id="emisor_tipo_identificacion" class="form-control" [(ngModel)]="objEmisor.tipoIdentificacion"
+                    name="tipoIdentificacion">
+                    <option selected disabled>--Seleccione--</option>
+                    <option *ngFor="let tipo of tipoIdentificacion" [ngValue]="tipo.codigo">{{tipo.descripcion}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="emisor_nombre">Cédula Emisor</label>
+                <input [(ngModel)]="objEmisor.emisor_cedula" name="emisor_cedula" type="text" class="form-control"
+                    id="emisor_cedula" placeholder="Cédula Emisor">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="">Provincia</label>
+                <select [(ngModel)]="objEmisor.provincia" name="provincia" id="provincia" class="form-control"
+                    (change)="obtenerCantones()">
+                    <option selected disabled>--Seleccione--</option>
+                    <option *ngFor="let provincia of listaProvincias" [ngValue]="provincia.provincia">{{provincia.nPro}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">Canton</label>
+                <select [(ngModel)]="objEmisor.canton" name="canton=" id="canton" class="form-control"
+                    (change)="obtenerDistritos(objEmisor.provincia,objEmisor.canton)">
+                    <option selected disabled>--Seleccione--</option>
+                    <option *ngFor="let canton of listaCantones" [ngValue]="canton.canton">{{canton.nCan}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">Distrito</label>
+                <select [(ngModel)]="objEmisor.distrito" name="distrito=" id="distrito" class="form-control"
+                    (change)="obtenerBarrios(objEmisor.provincia,objEmisor.canton,objEmisor.distrito)">
+                    <option>Seleccione</option>
+                    <option *ngFor="let distrito of listaDistritos" [ngValue]="distrito.distrito">{{distrito.nDis}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">Barrio</label>
+                <!---->
+                <select [(ngModel)]="objEmisor.barrio" name="barrio" id="barrio" class="form-control">
+                    <option>Seleccione</option>
+                    <option *ngFor="let barrio of listaBarrios" [ngValue]="barrio.CodNew">{{barrio.nHac}}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="otras_senas">Otras Señas</label>
+            <input [(ngModel)]="objEmisor.otras_senas" name="otras_senas" type="text" class="form-control"
+                id="otras_senas" placeholder="Otras señas emisor">
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="tel_codigopais">Codigo País</label>
+                <input [(ngModel)]="objEmisor.tel_codigo_pais" name="tel_codigo_pais" type="text" class="form-control"
+                    id="tel_codigopais" placeholder="Código país">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="numtel">Número de Teléfono</label>
+                <input [(ngModel)]="objEmisor.num_telefono" name="num_telefono" type="text" class="form-control"
+                    id="num_telefono" placeholder="Número de telefono">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="fax_codigopais">Código País</label>
+                <input [(ngModel)]="objEmisor.fax_codigo_pais" name="fax_codigo_pais" type="text" class="form-control"
+                    id="fax_codigopais" placeholder="Código país">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="fax_numtel">Número de Fax</label>
+                <input [(ngModel)]="objEmisor.fax_num_telefono" name="fax_num_telefono" type="text" class="form-control"
+                    id="fax_num_telefono" placeholder="Número de Fax">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="correo_emisor">Correo Electrónico</label>
+            <input [(ngModel)]="objEmisor.correo" name="correo" type="email" class="form-control" id="correo_emisor"
+                placeholder="Correo Electrónico">
+        </div>
+        <div class=" form-row ">
+            <div class="form-group col-md-6 ">
+                <label for="casamatriz">Casa Matriz</label>
+                <input [(ngModel)]="objEmisor.casamatriz" name="casamatriz" type="text" class="form-control"
+                    id="casamatriz" placeholder="Casa Matriz ">
+            </div>
+            <div class="form-group col-md-6 ">
+                <label for="puntoventa">Punto Venta</label>
+                <input [(ngModel)]="objEmisor.puntoventa" name="puntoventa" type="text" class="form-control"
+                    id="puntoventa" placeholder="Punto Venta ">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <form method="POST">
+                    <button data-toggle="modal" data-target="#formBuscarActividad"
+                        class="form-comtrol col-sm-2 col-md-1 mb-1" id="buscarActividad">
+                        <i class="fa fa-search"></i>
+                    </button>
+                    <input [(ngModel)]="objEmisor.codigo_actividad" name="codigo_actividad" type="number"
+                        id="codigo_actividad" class="form-control" placeholder="Código Actividad">
+                </form>
+
+            </div>
+            <div class="form-group col-md-6">
+                <label for="codigo_actividad">Tipo Codigo Servicio</label>
+                <select [(ngModel)]="objEmisor.codigo_servicio" name="codigo_servicio" id="codigo_servicio"
+                    class="form-control">
+                    <option value="">Seleccione</option>
+                    <option *ngFor="let servicio of tipoServicio" [ngValue]="servicio.codigo">{{servicio.tipo_codigo}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="client_id">Client ID</label>
+                <input [(ngModel)]="objEmisor.client_id" name="client_id" type="text" class="form-control"
+                    id="client_id" placeholder="Client ID">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="API_TOKEN">API TOKEN</label>
+                <input [(ngModel)]="objEmisor.API_TOKEN" name="API_TOKEN" type="text" class="form-control"
+                    id="API_TOKEN" placeholder="API TOKEN">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="API">API</label>
+                <input [(ngModel)]="objEmisor.API" name="API" type="text" class="form-control" id="API"
+                    placeholder="API">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="numero_resolucion">Número de resolución</label>
+                <input [(ngModel)]="objEmisor.numero_resolucion" name="numero_resolucion" type="text"
+                    class="form-control" id="numero_resolucion" placeholder="Número resolución">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="fecha_resolucion">Fecha resolución</label>
+                <input [(ngModel)]="objEmisor.fecha_resolucion" name="fecha_resolucion" type="text" class="form-control"
+                    id="fecha_resolucion" placeholder="Fecha resolución">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="user_hacienda">Usuario Hacienda</label>
+                <input [(ngModel)]="objEmisor.user_hacienda" name="user_hacienda" type="text" class="form-control"
+                    id="user_hacienda" placeholder="Usuario Hacienda">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="password_hacienda">Contraseña</label>
+                <input [(ngModel)]="objEmisor.password_hacienda" name="password_hacienda" type="password"
+                    class="form-control" id="password_hacienda" placeholder="Password Hacienda">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="">Archivo P12</label>
+                <input [(ngModel)]="objEmisor.file_p12" name="file_p12" type="file" class="form-control-file"
+                    id="file_p12">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">Contraseña</label>
+                <input [(ngModel)]="objEmisor.contrasenaP12" name="contrasenaP12" type="password" class="form-control"
+                    id="contrasenaP12" placeholder="Contraseña archivo p12">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="">Logo</label>
+                <input [(ngModel)]="objEmisor.logo" name="logo" type="file" class="form-control-file" id="logo">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">Tipo Reporte</label>
+                <select [(ngModel)]="objEmisor.pos" name="pos" id="tipoReporte" class="form-control">
+                    <option value="">Seleccione</option>
+                    <option value="1">POS</option>
+                    <option value="0" selected>Factura</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="">Activa Cabys</label>
+                <select [(ngModel)]="objEmisor.activaCabys" name="activaCabys" id="txtactivaCabys" class="form-control">
+                    <option value="">Seleccione</option>
+                    <option value="1">SI</option>
+                    <option value="0" selected>NO</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">Clave Autorizar Saldo</label>
+                <input type="text" [(ngModel)]="objEmisor.autorizaSaldo" name="autorizaSaldo" id="txtautorizaSaldo"
+                    class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="">Cerca Perimetral</label>
+                <input type="text" [(ngModel)]="objEmisor.cerca_perimetral" name="cerca_perimetral"
+                    id="txtcerca_perimetral" class="form-control">
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="">Correo Administrativo</label>
+                <input type="text" [(ngModel)]="objEmisor.correo_administrativo" name="correo_administrativo"
+                    id="txtcorreo_administrativo" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label> MultiSucursal</label>
+                <select [(ngModel)]="objEmisor.multi_sucursal" name="multi_sucursal" id="txtMultiSucursal"
+                    class="form-control">
+                    <option value="">Seleccione</option>
+                    <option value="1">SI</option>
+                    <option value="0" selected>NO</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">Grupo en común</label>
+                <input type="text" [(ngModel)]="objEmisor.grupoencomun" name="grupoencomun" id="txtgrupoencomun"
+                    class="form-control">
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="">Notas</label>
+                <textarea (keyup)="validarTamanoMaximo($event)" [(ngModel)]="objEmisor.notas_emisor" name="notas_emisor"
+                    id="txtnotasemisor" rows="6" class="form-control"> </textarea>
+
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">Token</label>
+                <input type="text" [(ngModel)]="objEmisor.token_emisor" name="token_emisor" id="txttoken_emisor"
+                    class="form-control">
+            </div>
+
+        </div>
+        <button type="submit" class="btn btn-primary" id="guardarEmisor"
+            (click)="procesarEmisor($event,objEmisor)">Guardar</button>
+    </form>
+</div>
+
+
+<div class="modal fade" id="formBuscarActividad" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Buscar Actividad</h5>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="formActividad">
+                    <div class="form-group">
+                        <label for="cedula" class="col-form-label">Cédula Emisor:</label>
+                        <input [(ngModel)]="objDataActividad.cedula" name="cedula" type="text" class="form-control"
+                            id="cedula">
+                        <button type="submit" class="btn btn-primary mt-1"
+                            (click)="obtenerActividades($event,objDataActividad.cedula)">Buscar</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre" class="col-form-label">Nombre:</label>
+                        <input [(ngModel)]="objDataActividad.nombre" name="nombre" type="text" class="form-control"
+                            id="nombre" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion" class="col-form-label">Descripcion:</label>
+                        <input [(ngModel)]="objDataActividad.descripcion" name="descripcion" type="text"
+                            class="form-control" id="descripcion" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="codigo" class="col-form-label">Código:</label>
+                        <input [(ngModel)]="objDataActividad.codigo" name="codigo" type="text" class="form-control"
+                            id="codigo" readonly>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary"
+                    (click)="cargarActividad(objDataActividad.codigo)">Cargar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL PARA ELIMINAR LAS FACTURAS-->
+<div class="modal fade" id="ModalEliminarFacturas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Eliminar Facturas</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="">Numero Inicio</label>
+                        <input [(ngModel)]="numeroInternoInicio" class="form-control" type="text"
+                            name="numeroInternoInicio" id="numeroInternoInicio">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="">Numero Fin</label>
+                        <input [(ngModel)]="numeroInternoFin" class="form-control" type="text" name="numeroInternoFin"
+                            id="numeroInternoFin">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary"
+                    (click)="eliminarFacturas(numeroInternoInicio,numeroInternoFin)">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>

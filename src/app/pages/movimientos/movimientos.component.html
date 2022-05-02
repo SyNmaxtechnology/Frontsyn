@@ -1,0 +1,109 @@
+<h1><i class="fa fa-cube"></i> Movimientos de Artículos</h1>
+<br>
+<hr>
+
+<div class="container">
+    <div class="form-row">
+        <div class="form-group col-sm-4 col-md-4 col-lg-4">
+            <p>Tipo Movimiento: </p>
+            <input type="radio" id="age1" name="age" value="01" checked (change)="this.bodegaDestino = false;limpiarCampos();">
+            <label for="age1"> (+) Entrada</label><br>
+            <input type="radio" id="age2" name="age" value="02" (change)="this.bodegaDestino = false;limpiarCampos();">
+            <label for="age2"> (-) Salida</label><br>  
+            <input type="radio" id="age3" name="age" value="03" (change)="this.bodegaDestino = true;limpiarCampos();">
+            <label for="age3"> (+/-) Traslado</label><br><br>
+       </div> 
+       <div class="form-group col-sm-12 col-md-4 col-lg-4">
+            <label for="descripcion">Fecha: </label>
+            <input type="date" name="fecha" id="date" class="form-control">
+        </div>
+        <div class="form-group col-sm-12 col-md-8 col-lg-8">
+            <label for="descripcion">Descripción: </label>
+            <input type="text" name="descripcion" id="txtDescripcion" class="form-control">
+        </div>
+        <div class="form-group col-sm-4 col-md-4 col-lg-4">
+            <label for="cantidad">Cantidad: </label>
+            <input type="text" name="cantidad" id="txtcantidad" class="form-control">
+       </div>
+        <div class="form-group col-sm-12 col-md-8 col-lg-8">
+            <label for="descripcion">Artículo: </label>
+            <input [(ngModel)]="descripcionArticulo" list="articulos" name="descripcionArticulo" id="txtArticulo" class="form-control" placeholder="Nombre o código" 
+            (ngModelChange)="obtenerArticulos(descripcionArticulo)"
+            >
+            <datalist id="articulos">
+                <option *ngFor="let articulo of listaArticulos" [value]="articulo.descripcion"></option>
+            </datalist>
+        </div>
+       <div class="form-group col-sm-4 col-md-4 col-lg-4">
+            <label for="bodega">Bodega Origen: </label>
+            <select name="bodega" id="selectBodega" class="form-control">
+                <option value="">Seleccione</option>
+                <option *ngFor="let bodega of listaBodegas" [value]="bodega.id">{{bodega.descripcion}}</option>
+
+            </select>
+       </div>
+       <div class="form-group col-sm-4 col-md-4 col-lg-4" *ngIf="bodegaDestino == true">
+            <label for="bodega">Bodega Destino: </label>
+            <select name="bodega" id="selectBodegaDestino" class="form-control">
+                <option value="">Seleccione</option>
+                <option *ngFor="let bodega of listaBodegas" [value]="bodega.id">{{bodega.descripcion}}</option>
+            </select>
+        </div>
+       <div class="form-group col-md-12">
+        <button type="button" class="btn btn-success" style="float: rigth" id="agregarLinea" >
+            <i class="fa fa-plus"></i>
+        </button>
+       </div>
+       
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Código</th>
+                    <th>Nombre <br> Artículo</th>
+                    <th>Bodega <br> Origen</th>
+                    <th *ngIf="bodegaDestino == true">Bodega <br> Destino</th>
+                    <th>Cantidad</th>
+                    <th>Costo/Uni</th>
+                    <th>Total</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let linea of listaAjustes">
+                    <td>{{linea.tipo}}</td>
+                    <td>{{linea.codigo}}</td>
+                    <td>{{linea.descripcion}}</td>
+                    <td>{{linea.bodega}}</td>
+                    <td *ngIf="bodegaDestino == true">{{linea.bodegadestino}}</td>
+                    <td>{{linea.cantidad}}</td>
+                    <td>{{linea.costoarticulo}}</td>
+                    <td>{{linea.costolinea}}</td>
+                    <td><button (click)="quitarAjuste(linea)" type="button" class="btn btn-danger btn-xs"> <i class="fa fa-remove"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <hr>
+        <div class="table" stye>
+            <table class="table-striped table-bordered" style="float: right;">
+
+                <tr>
+                    <th>Total Ajuste</th>
+                    <td>{{totalAjuste}}</td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <button type="button" class="btn btn-info" id="btnGuardarMovimiento">Guardar</button>
+    </div>
+
+    <div class="row" *ngIf="mostrar">
+
+    </div>    
+</div>

@@ -1,0 +1,68 @@
+<h1><i class="fa fa-cubes"></i> Existencia de los Artículos</h1>
+<hr>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="form-group col-sm-12 col-md-8 col-lg-8">
+        <label for="txtquery">Descripción</label>
+            
+        <input list="articulos" [(ngModel)]="objExistencia.descripcion" class="form-control" name="descripcion" id="txtquery" placeholder="Descripcion o código" (ngModelChange)="obtenerArticulos(objExistencia);">
+
+        <datalist id="articulos" >
+             <option *ngFor="let articulo of listaArticulos" [ngValue]="articulo.descripcion">{{articulo.descripcion}}</option>
+        </datalist>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row" >
+        <legend>Información de la existencia del Artículo</legend>
+        <br>
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Bodega</th>
+                    <th>Existencia <br> Actual</th>
+                    <th>Existencia <br> Anterior</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let articulo of listaArticulos">
+                    <td>{{articulo.codigo}}</td>
+                    <td>{{articulo.bodega}}</td>
+                    <td>{{articulo.existencia_actual}}</td>
+                    <td>{{articulo.existencia_anterior}}</td>
+                   
+                </tr>
+            </tbody>
+        </table> 
+    </div>
+</div>
+    
+ 
+   
+    
+    <!--<button type="button" class="btn btn-success" id="btnBuscarExistenncia">Buscar</button>-->
+    <!-- 
+
+*ngIf="mostrar"
+        <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                <label for="txtCodigoArtículo">Código Artículo</label>
+                <input type="text" name="txtCodigoArtículo" id="txtCodigoArtículo" class="form-control" [value]="articulo.codigo">
+            </div>
+            <div class="form-group col-sm-12 col-md-6 col-lg-6" >
+                <label for="txtBodega">Bodega</label>
+                <input type="text" name="txtBodega" id="txtBodega" class="form-control" [value]="articulo.bodega">
+            </div>
+            <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                <label for="txt_existenciaAnterior">Existencia Anterior</label>
+                <input type="text" name="existencia_anterior" id="txt_existenciaAnterior" class="form-control" [value]="articulo.existencia_anterior">
+            </div>
+            <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                <label for="txt_existenciaActual">Existencia Actual</label>
+                <input type="text" name="existencia_actual" id="txt_existenciaActual" class="form-control" [value]="articulo.existencia_actual">
+                <hr>
+            </div>
+    -->
+</div>

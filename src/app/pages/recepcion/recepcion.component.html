@@ -1,0 +1,43 @@
+<h1><i class="fa fa-file-text"></i>Recepción</h1>
+<hr>
+<br>
+
+<div class="container">
+    <h2>Acepta los documentos de los proveedores</h2>
+    <form>
+        <div class="row">
+            <div class="col-sm-12">
+                <label>Documento XML del Proveedor</label><br>
+                <input type="file" class="dropify" data-show-remove="false"  id="archivoXml"/>
+            </div>
+        </div><br>
+        <div class="row">
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <label>Estado Aceptación</label>
+                    <select  name="codigoEstadoAceptacion" id="codigoEstadoAceptacion" class="form-control">
+                        <option value="">Seleccione</option>
+                        <option *ngFor="let aceptacion of listaEstadoAceptacion" [value]="aceptacion.codigo">{{aceptacion.mensaje}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <label>Condición Impuesto</label>
+                    <select name="codigoCondicionImpuesto" id="codigoCondicionImpuesto" class="form-control">
+                        <option value="">Seleccione</option>
+                        <option *ngFor="let condicion of listaCondicionImpuesto" [value]="condicion.codigo">{{condicion.descripcion}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <button type="submit" class="btn btn-success btn-small mr-1" (click) ="recepcionComprobante($event)">
+                Confirmar
+            </button>
+            <button type="submit" class="btn btn-primary btn-small mr-1">
+                Imprimir
+            </button>
+        </div>
+    </form>
+</div>

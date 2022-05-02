@@ -1,0 +1,16 @@
+.funcionesCliente {
+    font-size: small;
+}
+
+
+.funcionesProductos {
+    font-size: small;
+}
+.funcionesFactura {
+    font-size: small;
+}
+
+.display {
+    display: flex;
+    align-items: center;
+}

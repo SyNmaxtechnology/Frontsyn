@@ -1,0 +1,355 @@
+<div class="row">
+    <div class="col-sm-6 bg-megna text-dark">
+        <div class="form-group" id="divTxtBusquedaProducto" >
+            <input (blur)="recargarProductos(nombreProducto)" [(ngModel)]="nombreProducto" (focusout)="recargarProductos(nombreProducto)" type="text" name="nombreProducto" id="buscarProducto" class="mr-2 mt-5 form-control" placeholder="Código de barra o nombre" style="width: 85%; font-size: 10px;">
+          <button class="btn btn-info btn-xs" (click)="filtrarProducto(nombreProducto)">
+              <i class="fa fa-search"></i>
+          </button>
+        </div>
+        <div class="form-group">
+          <select name="" id="selectCategoria" class="form-control" (change)="obtenerProductosPorCategoria($event)">
+            <option value="">Categoria</option>
+            <option value="0">Todas</option>
+            <option *ngFor="let categoria of listaCategorias" value="{{categoria.id}}">{{categoria.descripcion}}</option>
+        </select>
+        </div>
+        <ng-container *ngIf="mostrar == true">
+          <div 
+              class="container mb-1"  
+            >
+            <div class="row">
+              <div class="col-md-3 listaProductos text-center mb-3" *ngFor="let producto of this.collection.data | paginate: config" 
+              style="display: inline-block;" 
+              (click)="agregarProducto(producto)" id="productos">
+                <div id="imagen-producto" class="btn-producto img-thumbnail mt-1 text-center divProducto" 
+                  style="height:60%;width: 100%;">
+                  <img 
+                    [src]="producto.imagen" 
+                    class="card-img-top mt" 
+                    id="img_producto" 
+                    style="height:65%;"
+                  > 
+                  <span class="descripcionProducto badge badge-info text-light text-center"  
+                    style="word-break: break-all; "
+                  >{{producto.descripcion | slice:0:9}}
+                  </span>
+                </div>
+               <!-- <div id="divDescripcionProducto" class="text-center">
+                    
+                </div> | slice:0:10 -- pipe de substring para cadenas de texto -->
+              </div>
+            </div>
+        </div>
+        </ng-container>
+        <div class="col-12 alert alert-success text-center" *ngIf="mostrar == false" style="font-size: 15px;">{{mensaje}}</div>
+        <pagination-controls (pageChange)="pageChanged($event)" ></pagination-controls>
+    </div>
+    <div class="col-sm-6 bg-megna text-dark">
+        <div class="form-group" *ngIf="cliente !== 'undefined'">
+          <input type="text" readonly class="form-control mr-1 mt-5" style="width: 70%; font-size: 10px;" id="txtcliente" value="{{cliente}}" placeholder="Ingrese el Cliente"> 
+          <button type="button" class="btn btn-success btn-xs mr-1" style="font-size: 10px;" data-toggle="modal" data-target="#ModalBuscarCliente"><i class="fa fa-plus"></i> </button>
+          <button type="button" class="btn btn-danger btn-xs" style="font-size: 10px;" (click)="quitarCliente()"><i class="fa fa-remove"></i> </button>
+        </div>
+        <div class="table" id="Lineas" style="font-size: 10px; width: 100%;height: 500px;
+        overflow: scroll;
+        overflow-y: visible;
+        overflow-x: hidden;">
+            <table class="table table-striped table-hover" id="tableLineas">
+                <thead style="border-radius: 5px;" style="border: 1px ; border-radius: 5px; background-color: #05429e; color: #73f79f;" >
+                  <tr>
+                    <th class="d-none">id</th>
+                    <th style="width: 30px;font-size: 13px">Prod</th>
+                    <th style="width: 30px;font-size: 13px">Precio</th>
+                    <th style="width: 30px;font-size: 13px">Cant</th>
+                    <th style="width: 30px;font-size: 13px">Desc</th>
+                    <th style="width: 30px;font-size: 13px">X</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let producto of listaProductosVendidos">
+                    <td class="d-none" >{{producto.idproducto}}</td>
+                    <td style="word-break: break-all; width: 30%;">{{producto.descripcioDetalle}}</td>
+                    <td  style="word-break: break-all;  width: 15%;">{{producto.precio_linea}}</td>
+                    <td style="width: 25%;">
+                      <input type="text" name=""  class="mt-1 mb-1" readonly id="" [value]="producto.cantidad" style="width: 35px;">
+                      <br>
+                      <button type="button" class="btn btn-danger btn-xs" (click)="restarCantidad(producto)">
+                        -
+                      </button>
+                    </td>
+                    <td style="width: 15%;">
+                      <br>
+                      <select 
+                          [(ngModel)]="producto.iddescuento"
+                          name="iddescuento"
+                          (change)="obtenerTotalesConDescuento(producto,producto.iddescuento)" 
+                        >
+                          <option value="">0</option>
+                          <option  
+                            *ngFor="let descuento of listaDescuentos" 
+                            [value]="descuento.id"
+                          >{{descuento.porcentaje}}</option>
+                      </select>
+                    </td>
+            
+                    <td style="width: 15%;"><button type="button" class="btn btn-default btn-xs" (click)="quitarLinea(producto)"><i class="fa fa-remove"></i></button></td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+
+        <div class="bg-default">
+          
+          <div class="row">
+            <div class="col-md-4 form-control">
+              <label for="">Subtotal</label>
+              <input type="text" name="montoTotalVenta" id="" class="form-control form-control-xs" [value]="montoTotalVenta" readonly>
+            </div>
+            <div class="col-md-4 form-control">
+              <label for="">Descuentos</label>
+              <input type="text" name="totalDescuento" id="" class="form-control form-control-xs" [value]="totalDescuento" readonly>
+            </div>
+            <div class="col-md-4 form-control">
+              <label for="">Impuestos</label>
+              <input type="text" name="totalImpuestoNeto" id="" class="form-control form-control-xs" [value]="totalImpuestoNeto" readonly>
+            </div>
+            <div class="form-control mt-2">
+              <span class="p-3 text-center text-white badge badge-inverse" style="width: 100%; font-weight: bold; font-size: 20px;"> TOTAL PAGAR: ₡ {{totalVenta}} </span>
+            </div>
+          </div>
+
+          
+
+          <div class="p-2 bg-light text-dark row">
+            <button 
+              class="btn btn-info btn-block btn-outline-info mb-2" 
+              id="btnPagar" style="font-size: 13px;" 
+              type="button"
+              data-toggle="modal" 
+              data-target="#detalleVentas"
+            >Pagar</button>
+          </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="ModalBuscarCliente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Buscar Cliente</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Cédula:</label>
+            <input [(ngModel)]="txtCedbuscarCliente" name="txtCedbuscarCliente" type="number" class="form-control" id="txtCedbuscarCliente" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="buscarCliente(txtCedbuscarCliente)">Buscar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="ModalCrearCliente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Nuevo Cliente</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Nombre:</label>
+            <input [(ngModel)]="objCliente.cliente_nombre" name="cliente_nombre" type="text" class="form-control" id="cliente_nombre" required>
+          </div>
+          <div class="form-group">
+            <label for="cliente_tipo_identificacion">Tipo Identificación:</label>
+            <select class="form-control" [(ngModel)]="objCliente.cliente_tipo_identificacion" name="cliente_tipo_identificacion" id="cliente_tipo_identificacion" required>
+              <option value="" selected>-- Seleccione --</option>
+              <option *ngFor="let cedula of listaTiposCedula" value="{{cedula.codigo}}">{{cedula.descripcion}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Cédula:</label>
+            <input [(ngModel)]="objCliente.cedula_cliente" name="cedula_cliente" type="text" class="form-control" id="cedula_cliente" required>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Correo:</label>
+            <input [(ngModel)]="objCliente.cliente_correo" name="cliente_correo" type="text" class="form-control" id="cliente_correo" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="registrarCliente(objCliente)">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!---
+
+        <div class="card-columns" >
+        <div class="card animated fadeIn fast" *ngFor="let producto of listaProductos">
+            <img src="../../../assets/images/imagen.jpeg" class="card-img-top" [alt]="producto.nombre">
+            <div class="card-body">
+             <h5 class="card-title">{{producto.idproducto}}</h5>
+             <p class="card-text">{{producto.precio}}</p>
+             <p class="card-text"><small class="text-muted">{{producto.descripcion}}</small></p>
+             <button  type="button" name="button" class="btn btn-outline-primary btn-block">
+               AGREGAR
+             </button>
+                 <a [routerLink]="['/heroe',i]" class="btn btn-outline-primary"> El segundo parametro del router link es 
+              el parametro que se va pasar por la url del componente, en este caso es el index de la array
+                ver más... 
+             </a>
+            </div>  
+        </div>
+    </div>
+</div>
+
+#23272B
+
+-->
+
+
+<div class="modal fade" id="ModalFacturaPdf" tabindex="-1" role="dialog" aria-labelledby="ModalFacturaPdf" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title"><h2 style="text-align: center;">Preview</h2></h5>
+          </div>
+          <div class="modal-body" style="height: 700px;">
+            <object data="" type="application/pdf" width="100%" height="100%" id="ticket">
+            </object> 
+
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Aceptar</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!--
+  <ng2-pdfjs-viewer pdfSrc="pdfURL"></ng2-pdfjs-viewer>
+  <pdf-viewer [src]="pdfURL"
+                [original-size]="false"
+              ></pdf-viewer>
+
+   <pdf-viewer 
+              [src]="pdfURL" 
+              [render-text]="true"
+              style="display: block;"
+            ></pdf-viewer>
+-->
+
+
+<!-- MODAL DETALLES DE LA VENTA-->
+
+
+<div class="modal fade" id="detalleVentas" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Detalles de Venta</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4">
+              <h3 class="mb-3 text-center"><b>Opciones de Venta</b></h3>
+                <div class="form-group">
+                  <label for="">Forma Pago</label>
+                  <select [(ngModel)]="formaPago" (change)="cargarFormaPago(formaPago)" name="formaPago" id="selectMedioPago" class="form-control"
+                    >
+                    <option value="" selected>Seleccione</option>
+    
+                      <option  *ngFor="let medio of listaFormaPago" [value]="medio.id">{{medio.medio}}</option>
+                    </select> 
+              </div>
+              <div class="form-group">
+                  <label for="">Condición venta</label>
+                  <select [(ngModel)]="condicionVenta" name="condicionVenta" id="txtcondicion_venta" class="form-control"
+                  (change)="cargarCondicionVenta(condicionVenta)"
+                  > 
+                  <option value="" selected>Seleccione</option>
+    
+                    <option *ngFor="let condicion of listaCondicionesVenta" [value]="condicion.id" >{{condicion.condicion}}</option>
+                  </select>
+              </div>
+            </div>
+            
+            <div class="col-md-8">
+              <h3 class="mb-3 text-center"><b>Detalles de Pago</b></h3>
+
+                 <div class="form-group mr-2" style="width: 50%;" *ngIf="formaPago == '01'">
+                    <label for="">Monto</label>
+                    <input (keyup)="obtenerVuelto()" [(ngModel)]="monto"  type="text" name="textoMontoPagar" class="form-control" id="textoMontoPagar">
+                  </div>
+
+                  <div class="form-group mr-2" style="width: 50%;" *ngIf="formaPago == '06' ">
+                    <label for="">Efectivo</label>
+                    <input (keyup)="obtenerVuelto()" [(ngModel)]="monto"  type="text" name="monto" class="form-control" id="textoMontoPagar">
+                  </div>
+
+                  <div class="form-group mr-2" style="width: 50%;" *ngIf="formaPago == '06' ">
+                    <label for="">Tarjeta</label>
+                    <input (keyup)="obtenerVuelto()" [(ngModel)]="montoTarjeta"  type="text" name="montoTarjeta" class="form-control" id="textoMontoPagar">
+                  </div>
+                  
+                  <div class="form-group">
+                    <div class="bg-success text-white text-white text-center mt-2" style="font-weight: bold;">
+                      Vuelto: <span class="badge" style="font-weight: bold;font-size: 20px;">₡ {{vuelto}}</span>
+                    </div>
+                  </div>
+            </div>
+          </div>
+
+        </div>
+       <!-- Totales--> 
+       <hr>
+       <h3><b>Totales de Venta</b></h3>
+        <div class="row">
+          <div class="form-group col-md-3 text-center">
+            <label for="">Cantidad Productos</label>&nbsp;
+             <span for="" class="badge badge-secondary" style="font-size: 17px;font-weight: bold;">{{cantidadProductos}}</span>
+          </div>
+          <div class="form-group col-md-3 text-center">
+            <label for="">Subtotal</label><br>
+             <span class="badge badge-success" style="font-size: 17px;font-weight: bold;">{{montoTotalVenta}}</span>
+          </div>
+          <div class="form-group col-md-3 text-center">
+            <label for="">Descuentos</label><br>
+             <span class="badge badge-success" style="font-size: 17px;font-weight: bold;">{{totalDescuento}}</span>
+          </div>
+          <div class="form-group col-md-3 text-center">
+            <label for="">Impuestos</label><br>
+             <span class="badge badge-success" style="font-size: 17px;font-weight: bold;">{{totalImpuestoNeto}}</span>
+          </div>
+        </div>
+        <div class="p-3 mb-2 badge-info text-white text-white text-center mt-2 mb-2 mr-2 ml-2 p3" style="font-size: 20px;font-weight: bold;">
+          TOTAL PAGAR: ₡ {{totalVenta}}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button (click)="pagarVentaModal()" [disabled]="bloquearBtnPagar" type="button" class="btn btn-secondary" id="btnModalPagar" data-dismiss="modal">Pagar</button>
+      </div>
+    </div>
+  </div>
+</div>

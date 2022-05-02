@@ -1,0 +1,3272 @@
+<!-- <div class="form-group">
+    <a [routerLink]="['/factura']" class="btn btn-info">Volver</a>
+</div> -->
+<div class="form-row flex-column">
+    <h1>{{tituloReporte}} - Total de Resultados: {{numeroComprobantes}}</h1>
+    <br>
+    <h5>Filtros: {{descripcionFiltros}}</h5>
+</div>
+<hr>
+
+<div *ngIf="tabla == '01' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead>
+
+            <!-- ["Clavenumérica","Fecha", "Proveedor","Número Interno","Tipo Factura","Medio Pago","Condición Impuesto","Condición Venta","Moneda","Tipo Cambio","Descuentos","Servicios Gravados","Servicios Exentos", "Servicios Exonerados","Mercancías Gravadas","Mercancías Exentas", "Mercancías Exoneradas","Total Gravado", "Total Exento","Total Exonerado",
+            "Total Venta","Venta Neta","Subtotal","Total Impuesto","Otros Cargos","Total Factura"] -->
+            <tr>
+                <th> Clavenumérica </th>
+                <th> Fecha </th>
+                <th> Cliente </th>
+                <th> Número <br> Documento</th>
+                <th> Tipo <br> Factura</th>
+                <th> Medio <br> Pago </th>
+                <th> Condición <br> Venta </th>
+                <th> Moneda </th>
+                <th> Tipo Cambio </th>
+                <th> Descuentos </th>
+                <th> Servicios <br> Gravados </th>
+                <th> Servicios <br> Exentos </th>
+                <th> Servicios <br> Exonerados </th>
+                <th> Mercancías <br> Gravadas </th>
+                <th> Mercancías <br> Exentas </th>
+                <th> Mercancías <br> Exoneradas </th>
+                <th> Total <br> Gravado </th>
+                <th> Total <br> Exento </th>
+                <th> Total <br> Exonerado </th>
+                <th> Total <br> Venta </th>
+                <th> Total <br> Venta <br> Neta</th>
+                <th> Subtotal</th>
+                <th> Total <br> Impuesto </th>
+                <th> Otros <br> Cargos </th>
+                <th> Total <br> Comprobante </th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let factura of arrayComprobantes | paginate: config">
+            <tr>
+                <td>{{factura.clavenumerica}}</td>
+                <td>{{factura.fecha}}</td>
+                <td>{{factura.cliente_nombre}}</td>
+                <td>{{factura.num_documento}}</td>
+                <td>{{factura.tipo_factura}}</td>
+                <td>{{factura.medio_pago}}</td>
+                <td>{{factura.condicion_venta}}</td>
+                <td>{{factura.codigomoneda}}</td>
+                <td>{{factura.tipocambio}}</td>
+                <td>{{factura.totaldescuentos}}</td>
+                <td>{{factura.totalservgravados}}</td>
+                <td>{{factura.totalservexentos}}</td>
+                <td>{{factura.totalservexonerado}}</td>
+                <td>{{factura.totalmercanciasgravadas}}</td>
+                <td>{{factura.totalmercanciasexentas}}</td>
+                <td>{{factura.totalmercanciaexonerada}}</td>
+                <td>{{factura.totalgravado}}</td>
+                <td>{{factura.totalexento}}</td>
+                <td>{{factura.totalexonerado}}</td>
+                <td>{{factura.totalventa}}</td>
+                <td>{{factura.totalventaneta}}</td>
+                <td>{{factura.subtotal}}</td>
+                <td>{{factura.totalimpuesto}}</td>
+                <td>{{factura.TotalOtrosCargos}}</td>
+                <td>{{factura.totalcomprobante}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+    <hr>
+    <table class="table table-responsive float-right" *ngIf="mostrarTotales == true">
+        <h3>Totales por Moneda</h3>
+        <tbody *ngFor="let factura of arrayTotales">
+                <tr>
+                    <th>Moneda</th>
+                    <td>{{factura.codigomoneda}}</td>
+                </tr>
+                
+                <tr>
+                    <th> Descuentos </th>
+                    <td>{{factura.totaldescuentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Gravados </th>
+                    <td>{{factura.totalservgravados}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exentos </th>
+                    <td>{{factura.totalservexentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exonerados </th>
+                    <td>{{factura.totalservexonerado}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Gravadas </th>
+                    <td>{{factura.totalmercanciasgravadas}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Exentas </th>
+                    <td>{{factura.totalmercanciasexentas}}</td>
+               
+                </tr>
+                <tr></tr>
+                    <th> Mercancías <br> Exoneradas </th>
+                    <td>{{factura.totalmercanciaexonerada}}</td>
+                <tr>
+                    <th> Total <br> Gravado </th>
+                    <td>{{factura.totalgravado}}</td>
+                
+                </tr>
+                <tr>
+                    <th> Total <br> Exento </th>
+                    <td>{{factura.totalexento}}</td>
+               
+                </tr>
+                <tr>
+                    <th> Total <br> Exonerado </th>
+                    <td>{{factura.totalexonerado}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Venta </th>
+                    <td>{{factura.totalventa}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Total <br> Venta <br> Neta</th>
+                    <td>{{factura.totalventaneta}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Subtotal</th>
+                    <td>{{factura.subtotal}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Impuesto </th>
+                    <td>{{factura.totalimpuesto}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Otros <br> Cargos </th>
+                    <td>{{factura.TotalOtrosCargos}}</td>
+                  
+                </tr>
+                <tr>
+                    <th> Total <br> Comprobante </th>
+                    <td>{{factura.totalcomprobante}}</td>
+                </tr>
+            
+        </tbody>
+    </table>
+    <hr>    
+</div>
+
+<!-----------------TABLA PEQUEÑA 01----------------------------------------------->
+<ng-container *ngIf="tablaPequena && tabla == '01'">
+    <table class="table table-responsive table-hover" *ngFor="let factura of arrayComprobantes | paginate: config">
+        <tbody>
+            <tr>
+                <th>Clave</th>
+                <td style="width: 100px;word-break: break-all">{{factura.clavenumerica}}</td>
+            </tr>
+            <tr>
+                <th>Fecha</th>
+                <td>{{factura.fecha}}</td>
+            </tr>
+            <tr>
+                <th>Proveedor</th>
+                <td style="width: 100px;word-break: break-all">{{factura.cliente_nombre}}</td>
+            </tr>
+            <tr>
+                <th>Número <br> Interno</th>
+                <td>{{factura.numero_interno}}</td>
+            </tr>
+            <tr>
+                <th>Tipo <br> Factura</th>
+                <td>{{factura.tipo_factura}}</td>
+            </tr>
+            <tr>
+                <th> Medio <br> Pago</th>
+                <td>{{factura.medio_pago}}</td>
+            </tr>
+            <tr>
+                <th>Condición <br> Venta</th>
+                <td>{{factura.condicion_venta}}</td>
+            </tr>
+            <tr>
+                <th>Moneda</th>
+                <td>{{factura.codigomoneda}}</td>
+            </tr>
+            <tr>
+                <th>Tipo <br> Cambio</th>
+                <td>{{factura.tipocambio}}</td>
+            </tr>
+            <tr>
+                <th> Descuentos </th>
+                <td>{{factura.totaldescuentos}}</td>
+            </tr>
+            <tr>
+                <th> Servicios <br> Gravados </th>
+                <td>{{factura.totalservgravados}}</td>
+            </tr>
+            <tr>
+                <th> Servicios <br> Exentos </th>
+                <td>{{factura.totalservexentos}}</td>
+            </tr>
+            <tr>
+                <th> Servicios <br> Exonerados </th>
+                <td>{{factura.totalservexonerado}}</td>
+            </tr>
+            <tr>
+                <th> Mercancías <br> Gravadas </th>
+                <td>{{factura.totalmercanciasgravadas}}</td>
+            </tr>
+            <tr>
+                <th> Mercancías <br> Exentas </th>
+                <td>{{factura.totalmercanciasexentas}}</td>
+           
+            </tr>
+            <tr></tr>
+                <th> Mercancías <br> Exoneradas </th>
+                <td>{{factura.totalmercanciaexonerada}}</td>
+            <tr>
+                <th> Total <br> Gravado </th>
+                <td>{{factura.totalgravado}}</td>
+            
+            </tr>
+            <tr>
+                <th> Total <br> Exento </th>
+                <td>{{factura.totalexento}}</td>
+           
+            </tr>
+            <tr>
+                <th> Total <br> Exonerado </th>
+                <td>{{factura.totalexonerado}}</td>
+                
+            </tr>
+            <tr>
+                <th> Total <br> Venta </th>
+                <td>{{factura.totalventa}}</td>
+               
+            </tr>
+            <tr>
+                <th> Total <br> Venta <br> Neta</th>
+                <td>{{factura.totalventaneta}}</td>
+                
+            </tr>
+            <tr>
+                <th> Subtotal</th>
+                <td>{{factura.subtotal}}</td>
+                
+            </tr>
+            <tr>
+                <th> Total <br> Impuesto </th>
+                <td>{{factura.totalimpuesto}}</td>
+               
+            </tr>
+            <tr>
+                <th> Otros <br> Cargos </th>
+                <td>{{factura.TotalOtrosCargos}}</td>
+              
+            </tr>
+            <tr>
+                <th> Total <br> Comprobante </th>
+                <td>{{factura.totalcomprobante}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+    <hr>
+    <div class="table">
+        <table class="table-bordered table-hover" *ngIf="mostrarTotales == true">
+            <h3>Totales por Moneda</h3>
+        <tbody *ngFor="let factura of arrayTotales">
+                <tr>
+                    <th>Moneda</th>
+                    <td>{{factura.codigomoneda}}</td>
+                </tr>
+                <tr>
+                    <th> Descuentos </th>
+                    <td>{{factura.totaldescuentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Gravados </th>
+                    <td>{{factura.totalservgravados}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exentos </th>
+                    <td>{{factura.totalservexentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exonerados </th>
+                    <td>{{factura.totalservexonerado}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Gravadas </th>
+                    <td>{{factura.totalmercanciasgravadas}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Exentas </th>
+                    <td>{{factura.totalmercanciasexentas}}</td>
+               
+                </tr>
+                <tr></tr>
+                    <th> Mercancías <br> Exoneradas </th>
+                    <td>{{factura.totalmercanciaexonerada}}</td>
+                <tr>
+                    <th> Total <br> Gravado </th>
+                    <td>{{factura.totalgravado}}</td>
+                
+                </tr>
+                <tr>
+                    <th> Total <br> Exento </th>
+                    <td>{{factura.totalexento}}</td>
+               
+                </tr>
+                <tr>
+                    <th> Total <br> Exonerado </th>
+                    <td>{{factura.totalexonerado}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Venta </th>
+                    <td>{{factura.totalventa}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Total <br> Venta <br> Neta</th>
+                    <td>{{factura.totalventaneta}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Subtotal</th>
+                    <td>{{factura.subtotal}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Impuesto </th>
+                    <td>{{factura.totalimpuesto}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Otros <br> Cargos </th>
+                    <td>{{factura.TotalOtrosCargos}}</td>
+                  
+                </tr>
+                <tr>
+                    <th> Total <br> Comprobante </th>
+                    <td>{{factura.totalcomprobante}}</td>
+                </tr>
+            
+        </tbody>
+        </table>
+    </div>
+    <hr>
+</ng-container>
+<!-----------------FIN TABLA PEQUEÑA 01----------------------------------------------->
+
+
+
+<div *ngIf="tabla == '02' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th> ID </th>
+                <th> Producto </th>
+                <th> Código </th>
+                <th> Cantidad </th>
+                <th> Categoría </th>
+                <th> Subtotal </th>
+                <th> Impuestos </th>
+                <th> Otros Cargos </th>
+                <th> Total </th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let factura of arrayComprobantes | paginate: config">
+            <tr>
+                <td>{{factura.id}}</td>
+                <td>{{factura.descripcion}}</td>
+                <td>{{factura.codigobarra_producto}}</td>
+                <td>{{factura.cantidad}}</td>
+                <td>{{factura.categoria}}</td>
+                <td>{{factura.subtotal}}</td>
+                <td>{{factura.totalimpuesto}}</td>
+                <td>{{factura.otroscargos}}</td>
+                <td>{{factura.totalcomprobante}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <table class="table table-responsive float-right" *ngIf="mostrarTotales == true">
+        <tr>
+            <th>Subtotal</th>
+            <th>Total Impuesto</th>
+            <th>Impuesto Servicio</th>
+            <th>Total</th>
+        </tr>
+        <tbody>
+            <tr>
+            <td>{{subtotal}}</td>
+            <td>{{impuestos}}</td>
+            <td>{{otroscargos}}</td>
+            <td>{{total}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+<!-----------------TABLA PEQUEÑA 02----------------------------------------------->
+
+<ng-container *ngIf="tablaPequena && tabla == '02'">
+    <table class="table table-responsive table-hover" *ngFor="let factura of arrayComprobantes | paginate: config">
+        <tbody>
+            <tr>
+                <th> ID </th>
+                <td >{{factura.id}}</td>
+            </tr>
+            <tr>
+                <th> Producto</th>
+                <td  style="word-break: break-all">{{factura.descripcion}}</td>
+            </tr>
+            <tr>
+                <th> Código </th>
+                <td style="word-break: break-all">{{factura.codigobarra_producto}}</td>
+            </tr>
+            <tr>
+                <th> Cantidad </th>
+                <td>{{factura.cantidad}}</td>
+            </tr>
+            <tr>
+                <th>Categoría</th>
+                <td>{{factura.categoria}}</td>
+            </tr>
+            <tr>
+                <th> Subtotal </th>
+                <td>{{factura.subtotal}}</td>
+            </tr>
+            <tr>
+                <th> Impuestos </th>
+                <td>{{factura.totalimpuesto}}</td>
+            </tr>    
+            <tr>
+                <th> Otros Cargos </th>
+                <td>{{factura.otroscargos}}</td>
+            </tr>    
+            <tr>    
+                <th> Total </th>
+                <td>{{factura.totalcomprobante}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <div class="table">
+        <table class="table-bordered table-hover" *ngIf="mostrarTotales == true">
+            <tbody>
+                <tr>
+                    <th>Subtotal</th>
+                    <td>{{subtotal}}</td>
+                </tr>
+                <tr>
+                    <th>Total <br> Impuesto</th>
+                    <td>{{impuestos}}</td>
+                </tr>
+                <tr>
+                    <th>Impuesto <br> Servicio</th>
+                    <td>{{otroscargos}}</td>
+                </tr>
+                <tr>
+                    <th>Total</th>
+                    <td>{{total}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+
+<!------------------------------ FIN TABLA PEQUEÑA 02------------------------------->
+
+
+<div *ngIf="tabla == '03' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th> ID </th>
+                <th> Cliente </th>
+                <th> Fecha </th>
+                <th> Subtotal </th>
+                <th> Impuestos </th>
+                <th> Otros Cargos </th>
+                <th> Total </th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let factura of arrayComprobantes | paginate: config">
+            <tr>
+                <td>{{factura.id}}</td>
+                <td>{{factura.nombre}}</td>
+                <td>{{factura.fecha}}</td>
+                <td>{{factura.subtotal}}</td>
+                <td>{{factura.totalimpuesto}}</td>
+                <td>{{factura.otroscargos}}</td>
+                <td>{{factura.total}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <table class="table table-responsive float-right" *ngIf="mostrarTotales == true">
+        <tr>
+            <th>Subtotal</th>
+            <th>Total Impuesto</th>
+            <th>Impuesto Servicio</th>
+            <th>Total</th>
+        </tr>
+        <tbody>
+            <tr>
+            <td>{{subtotal}}</td>
+            <td>{{impuestos}}</td>
+            <td>{{otroscargos}}</td>
+            <td>{{total}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+<!---------------------------- TABLA PEQUEÑA 03 -------------------------------------------->
+<ng-container *ngIf="tablaPequena && tabla == '03'">
+    <table class="table table-responsive table-hover" *ngFor="let factura of arrayComprobantes | paginate: config">
+        <tbody>
+            <tr>
+                <th> ID </th>
+                <td >{{factura.id}}</td>
+            </tr>
+            <tr>
+                <th> Nombre</th>
+                <td  style="word-break: break-all">{{factura.nombre}}</td>
+            </tr>
+            <tr>
+                <th> Fecha </th>
+                <td style="word-break: break-all">{{factura.fecha | date: 'yyyy-MM-dd'}}</td>
+            </tr>
+            <tr>
+                <th> Subtotal </th>
+                <td>{{factura.subtotal}}</td>
+            </tr>
+            <tr>
+                <th> Impuestos </th>
+                <td>{{factura.totalimpuesto}}</td>
+            </tr>    
+            <tr>
+                <th> Otros Cargos </th>
+                <td>{{factura.otroscargos}}</td>
+            </tr>    
+            <tr>    
+                <th> Total </th>
+                <td>{{factura.total}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <div class="table">
+        <table class="table-bordered table-hover" *ngIf="mostrarTotales == true">
+            <tbody>
+                <tr>
+                    <th>Subtotal</th>
+                    <td>{{subtotal}}</td>
+                </tr>
+                <tr>
+                    <th>Total <br> Impuesto</th>
+                    <td>{{impuestos}}</td>
+                </tr>
+                <tr>
+                    <th>Impuesto <br> Servicio</th>
+                    <td>{{otroscargos}}</td>
+                </tr>
+                <tr>
+                    <th>Total</th>
+                    <td>{{total}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+
+<!-----------------------------FIN TABLA PEQUEÑA 03----------------------------------------->
+
+
+<div *ngIf="tabla == '04' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th> Fecha </th>
+                <th> Clave </th>
+                <th> Proveedor </th>
+                <th> Subtotal </th>
+                <th> Impuestos </th>
+                <th> Otros Cargos </th>
+                <th> Total </th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let factura of arrayComprobantes | paginate: config">
+            <tr>
+                <td>{{factura.fecha}}</td>
+                <td>{{factura.clavenumerica}}</td>
+                <td>{{factura.proveedor_nombre}}</td>
+                <td>{{factura.subtotal}}</td>
+                <td>{{factura.totalimpuesto}}</td>
+                <td>{{factura.TotalOtrosCargos}}</td>
+                <td>{{factura.totalcomprobante}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <table class="table table-responsive" *ngIf="mostrarTotales == true">
+        <tr>
+            <th>Subtotal</th>
+            <th>Total Impuesto</th>
+            <th>Impuesto Servicio</th>
+            <th>Total</th>
+        </tr>
+        <tbody>
+            <tr>
+            <td>{{subtotal}}</td>
+            <td>{{impuestos}}</td>
+            <td>{{otroscargos}}</td>
+            <td>{{total}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+<!------------------------------------TABLA PEQUEÑA 04------------------------------>
+<ng-container *ngIf="tablaPequena && tabla == '04'">
+    <table class="table table-responsive table-hover" *ngFor="let factura of arrayComprobantes | paginate: config">
+        <tbody>
+            <tr>
+                <th> Fecha </th>
+                <td style="word-break: break-all">{{factura.fecha | date: 'yyyy-MM-dd'}}</td>
+            </tr>
+            <tr>
+                <th>Clave</th>
+                <td style="word-break: break-all">{{factura.clavenumerica}}</td>
+            </tr>
+            <tr>
+                <th>Proveedor</th>
+                <td>{{factura.proveedor_nombre}}</td>
+            </tr>
+            <tr>
+                <th> Subtotal </th>
+                <td>{{factura.subtotal}}</td>
+            </tr>
+            <tr>
+                <th> Impuestos </th>
+                <td>{{factura.totalimpuesto}}</td>
+            </tr>    
+            <tr>
+                <th> Otros Cargos </th>
+                <td>{{factura.TotalOtrosCargos}}</td>
+            </tr>    
+            <tr>    
+                <th> Total </th>
+                <td>{{factura.totalcomprobante}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <div class="table">
+        <table class="table-bordered table-hover" *ngIf="mostrarTotales == true">
+            <tbody>
+                <tr>
+                    <th>Subtotal</th>
+                    <td>{{subtotal}}</td>
+                </tr>
+                <tr>
+                    <th>Total <br> Impuesto</th>
+                    <td>{{impuestos}}</td>
+                </tr>
+                <tr>
+                    <th>Impuesto <br> Servicio</th>
+                    <td>{{otroscargos}}</td>
+                </tr>
+                <tr>
+                    <th>Total</th>
+                    <td>{{total}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+
+<!----------------------------------FIN TABLA PEQUEÑA 04------------------------------>
+
+
+<div *ngIf="tabla == '05' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead>
+
+            <!-- ["Clavenumérica","Fecha", "Proveedor","Número Interno","Tipo Factura","Medio Pago","Condición Impuesto","Condición Venta","Moneda","Tipo Cambio","Descuentos","Servicios Gravados","Servicios Exentos", "Servicios Exonerados","Mercancías Gravadas","Mercancías Exentas", "Mercancías Exoneradas","Total Gravado", "Total Exento","Total Exonerado",
+            "Total Venta","Venta Neta","Subtotal","Total Impuesto","Otros Cargos","Total Factura"] -->
+            <tr>
+                <th> Clavenumérica </th>
+                <th> Fecha </th>
+                <th> Proveedor </th>
+                <th> Número <br> Interno </th>
+                <th> Tipo <br> Factura</th>
+                <th> Medio <br> Pago </th>
+                <th> Condición <br> Impuesto </th>
+                <th> Condición <br> Venta </th>
+                <th> Moneda </th>
+                <th> Tipo Cambio </th>
+                <th> Descuentos </th>
+                <th> Servicios <br> Gravados </th>
+                <th> Servicios <br> Exentos </th>
+                <th> Servicios <br> Exonerados </th>
+                <th> Mercancías <br> Gravadas </th>
+                <th> Mercancías <br> Exentas </th>
+                <th> Mercancías <br> Exoneradas </th>
+                <th> Total <br> Gravado </th>
+                <th> Total <br> Exento </th>
+                <th> Total <br> Exonerado </th>
+                <th> Total <br> Venta </th>
+                <th> Total <br> Venta <br> Neta</th>
+                <th> Subtotal</th>
+                <th> Total <br> Impuesto </th>
+                <th> Otros <br> Cargos </th>
+                <th> Total <br> Comprobante </th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let factura of arrayComprobantes | paginate: config">
+            <tr>
+                <td>{{factura.clavenumerica}}</td>
+                <td>{{factura.fecha}}</td>
+                <td>{{factura.proveedor_nombre}}</td>
+                <td>{{factura.numero_interno}}</td>
+                <td>{{factura.tipo_factura}}</td>
+                <td>{{factura.medio_pago}}</td>
+                <td>{{factura.codicion_impuesto}}</td>
+                <td>{{factura.condicion_venta}}</td>
+                <td>{{factura.codigomoneda}}</td>
+                <td>{{factura.tipocambio}}</td>
+                <td>{{factura.totaldescuentos}}</td>
+                <td>{{factura.totalservgravados}}</td>
+                <td>{{factura.totalservexentos}}</td>
+                <td>{{factura.totalservexonerado}}</td>
+                <td>{{factura.totalmercanciasgravadas}}</td>
+                <td>{{factura.totalmercanciasexentas}}</td>
+                <td>{{factura.totalmercanciaexonerada}}</td>
+                <td>{{factura.totalgravado}}</td>
+                <td>{{factura.totalexento}}</td>
+                <td>{{factura.totalexonerado}}</td>
+                <td>{{factura.totalventa}}</td>
+                <td>{{factura.totalventaneta}}</td>
+                <td>{{factura.subtotal}}</td>
+                <td>{{factura.totalimpuesto}}</td>
+                <td>{{factura.TotalOtrosCargos}}</td>
+                <td>{{factura.totalcomprobante}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <table class="table table-responsive float-right" *ngIf="mostrarTotales == true">
+        <h3>Totales por Moneda</h3>
+        <tbody *ngFor="let factura of arrayTotales">
+                
+                
+                <tr>
+                    <th>Moneda</th>
+                    <td>{{factura.codigomoneda}}</td>
+                </tr>
+                
+                <tr>
+                    <th> Descuentos </th>
+                    <td>{{factura.totaldescuentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Gravados </th>
+                    <td>{{factura.totalservgravados}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exentos </th>
+                    <td>{{factura.totalservexentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exonerados </th>
+                    <td>{{factura.totalservexonerado}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Gravadas </th>
+                    <td>{{factura.totalmercanciasgravadas}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Exentas </th>
+                    <td>{{factura.totalmercanciasexentas}}</td>
+               
+                </tr>
+                <tr></tr>
+                    <th> Mercancías <br> Exoneradas </th>
+                    <td>{{factura.totalmercanciaexonerada}}</td>
+                <tr>
+                    <th> Total <br> Gravado </th>
+                    <td>{{factura.totalgravado}}</td>
+                
+                </tr>
+                <tr>
+                    <th> Total <br> Exento </th>
+                    <td>{{factura.totalexento}}</td>
+               
+                </tr>
+                <tr>
+                    <th> Total <br> Exonerado </th>
+                    <td>{{factura.totalexonerado}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Venta </th>
+                    <td>{{factura.totalventa}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Total <br> Venta <br> Neta</th>
+                    <td>{{factura.totalventaneta}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Subtotal</th>
+                    <td>{{factura.subtotal}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Impuesto </th>
+                    <td>{{factura.totalimpuesto}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Otros <br> Cargos </th>
+                    <td>{{factura.TotalOtrosCargos}}</td>
+                  
+                </tr>
+                <tr>
+                    <th> Total <br> Comprobante </th>
+                    <td>{{factura.totalcomprobante}}</td>
+                </tr>
+            
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+
+<!--------------------------------TABLA PEQUEÑA 05-------------------------------->
+<ng-container *ngIf="tablaPequena == true && tabla == '05'">
+    <table class="table table-responsive table-hover" *ngFor="let factura of arrayComprobantes | paginate: config">
+        <tbody>
+            <tr>
+                <th>Clave</th>
+                <td style="width: 100px;word-break: break-all">{{factura.clavenumerica}}</td>
+            </tr>
+            <tr>
+                <th>Fecha</th>
+                <td>{{factura.fecha}}</td>
+            </tr>
+            <tr>
+                <th>Proveedor</th>
+                <td style="width: 100px;word-break: break-all">{{factura.proveedor_nombre}}</td>
+            </tr>
+            <tr>
+                <th>Número <br> Interno</th>
+                <td>{{factura.numero_interno}}</td>
+            </tr>
+            <tr>
+                <th>Tipo <br> Factura</th>
+                <td>{{factura.tipo_factura}}</td>
+            </tr>
+            <tr>
+                <th> Medio <br> Pago</th>
+                <td>{{factura.medio_pago}}</td>
+            </tr>
+            <tr>
+                <th>Condición <br> Impuesto</th>
+                <td>{{factura.codicion_impuesto}}</td>
+            </tr>
+            <tr>
+                <th>Condición <br> Venta</th>
+                <td>{{factura.condicion_venta}}</td>
+            </tr>
+            <tr>
+                <th>Moneda</th>
+                <td>{{factura.codigomoneda}}</td>
+            </tr>
+            <tr>
+                <th>Tipo <br> Cambio</th>
+                <td>{{factura.tipocambio}}</td>
+            </tr>
+            <tr>
+                <th> Descuentos </th>
+                <td>{{factura.totaldescuentos}}</td>
+            </tr>
+            <tr>
+                <th> Servicios <br> Gravados </th>
+                <td>{{factura.totalservgravados}}</td>
+            </tr>
+            <tr>
+                <th> Servicios <br> Exentos </th>
+                <td>{{factura.totalservexentos}}</td>
+            </tr>
+            <tr>
+                <th> Servicios <br> Exonerados </th>
+                <td>{{factura.totalservexonerado}}</td>
+            </tr>
+            <tr>
+                <th> Mercancías <br> Gravadas </th>
+                <td>{{factura.totalmercanciasgravadas}}</td>
+            </tr>
+            <tr>
+                <th> Mercancías <br> Exentas </th>
+                <td>{{factura.totalmercanciasexentas}}</td>
+           
+            </tr>
+            <tr></tr>
+                <th> Mercancías <br> Exoneradas </th>
+                <td>{{factura.totalmercanciaexonerada}}</td>
+            <tr>
+                <th> Total <br> Gravado </th>
+                <td>{{factura.totalgravado}}</td>
+            
+            </tr>
+            <tr>
+                <th> Total <br> Exento </th>
+                <td>{{factura.totalexento}}</td>
+           
+            </tr>
+            <tr>
+                <th> Total <br> Exonerado </th>
+                <td>{{factura.totalexonerado}}</td>
+                
+            </tr>
+            <tr>
+                <th> Total <br> Venta </th>
+                <td>{{factura.totalventa}}</td>
+               
+            </tr>
+            <tr>
+                <th> Total <br> Venta <br> Neta</th>
+                <td>{{factura.totalventaneta}}</td>
+                
+            </tr>
+            <tr>
+                <th> Subtotal</th>
+                <td>{{factura.subtotal}}</td>
+                
+            </tr>
+            <tr>
+                <th> Total <br> Impuesto </th>
+                <td>{{factura.totalimpuesto}}</td>
+               
+            </tr>
+            <tr>
+                <th> Otros <br> Cargos </th>
+                <td>{{factura.TotalOtrosCargos}}</td>
+              
+            </tr>
+            <tr>
+                <th> Total <br> Comprobante </th>
+                <td>{{factura.totalcomprobante}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <div class="table">
+       
+        <table class="table-bordered table-hover" *ngIf="mostrarTotales == true">
+             <h3>Totales por Moneda</h3>
+            <tbody *ngFor="let factura of arrayTotales">
+                <tr>
+                    <th> Moneda </th>
+                    <td>{{factura.codigomoneda}}</td>
+                </tr>
+                <tr>
+                    <th> Descuentos </th>
+                    <td>{{factura.totaldescuentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Gravados </th>
+                    <td>{{factura.totalservgravados}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exentos </th>
+                    <td>{{factura.totalservexentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exonerados </th>
+                    <td>{{factura.totalservexonerado}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Gravadas </th>
+                    <td>{{factura.totalmercanciasgravadas}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Exentas </th>
+                    <td>{{factura.totalmercanciasexentas}}</td>
+               
+                </tr>
+                <tr></tr>
+                    <th> Mercancías <br> Exoneradas </th>
+                    <td>{{factura.totalmercanciaexonerada}}</td>
+                <tr>
+                    <th> Total <br> Gravado </th>
+                    <td>{{factura.totalgravado}}</td>
+                
+                </tr>
+                <tr>
+                    <th> Total <br> Exento </th>
+                    <td>{{factura.totalexento}}</td>
+               
+                </tr>
+                <tr>
+                    <th> Total <br> Exonerado </th>
+                    <td>{{factura.totalexonerado}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Venta </th>
+                    <td>{{factura.totalventa}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Total <br> Venta <br> Neta</th>
+                    <td>{{factura.totalventaneta}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Subtotal</th>
+                    <td>{{factura.subtotal}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Impuesto </th>
+                    <td>{{factura.totalimpuesto}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Otros <br> Cargos </th>
+                    <td>{{factura.TotalOtrosCargos}}</td>
+                  
+                </tr>
+                <tr>
+                    <th> Total <br> Comprobante </th>
+                    <td>{{factura.totalcomprobante}}</td>
+                </tr>
+            
+        </tbody>
+        </table>
+    </div>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+
+<!-----------------------------FIN TABLA PEQUEÑA 05-------------------------------->
+
+
+<div *ngIf="tabla == '06' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th> Proveedor </th>
+                <td> Subtotal</td>
+                <th> Impuestos </th>
+                <th> Otros Cargos </th>
+                <th> Total </th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let factura of arrayComprobantes | paginate: config">
+            <tr>
+                <td>{{factura.proveedor}}</td>
+                <td>{{factura.subtotal}}</td>
+                <td>{{factura.totalimpuesto}}</td>
+                <td>{{factura.otroscargos}}</td>
+                <td>{{factura.total}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <table class="table table-responsive float-right" *ngIf="mostrarTotales == true">
+        <tr>
+            <th>Subtotal</th>
+            <th>Total Impuesto</th>
+            <th>Impuesto Servicio</th>
+            <th>Total</th>
+        </tr>
+        <tbody>
+            <tr>
+            <td>{{subtotal}}</td>
+            <td>{{impuestos}}</td>
+            <td>{{otroscargos}}</td>
+            <td>{{total}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+<!--------------------------------------------TABLA PEQUEÑA 06---------------------------->
+<ng-container *ngIf="tablaPequena && tabla == '06'">
+    <table class="table table-responsive table-hover" *ngFor="let factura of arrayComprobantes | paginate: config">
+        <tbody>
+            <tr>
+                <th>Proveedor</th>
+                <td style="word-break: break-all">{{factura.proveedor}}</td>
+            </tr>
+            <tr>
+                <th> Subtotal </th>
+                <td>{{factura.subtotal}}</td>
+            </tr>
+            <tr>
+                <th> Impuestos </th>
+                <td>{{factura.totalimpuesto}}</td>
+            </tr>    
+            <tr>
+                <th> Otros Cargos </th>
+                <td>{{factura.otroscargos}}</td>
+            </tr>    
+            <tr>    
+                <th> Total </th>
+                <td>{{factura.total}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <div class="table">
+        <table class="table-bordered table-hover" *ngIf="mostrarTotales == true">
+            <tbody>
+                <tr>
+                    <th>Subtotal</th>
+                    <td>{{subtotal}}</td>
+                </tr>
+                <tr>
+                    <th>Total <br> Impuesto</th>
+                    <td>{{impuestos}}</td>
+                </tr>
+                <tr>
+                    <th>Impuesto <br> Servicio</th>
+                    <td>{{otroscargos}}</td>
+                </tr>
+                <tr>
+                    <th>Total</th>
+                    <td>{{total}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+
+
+<!-------------------------------------FIN TABLA PEQUEÑA 09------------------------------->
+
+
+<!-------REPORTE DE VENTAS DE FORMA DE PAGO ----------------------------------------------->
+<div *ngIf="tabla == '09' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Razón</th>
+                <th>Clave</th>
+                <th>Número Documento</th>
+                <th>Medio Pago</th>
+                <th>Subtotal</th>
+                <th>Total Impuesto</th>
+                <th>Otros Cargos</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let factura of arrayComprobantes | paginate: config">
+            <tr>
+                <td>{{factura.fecha}}</td>
+                <td>{{factura.cliente_nombre}}</td>
+                <td>{{factura.cliente_nombre_comercial}}</td>
+                <td>{{factura.clavenumerica}}</td>
+                <td>{{factura.num_documento}}</td>
+                <td>{{factura.medioPago}}</td>
+                <td>{{factura.subtotal}}</td>
+                <td>{{factura.totalimpuesto}}</td>
+                <td>{{factura.TotalOtrosCargos}}</td>
+                <td>{{factura.totalcomprobante}}</td>
+               
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <table class="table table-responsive float-right" *ngIf="mostrarTotales == true">
+        <tr>
+            <th>Subtotal</th>
+            <th>Total Impuesto</th>
+            <th>Impuesto Servicio</th>
+            <th>Total</th>
+        </tr>
+        <tbody>
+            <tr>
+            <td>{{subtotal}}</td>
+            <td>{{impuestos}}</td>
+            <td>{{otroscargos}}</td>
+            <td>{{total}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+<!--------------------------------------------TABLA PEQUEÑA 09---------------------------->
+<ng-container *ngIf="tablaPequena && tabla == '09'">
+    <table class="table table-responsive table-hover" *ngFor="let factura of arrayComprobantes | paginate: config">
+        <tbody>
+            <tr>
+                <th>Fecha</th>
+                <td style="word-break: break-all">{{factura.fecha}}</td>
+            </tr>
+            <tr>
+                <th>Cliente</th>
+                <td style="word-break: break-all">{{factura.cliente_nombre}}</td>
+            </tr>
+            <tr>
+                <th>Razon social </th>
+                <td style="word-break: break-all">{{factura.cliente_nombre_comercial}}</td>
+            </tr>
+            <tr>
+                <th> Clave </th>
+                <td style="word-break: break-all">{{factura.clavenumerica}}</td>
+            </tr>    
+            <tr>
+                <th> Medio Pago </th>
+                <td>{{factura.medioPago}}</td>
+            </tr>    
+            <tr>    
+                <th> # Documento</th>
+                <td>{{factura.num_documento}}</td>
+            </tr>
+            <tr>    
+                <th> Subtotal</th>
+                <td>{{factura.subtotal}}</td>
+            </tr>
+            <tr>    
+                <th> Total Impuesto</th>
+                <td>{{factura.totalimpuesto}}</td>
+            </tr>
+            <tr>    
+                <th> Otros Cargos</th>
+                <td>{{factura.TotalOtrosCargos}}</td>
+            </tr>
+            <tr>    
+                <th> Total </th>
+                <td>{{factura.totalcomprobante}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <div class="table">
+        <table class="table-bordered table-hover" *ngIf="mostrarTotales == true">
+            <tbody>
+                <tr>
+                    <th>Subtotal</th>
+                    <td>{{subtotal}}</td>
+                </tr>
+                <tr>
+                    <th>Total <br> Impuesto</th>
+                    <td>{{impuestos}}</td>
+                </tr>
+                <tr>
+                    <th>Impuesto <br> Servicio</th>
+                    <td>{{otroscargos}}</td>
+                </tr>
+                <tr>
+                    <th>Total</th>
+                    <td>{{total}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+
+
+<!-------------------------------------FIN TABLA PEQUEÑA 09------------------------------->
+
+
+<!------------------------------------------TABLE 10-------------------------------------- -->
+
+<div *ngIf="tabla == '10' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Artículo</th>
+                <th>Categoría</th>
+                <th>Bodega</th>
+                <th>Existencia <br> Actual</th>
+                <th>Existencia <br> Anterior</th>
+                
+            </tr>
+        </thead>
+        <tbody *ngFor="let existencia of arrayComprobantes | paginate: config">
+            <tr>
+                <td>{{existencia.nombre}}</td>
+                <td>{{existencia.categoria}}</td>
+                <td>{{existencia.descripcion}}</td>
+                <td>{{existencia.existencia_actual}}</td>
+                <td>{{existencia.existencia_anterior}}</td>       
+            </tr>
+        </tbody>
+    </table>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+<!-- TABLE PEQUEÑA 10-------------------------------------------------------------->
+<ng-container *ngIf="tablaPequena && tabla == '10'">
+    <table class="table table-responsive table-hover" *ngFor="let existencia of arrayComprobantes | paginate: config">
+        <tbody>
+            <tr>
+                <th>Artículo</th>
+                <td style="word-break: break-all">{{existencia.nombre}}</td>
+            </tr>
+            <tr>
+                <th>Categoría</th>
+                <td style="word-break: break-all">{{existencia.categoria}}</td>
+            </tr>
+            <tr>
+                <th>Bodega </th>
+                <td style="word-break: break-all">{{existencia.descripcion}}</td>
+            </tr>
+            <tr>
+                <th> Existencia <br> Actual</th>
+                <td>{{existencia.existencia_actual}}</td>
+            </tr>    
+            <tr>
+                <th> Existencia <br> Anterior</th>
+                <td>{{existencia.existencia_anterior}}</td>
+            </tr>    
+        </tbody>
+    </table>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+
+<!------------------------------------------FIN TABLE 10-------------------------------------- -->
+
+
+<!----------------------------------------- TABLE 11-------------------------------------- -->
+
+<div *ngIf="tabla == '11' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead *ngIf="mostrarHeader == true">
+            <tr>
+                <th>Fecha</th>
+                <th>Artículo</th>
+                <th>Categoría</th>
+                <th>Descripción</th>
+                <th>Tipo <br> Ajuste</th>
+                <th>Bodega</th> 
+                <th>Total</th>
+            </tr>
+        </thead>
+        <thead *ngIf="mostrarHeader == false">
+            <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Descripción</th>
+                <th>Tipo <br> Ajuste</th>
+                <th>Total</th>                
+            </tr>
+        </thead>
+
+        <tbody *ngFor="let existencia of arrayComprobantes | paginate: config">
+            <tr *ngIf="mostrarHeader == true">
+                <td>{{existencia.fecha}}</td>
+                <td>{{existencia.articulo}}</td>
+                <td>{{existencia.categoria}}</td>
+                <td>{{existencia.descripcion}}</td>
+                <td>{{existencia.tipoajuste}}</td>       
+                <td>{{existencia.bodega}}</td> 
+                <td>{{existencia.total}}</td>
+            </tr>
+
+            <tr *ngIf="mostrarHeader == false">
+                <td>{{existencia.idajuste}}</td>
+                <td>{{existencia.fecha}}</td>
+                <td>{{existencia.descripcion}}</td>
+                <td>{{existencia.tipoajuste}}</td>
+                <td>{{existencia.total}}</td>      
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <div class="table">
+        <table class="table-bordered table-hover" *ngIf="mostrarTotales == true">
+            <tbody>
+                <tr>
+                    <th>Total</th>
+                    <td>{{total}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr *ngIf="mostrarTotales == true">
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+<!-- TABLA PEQUEÑA 11-------------------------------------------------------------------------->
+<ng-container *ngIf="tablaPequena == true && tabla == '11'">
+    <table class="table table-responsive table-hover" *ngFor="let existencia of arrayComprobantes | paginate: config">
+    <tbody *ngIf="mostrarHeader == true">
+       <tr>
+           <th>Fecha</th>
+           <td>{{existencia.fecha}}</td>
+       </tr>
+
+        <tr>
+            <th>Artículo</th>
+            <td>{{existencia.articulo}}</td>
+        </tr>
+
+        <tr>
+            <th>Categoría</th>
+            <td>{{existencia.categoria}}</td>
+        </tr>
+
+        <tr>
+            <th>Descripción</th>
+            <td>{{existencia.descripcion}}</td>
+        </tr>
+
+        <tr>
+            <th>Tipo <br> Ajuste</th>
+            <td>{{existencia.tipoajuste}}</td> 
+        </tr>  
+
+        <tr>
+            <th>Bodega</th>
+            <td>{{existencia.bodega}}</td>
+        </tr> 
+
+        <tr>
+            <th>Total</th>
+            <td>{{existencia.total}}</td> 
+        </tr>
+
+    </tbody>
+
+
+    <tbody *ngIf="mostrarHeader == false">
+        <tr>
+            <th>ID</th>
+            <td>{{existencia.idajuste}}</td>
+        </tr>
+        <tr>
+            <th>Fecha</th>
+            <td>{{existencia.fecha}}</td>
+        </tr>
+        <tr>
+            <th>Descripción</th>
+            <td>{{existencia.descripcion}}</td>
+        </tr>
+        <tr>
+            <th>Tipo <br> Ajuste</th>
+            <td>{{existencia.tipoajuste}}</td>
+        </tr>
+        <tr>
+            <th>Total</th>
+            <td>{{existencia.total}}</td> 
+        </tr>
+    </tbody>
+</table>
+<hr *ngIf="mostrarTotales == true">
+<div class="table">
+    <table class="table-bordered table-hover" *ngIf="mostrarTotales == true">
+        <tbody>
+            <tr>
+                <th>Total</th>
+                <td>{{total}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+
+<!----------------------------------------- FIN TABLE 11-------------------------------------- -->
+
+
+<!------------------------------------------TABLA12------------------------------------------------------>
+
+<div *ngIf="tabla == '12' && tablaPequena == false" class="table">
+    <table class="table table-responsive table-hover">
+        <thead >
+            <tr>
+               
+                <th>Usuario</th>
+                <th>Cliente</th>
+                <th>Fecha</th>
+                <th>Zona</th>
+                <th>Ubicación Cliente</th>
+                <th>Tipo Movimiento</th>
+                <th>Visita</th>
+                <th>Venta</th>
+                <th>Razón</th>
+                <th>Distancia</th>
+                <th>Ubicación Salida</th>
+
+            </tr>
+        </thead>
+        <tbody *ngFor="let visita of arrayComprobantes | paginate: config">
+            <tr>
+                <td>{{visita.usuario}}</td>
+                <td>{{visita.cliente}}</td>
+                <td>{{visita.fecha}}</td>
+                <td>{{visita.zona}}</td>
+                <td>{{visita.ubicacionCliente}}</td>
+                <td>{{visita.tipo_movimiento}}</td>
+                <td>{{visita.visita}}</td>
+                <td>{{visita.venta}}</td>
+                <td>{{visita.razon}}</td>      
+                <td>{{visita.distancia}}</td>      
+                <td>{{visita.ubicacionSalida}}</td>
+
+            </tr>
+        </tbody>
+    </table>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+<!----------------- TABLA PQUEÑA 12 ------------------------------------------------------->
+
+<ng-container *ngIf="tabla == '12' && tablaPequena == true" class="table">
+
+    <table class="table table-responsive table-hover">
+        <tbody *ngFor="let visita of arrayComprobantes | paginate: config">
+            
+            <tr>
+                <th>Usuario</th>
+                <td>{{visita.usuario}}</td>
+            </tr>
+            <tr>
+                <th>Cliente</th>
+                <td style="word-break: break-all">{{visita.cliente}}</td>
+            </tr>
+            <tr>
+                <th>Fecha</th>
+                <td>{{visita.fecha}}</td>
+            </tr>
+            <tr>
+                <th>Zona</th>
+                <td>{{visita.zona}}</td>
+            </tr>
+
+            <tr>
+                <th>Ubicación Cliente</th>
+                <td>{{visita.ubicacionCliente}}</td>
+            </tr>
+            <tr>
+                <th>Tipo <br> Movimiento</th>
+                <td>{{visita.tipo_movimiento}}</td>
+            </tr>
+            <tr>
+                <th>Visita</th>
+                <td>{{visita.visita}}</td>
+            </tr>
+            <tr>
+                <th>Venta</th>
+                <td>{{visita.venta}}</td>
+            </tr>
+            <tr>
+                <th>Razón</th>
+                <td style="word-break: break-all">{{visita.razon}}</td>
+            </tr>
+            <tr>
+                <th>Distancia</th>
+                <td style="word-break: break-all">{{visita.distancia}}</td>
+            </tr>
+            <tr>
+                <th>Ubicación Salida</th>
+                <td>{{visita.ubicacionSalida}}</td>
+            </tr>
+        </tbody>
+        <br>
+    </table>
+
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+<!------------------------------FIN TABLA PEQUEÑA 12----------------------------------------->
+
+
+<div *ngIf="tabla == '13' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead>
+
+            <!-- ["Clavenumérica","Fecha", "Proveedor","Número Interno","Tipo Factura","Medio Pago","Condición Impuesto","Condición Venta","Moneda","Tipo Cambio","Descuentos","Servicios Gravados","Servicios Exentos", "Servicios Exonerados","Mercancías Gravadas","Mercancías Exentas", "Mercancías Exoneradas","Total Gravado", "Total Exento","Total Exonerado",
+            "Total Venta","Venta Neta","Subtotal","Total Impuesto","Otros Cargos","Total Factura"] -->
+            <tr>
+                <th> Fecha</th>
+                <th> Clavenumérica </th>
+                <th> Cliente </th>
+                <th> Cédula </th>
+                <th> Tipo <br> Factura</th>
+                <th> Medio <br> Pago </th>
+                <th> Condición <br> Venta </th>
+                <th> Moneda </th>
+                <th> Descuentos </th>
+                <th> Servicios <br> Gravados </th>
+                <th> Servicios <br> Exentos </th>
+                <th> Servicios <br> Exonerados </th>
+                <th> Mercancías <br> Gravadas </th>
+                <th> Mercancías <br> Exentas </th>
+                <th> Mercancías <br> Exoneradas </th>
+                <th> Total <br> Gravado </th>
+                <th> Total <br> Exento </th>
+                <th> Total <br> Exonerado </th>
+                <th> Total <br> Venta </th>
+                <th> Total <br> Venta <br> Neta</th>
+                <th> Subtotal</th>
+                <th> Total <br> Impuesto </th>
+                <th> Otros <br> Cargos </th>
+                <th> Total <br> Comprobante </th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let factura of arrayComprobantes | paginate: config">
+            <tr>
+                <td>{{factura.fecha}}</td>
+                <td>{{factura.clavenumerica}}</td>
+                <td>{{factura.cliente_nombre}}</td>
+                <td>{{factura.cedula_cliente}}</td>
+                <td>{{factura.tipo_factura}}</td>
+                <td>{{factura.medio_pago}}</td>
+                <td>{{factura.condicion_venta}}</td>
+                <td>{{factura.codigomoneda}}</td>
+                <td>{{factura.totaldescuentos}}</td>
+                <td>{{factura.totalservgravados}}</td>
+                <td>{{factura.totalservexentos}}</td>
+                <td>{{factura.totalservexonerado}}</td>
+                <td>{{factura.totalmercanciasgravadas}}</td>
+                <td>{{factura.totalmercanciasexentas}}</td>
+                <td>{{factura.totalmercanciaexonerada}}</td>
+                <td>{{factura.totalgravado}}</td>
+                <td>{{factura.totalexento}}</td>
+                <td>{{factura.totalexonerado}}</td>
+                <td>{{factura.totalventa}}</td>
+                <td>{{factura.totalventaneta}}</td>
+                <td>{{factura.subtotal}}</td>
+                <td>{{factura.totalimpuesto}}</td>
+                <td>{{factura.TotalOtrosCargos}}</td>
+                <td>{{factura.totalcomprobante}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <table class="table table-responsive float-right" *ngIf="mostrarTotales == true">
+        <h3>Totales por Moneda</h3>
+        <tbody *ngFor="let factura of arrayTotales">
+                
+                
+                <tr>
+                    <th>Moneda</th>
+                    <td>{{factura.codigomoneda}}</td>
+                </tr>
+                
+                <tr>
+                    <th> Descuentos </th>
+                    <td>{{factura.totaldescuentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Gravados </th>
+                    <td>{{factura.totalservgravados}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exentos </th>
+                    <td>{{factura.totalservexentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exonerados </th>
+                    <td>{{factura.totalservexonerado}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Gravadas </th>
+                    <td>{{factura.totalmercanciasgravadas}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Exentas </th>
+                    <td>{{factura.totalmercanciasexentas}}</td>
+               
+                </tr>
+                <tr></tr>
+                    <th> Mercancías <br> Exoneradas </th>
+                    <td>{{factura.totalmercanciaexonerada}}</td>
+                <tr>
+                    <th> Total <br> Gravado </th>
+                    <td>{{factura.totalgravado}}</td>
+                
+                </tr>
+                <tr>
+                    <th> Total <br> Exento </th>
+                    <td>{{factura.totalexento}}</td>
+               
+                </tr>
+                <tr>
+                    <th> Total <br> Exonerado </th>
+                    <td>{{factura.totalexonerado}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Venta </th>
+                    <td>{{factura.totalventa}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Total <br> Venta <br> Neta</th>
+                    <td>{{factura.totalventaneta}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Subtotal</th>
+                    <td>{{factura.subtotal}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Impuesto </th>
+                    <td>{{factura.totalimpuesto}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Otros <br> Cargos </th>
+                    <td>{{factura.TotalOtrosCargos}}</td>
+                  
+                </tr>
+                <tr>
+                    <th> Total <br> Comprobante </th>
+                    <td>{{factura.totalcomprobante}}</td>
+                </tr>
+            
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+
+<!--------------------------------TABLA PEQUEÑA 13-------------------------------->
+<ng-container *ngIf="tablaPequena == true && tabla == '13'">
+    <table class="table table-responsive table-hover" *ngFor="let factura of arrayComprobantes | paginate: config">
+        <tbody>
+            <tr>
+                <th>fecha</th>
+                <td style="width: 100px;word-break: break-all">{{factura.fecha}}</td>
+            </tr>
+            <tr>
+                <th>Clave</th>
+                <td style="width: 100px;word-break: break-all">{{factura.clavenumerica}}</td>
+            </tr>
+            <tr>
+                <th>Cliente</th>
+                <td style="width: 100px;word-break: break-all">{{factura.cliente_nombre}}</td>
+            </tr>
+            <tr>
+                <th>Cédula</th>
+                <td style="width: 100px;word-break: break-all">{{factura.cedula_cliente}}</td>
+            </tr>
+            <tr>
+                <th>Tipo <br> Factura</th>
+                <td>{{factura.tipo_factura}}</td>
+            </tr>
+            <tr>
+                <th> Medio <br> Pago</th>
+                <td>{{factura.medio_pago}}</td>
+            </tr>
+            <tr>
+                <th>Condición <br> Venta</th>
+                <td>{{factura.condicion_venta}}</td>
+            </tr>
+            <tr>
+                <th>Moneda</th>
+                <td>{{factura.codigomoneda}}</td>
+            </tr>
+            <tr>
+                <th> Descuentos </th>
+                <td>{{factura.totaldescuentos}}</td>
+            </tr>
+            <tr>
+                <th> Servicios <br> Gravados </th>
+                <td>{{factura.totalservgravados}}</td>
+            </tr>
+            <tr>
+                <th> Servicios <br> Exentos </th>
+                <td>{{factura.totalservexentos}}</td>
+            </tr>
+            <tr>
+                <th> Servicios <br> Exonerados </th>
+                <td>{{factura.totalservexonerado}}</td>
+            </tr>
+            <tr>
+                <th> Mercancías <br> Gravadas </th>
+                <td>{{factura.totalmercanciasgravadas}}</td>
+            </tr>
+            <tr>
+                <th> Mercancías <br> Exentas </th>
+                <td>{{factura.totalmercanciasexentas}}</td>
+           
+            </tr>
+            <tr></tr>
+                <th> Mercancías <br> Exoneradas </th>
+                <td>{{factura.totalmercanciaexonerada}}</td>
+            <tr>
+                <th> Total <br> Gravado </th>
+                <td>{{factura.totalgravado}}</td>
+            
+            </tr>
+            <tr>
+                <th> Total <br> Exento </th>
+                <td>{{factura.totalexento}}</td>
+           
+            </tr>
+            <tr>
+                <th> Total <br> Exonerado </th>
+                <td>{{factura.totalexonerado}}</td>
+                
+            </tr>
+            <tr>
+                <th> Total <br> Venta </th>
+                <td>{{factura.totalventa}}</td>
+               
+            </tr>
+            <tr>
+                <th> Total <br> Venta <br> Neta</th>
+                <td>{{factura.totalventaneta}}</td>
+                
+            </tr>
+            <tr>
+                <th> Subtotal</th>
+                <td>{{factura.subtotal}}</td>
+                
+            </tr>
+            <tr>
+                <th> Total <br> Impuesto </th>
+                <td>{{factura.totalimpuesto}}</td>
+               
+            </tr>
+            <tr>
+                <th> Otros <br> Cargos </th>
+                <td>{{factura.TotalOtrosCargos}}</td>
+              
+            </tr>
+            <tr>
+                <th> Total <br> Comprobante </th>
+                <td>{{factura.totalcomprobante}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <div class="table">
+       
+        <table class="table-bordered table-hover" *ngIf="mostrarTotales == true">
+             <h3>Totales por Moneda</h3>
+            <tbody *ngFor="let factura of arrayTotales">
+                <tr>
+                    <th> Moneda </th>
+                    <td>{{factura.codigomoneda}}</td>
+                </tr>
+                <tr>
+                    <th> Descuentos </th>
+                    <td>{{factura.totaldescuentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Gravados </th>
+                    <td>{{factura.totalservgravados}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exentos </th>
+                    <td>{{factura.totalservexentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exonerados </th>
+                    <td>{{factura.totalservexonerado}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Gravadas </th>
+                    <td>{{factura.totalmercanciasgravadas}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Exentas </th>
+                    <td>{{factura.totalmercanciasexentas}}</td>
+               
+                </tr>
+                <tr></tr>
+                    <th> Mercancías <br> Exoneradas </th>
+                    <td>{{factura.totalmercanciaexonerada}}</td>
+                <tr>
+                    <th> Total <br> Gravado </th>
+                    <td>{{factura.totalgravado}}</td>
+                
+                </tr>
+                <tr>
+                    <th> Total <br> Exento </th>
+                    <td>{{factura.totalexento}}</td>
+               
+                </tr>
+                <tr>
+                    <th> Total <br> Exonerado </th>
+                    <td>{{factura.totalexonerado}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Venta </th>
+                    <td>{{factura.totalventa}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Total <br> Venta <br> Neta</th>
+                    <td>{{factura.totalventaneta}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Subtotal</th>
+                    <td>{{factura.subtotal}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Impuesto </th>
+                    <td>{{factura.totalimpuesto}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Otros <br> Cargos </th>
+                    <td>{{factura.TotalOtrosCargos}}</td>
+                  
+                </tr>
+                <tr>
+                    <th> Total <br> Comprobante </th>
+                    <td>{{factura.totalcomprobante}}</td>
+                </tr>
+            
+        </tbody>
+        </table>
+    </div>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+
+
+<!--------------------------------TABLA  14-------------------------------->
+
+<div *ngIf="tabla == '14' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th> Cliente </th>
+                <th> Cédula </th>
+                <th> Moneda </th>
+                <th> Descuentos </th>
+                <th> Servicios <br> Gravados </th>
+                <th> Servicios <br> Exentos </th>
+                <th> Servicios <br> Exonerados </th>
+                <th> Mercancías <br> Gravadas </th>
+                <th> Mercancías <br> Exentas </th>
+                <th> Mercancías <br> Exoneradas </th>
+                <th> Total <br> Gravado </th>
+                <th> Total <br> Exento </th>
+                <th> Total <br> Exonerado </th>
+                <th> Total <br> Venta </th>
+                <th> Total <br> Venta <br> Neta</th>
+                <th> Subtotal</th>
+                <th> Total <br> Impuesto </th>
+                <th> Otros <br> Cargos </th>
+                <th> Total <br> Comprobante </th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let factura of arrayComprobantes | paginate: config">
+            <tr>
+
+                <td>{{factura.cliente_nombre}}</td>
+                <td>{{factura.cedula_cliente}}</td>
+                <td>{{factura.codigomoneda}}</td>
+                <td>{{factura.totaldescuentos}}</td>
+                <td>{{factura.totalservgravados}}</td>
+                <td>{{factura.totalservexentos}}</td>
+                <td>{{factura.totalservexonerado}}</td>
+                <td>{{factura.totalmercanciasgravadas}}</td>
+                <td>{{factura.totalmercanciasexentas}}</td>
+                <td>{{factura.totalmercanciaexonerada}}</td>
+                <td>{{factura.totalgravado}}</td>
+                <td>{{factura.totalexento}}</td>
+                <td>{{factura.totalexonerado}}</td>
+                <td>{{factura.totalventa}}</td>
+                <td>{{factura.totalventaneta}}</td>
+                <td>{{factura.subtotal}}</td>
+                <td>{{factura.totalimpuesto}}</td>
+                <td>{{factura.TotalOtrosCargos}}</td>
+                <td>{{factura.totalcomprobante}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <table class="table table-responsive float-right" *ngIf="mostrarTotales == true">
+        <h3>Totales por Moneda</h3>
+        <tbody *ngFor="let factura of arrayTotales">
+                
+                
+                <tr>
+                    <th>Moneda</th>
+                    <td>{{factura.codigomoneda}}</td>
+                </tr>
+                
+                <tr>
+                    <th> Descuentos </th>
+                    <td>{{factura.totaldescuentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Gravados </th>
+                    <td>{{factura.totalservgravados}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exentos </th>
+                    <td>{{factura.totalservexentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exonerados </th>
+                    <td>{{factura.totalservexonerado}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Gravadas </th>
+                    <td>{{factura.totalmercanciasgravadas}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Exentas </th>
+                    <td>{{factura.totalmercanciasexentas}}</td>
+               
+                </tr>
+                <tr></tr>
+                    <th> Mercancías <br> Exoneradas </th>
+                    <td>{{factura.totalmercanciaexonerada}}</td>
+                <tr>
+                    <th> Total <br> Gravado </th>
+                    <td>{{factura.totalgravado}}</td>
+                
+                </tr>
+                <tr>
+                    <th> Total <br> Exento </th>
+                    <td>{{factura.totalexento}}</td>
+               
+                </tr>
+                <tr>
+                    <th> Total <br> Exonerado </th>
+                    <td>{{factura.totalexonerado}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Venta </th>
+                    <td>{{factura.totalventa}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Total <br> Venta <br> Neta</th>
+                    <td>{{factura.totalventaneta}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Subtotal</th>
+                    <td>{{factura.subtotal}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Impuesto </th>
+                    <td>{{factura.totalimpuesto}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Otros <br> Cargos </th>
+                    <td>{{factura.TotalOtrosCargos}}</td>
+                  
+                </tr>
+                <tr>
+                    <th> Total <br> Comprobante </th>
+                    <td>{{factura.totalcomprobante}}</td>
+                </tr>
+            
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+
+<!--------------------------------TABLA PEQUEÑA 13-------------------------------->
+<ng-container *ngIf="tablaPequena == true && tabla == '14'">
+    <table class="table table-responsive table-hover" *ngFor="let factura of arrayComprobantes | paginate: config">
+        <tbody>
+            <tr>
+                <th>Cliente</th>
+                <td style="width: 100px;word-break: break-all">{{factura.cliente_nombre}}</td>
+            </tr>
+            <tr>
+                <th>Cédula</th>
+                <td style="width: 100px;word-break: break-all">{{factura.cedula_cliente}}</td>
+            </tr>
+            <tr>
+                <th>Moneda</th>
+                <td>{{factura.codigomoneda}}</td>
+            </tr>
+            <tr>
+                <th> Descuentos </th>
+                <td>{{factura.totaldescuentos}}</td>
+            </tr>
+            <tr>
+                <th> Servicios <br> Gravados </th>
+                <td>{{factura.totalservgravados}}</td>
+            </tr>
+            <tr>
+                <th> Servicios <br> Exentos </th>
+                <td>{{factura.totalservexentos}}</td>
+            </tr>
+            <tr>
+                <th> Servicios <br> Exonerados </th>
+                <td>{{factura.totalservexonerado}}</td>
+            </tr>
+            <tr>
+                <th> Mercancías <br> Gravadas </th>
+                <td>{{factura.totalmercanciasgravadas}}</td>
+            </tr>
+            <tr>
+                <th> Mercancías <br> Exentas </th>
+                <td>{{factura.totalmercanciasexentas}}</td>
+           
+            </tr>
+            <tr></tr>
+                <th> Mercancías <br> Exoneradas </th>
+                <td>{{factura.totalmercanciaexonerada}}</td>
+            <tr>
+                <th> Total <br> Gravado </th>
+                <td>{{factura.totalgravado}}</td>
+            
+            </tr>
+            <tr>
+                <th> Total <br> Exento </th>
+                <td>{{factura.totalexento}}</td>
+           
+            </tr>
+            <tr>
+                <th> Total <br> Exonerado </th>
+                <td>{{factura.totalexonerado}}</td>
+                
+            </tr>
+            <tr>
+                <th> Total <br> Venta </th>
+                <td>{{factura.totalventa}}</td>
+               
+            </tr>
+            <tr>
+                <th> Total <br> Venta <br> Neta</th>
+                <td>{{factura.totalventaneta}}</td>
+                
+            </tr>
+            <tr>
+                <th> Subtotal</th>
+                <td>{{factura.subtotal}}</td>
+                
+            </tr>
+            <tr>
+                <th> Total <br> Impuesto </th>
+                <td>{{factura.totalimpuesto}}</td>
+               
+            </tr>
+            <tr>
+                <th> Otros <br> Cargos </th>
+                <td>{{factura.TotalOtrosCargos}}</td>
+              
+            </tr>
+            <tr>
+                <th> Total <br> Comprobante </th>
+                <td>{{factura.totalcomprobante}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <div class="table">
+       
+        <table class="table-bordered table-hover" *ngIf="mostrarTotales == true">
+             <h3>Totales por Moneda</h3>
+            <tbody *ngFor="let factura of arrayTotales">
+                <tr>
+                    <th> Moneda </th>
+                    <td>{{factura.codigomoneda}}</td>
+                </tr>
+                <tr>
+                    <th> Descuentos </th>
+                    <td>{{factura.totaldescuentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Gravados </th>
+                    <td>{{factura.totalservgravados}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exentos </th>
+                    <td>{{factura.totalservexentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exonerados </th>
+                    <td>{{factura.totalservexonerado}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Gravadas </th>
+                    <td>{{factura.totalmercanciasgravadas}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Exentas </th>
+                    <td>{{factura.totalmercanciasexentas}}</td>
+               
+                </tr>
+                <tr></tr>
+                    <th> Mercancías <br> Exoneradas </th>
+                    <td>{{factura.totalmercanciaexonerada}}</td>
+                <tr>
+                    <th> Total <br> Gravado </th>
+                    <td>{{factura.totalgravado}}</td>
+                
+                </tr>
+                <tr>
+                    <th> Total <br> Exento </th>
+                    <td>{{factura.totalexento}}</td>
+               
+                </tr>
+                <tr>
+                    <th> Total <br> Exonerado </th>
+                    <td>{{factura.totalexonerado}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Venta </th>
+                    <td>{{factura.totalventa}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Total <br> Venta <br> Neta</th>
+                    <td>{{factura.totalventaneta}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Subtotal</th>
+                    <td>{{factura.subtotal}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Impuesto </th>
+                    <td>{{factura.totalimpuesto}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Otros <br> Cargos </th>
+                    <td>{{factura.TotalOtrosCargos}}</td>
+                  
+                </tr>
+                <tr>
+                    <th> Total <br> Comprobante </th>
+                    <td>{{factura.totalcomprobante}}</td>
+                </tr>
+            
+        </tbody>
+        </table>
+    </div>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+
+
+<!--------------------------------TABLA PEQUEÑA 15-------------------------------->
+
+<div *ngIf="tabla == '15' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th> Fecha </th>
+                <th> Clavenumérica </th>
+                <th> Proveedor </th>
+                <th> Cédula </th>
+                <th> tipo Factura</th>
+                <th> Medio Pago</th>
+                <th> Condición Venta</th>
+                <th> Moneda </th>
+                <th> Descuentos </th>
+                <th> Servicios <br> Gravados </th>
+                <th> Servicios <br> Exentos </th>
+                <th> Servicios <br> Exonerados </th>
+                <th> Mercancías <br> Gravadas </th>
+                <th> Mercancías <br> Exentas </th>
+                <th> Mercancías <br> Exoneradas </th>
+                <th> Total <br> Gravado </th>
+                <th> Total <br> Exento </th>
+                <th> Total <br> Exonerado </th>
+                <th> Total <br> Venta </th>
+                <th> Total <br> Venta <br> Neta</th>
+                <th> Subtotal</th>
+                <th> Total <br> Impuesto </th>
+                <th> Otros <br> Cargos </th>
+                <th> Total <br> Comprobante </th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let factura of arrayComprobantes | paginate: config">
+            <tr>
+                <td>{{factura.fecha}}</td>
+                <td>{{factura.clavenumerica}}</td>
+                <td>{{factura.proveedor_nombre}}</td>
+                <td>{{factura.cedula_proveedor}}</td>
+                <td>{{factura.tipo_factura}}</td>
+                <td>{{factura.condicion_venta}}</td>
+                <td>{{factura.medio_pago}}</td>
+                <td>{{factura.codigomoneda}}</td>
+                <td>{{factura.totaldescuentos}}</td>
+                <td>{{factura.totalservgravados}}</td>
+                <td>{{factura.totalservexentos}}</td>
+                <td>{{factura.totalservexonerado}}</td>
+                <td>{{factura.totalmercanciasgravadas}}</td>
+                <td>{{factura.totalmercanciasexentas}}</td>
+                <td>{{factura.totalmercanciaexonerada}}</td>
+                <td>{{factura.totalgravado}}</td>
+                <td>{{factura.totalexento}}</td>
+                <td>{{factura.totalexonerado}}</td>
+                <td>{{factura.totalventa}}</td>
+                <td>{{factura.totalventaneta}}</td>
+                <td>{{factura.subtotal}}</td>
+                <td>{{factura.totalimpuesto}}</td>
+                <td>{{factura.TotalOtrosCargos}}</td>
+                <td>{{factura.totalcomprobante}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <table class="table table-responsive float-right" *ngIf="mostrarTotales == true">
+        <h3>Totales por Moneda</h3>
+        <tbody *ngFor="let factura of arrayTotales">
+                
+                
+                <tr>
+                    <th>Moneda</th>
+                    <td>{{factura.codigomoneda}}</td>
+                </tr>
+                
+                <tr>
+                    <th> Descuentos </th>
+                    <td>{{factura.totaldescuentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Gravados </th>
+                    <td>{{factura.totalservgravados}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exentos </th>
+                    <td>{{factura.totalservexentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exonerados </th>
+                    <td>{{factura.totalservexonerado}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Gravadas </th>
+                    <td>{{factura.totalmercanciasgravadas}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Exentas </th>
+                    <td>{{factura.totalmercanciasexentas}}</td>
+               
+                </tr>
+                <tr></tr>
+                    <th> Mercancías <br> Exoneradas </th>
+                    <td>{{factura.totalmercanciaexonerada}}</td>
+                <tr>
+                    <th> Total <br> Gravado </th>
+                    <td>{{factura.totalgravado}}</td>
+                
+                </tr>
+                <tr>
+                    <th> Total <br> Exento </th>
+                    <td>{{factura.totalexento}}</td>
+               
+                </tr>
+                <tr>
+                    <th> Total <br> Exonerado </th>
+                    <td>{{factura.totalexonerado}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Venta </th>
+                    <td>{{factura.totalventa}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Total <br> Venta <br> Neta</th>
+                    <td>{{factura.totalventaneta}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Subtotal</th>
+                    <td>{{factura.subtotal}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Impuesto </th>
+                    <td>{{factura.totalimpuesto}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Otros <br> Cargos </th>
+                    <td>{{factura.TotalOtrosCargos}}</td>
+                  
+                </tr>
+                <tr>
+                    <th> Total <br> Comprobante </th>
+                    <td>{{factura.totalcomprobante}}</td>
+                </tr>
+            
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+<!-- --------------------------------------------------- TABLA PEQUEÑA 15 ------------------------------------------------------ -->
+
+<ng-container *ngIf="tablaPequena == true && tabla == '15'">
+    <table class="table table-responsive table-hover" *ngFor="let factura of arrayComprobantes | paginate: config">
+        <tbody>
+            <tr>
+                <th>Fecha</th>
+                <td style="width: 100px;word-break: break-all">{{factura.fecha}}</td>
+            </tr>
+            <tr>
+                <th>Clave</th>
+                <td style="width: 100px;word-break: break-all">{{factura.clavenumerica}}</td>
+            </tr>
+            <tr>
+                <th>Proveedor</th>
+                <td style="width: 100px;word-break: break-all">{{factura.proveedor_nombre}}</td>
+            </tr>
+            <tr>
+                <th>Cédula</th>
+                <td style="width: 100px;word-break: break-all">{{factura.cedula_proveedor}}</td>
+            </tr>
+            <tr>
+                <th>Tipo Factura</th>
+                <td>{{factura.tipo_factura}}</td>
+            </tr>
+            <tr>
+                <th>Medio Pago</th>
+                <td>{{factura.medio_pago}}</td>
+            </tr>
+            <tr>
+                <th>Condición Venta</th>
+                <td>{{factura.condicion_venta}}</td>
+            </tr>
+            <tr>
+                <th>Moneda</th>
+                <td>{{factura.codigomoneda}}</td>
+            </tr>
+            <tr>
+                <th> Descuentos </th>
+                <td>{{factura.totaldescuentos}}</td>
+            </tr>
+            <tr>
+                <th> Servicios <br> Gravados </th>
+                <td>{{factura.totalservgravados}}</td>
+            </tr>
+            <tr>
+                <th> Servicios <br> Exentos </th>
+                <td>{{factura.totalservexentos}}</td>
+            </tr>
+            <tr>
+                <th> Servicios <br> Exonerados </th>
+                <td>{{factura.totalservexonerado}}</td>
+            </tr>
+            <tr>
+                <th> Mercancías <br> Gravadas </th>
+                <td>{{factura.totalmercanciasgravadas}}</td>
+            </tr>
+            <tr>
+                <th> Mercancías <br> Exentas </th>
+                <td>{{factura.totalmercanciasexentas}}</td>
+           
+            </tr>
+            <tr></tr>
+                <th> Mercancías <br> Exoneradas </th>
+                <td>{{factura.totalmercanciaexonerada}}</td>
+            <tr>
+                <th> Total <br> Gravado </th>
+                <td>{{factura.totalgravado}}</td>
+            
+            </tr>
+            <tr>
+                <th> Total <br> Exento </th>
+                <td>{{factura.totalexento}}</td>
+           
+            </tr>
+            <tr>
+                <th> Total <br> Exonerado </th>
+                <td>{{factura.totalexonerado}}</td>
+                
+            </tr>
+            <tr>
+                <th> Total <br> Venta </th>
+                <td>{{factura.totalventa}}</td>
+               
+            </tr>
+            <tr>
+                <th> Total <br> Venta <br> Neta</th>
+                <td>{{factura.totalventaneta}}</td>
+                
+            </tr>
+            <tr>
+                <th> Subtotal</th>
+                <td>{{factura.subtotal}}</td>
+                
+            </tr>
+            <tr>
+                <th> Total <br> Impuesto </th>
+                <td>{{factura.totalimpuesto}}</td>
+               
+            </tr>
+            <tr>
+                <th> Otros <br> Cargos </th>
+                <td>{{factura.TotalOtrosCargos}}</td>
+              
+            </tr>
+            <tr>
+                <th> Total <br> Comprobante </th>
+                <td>{{factura.totalcomprobante}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <div class="table">
+       
+        <table class="table-bordered table-hover" *ngIf="mostrarTotales == true">
+             <h3>Totales por Moneda</h3>
+            <tbody *ngFor="let factura of arrayTotales">
+                <tr>
+                    <th> Moneda </th>
+                    <td>{{factura.codigomoneda}}</td>
+                </tr>
+                <tr>
+                    <th> Descuentos </th>
+                    <td>{{factura.totaldescuentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Gravados </th>
+                    <td>{{factura.totalservgravados}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exentos </th>
+                    <td>{{factura.totalservexentos}}</td>
+                </tr>
+                <tr>
+                    <th> Servicios <br> Exonerados </th>
+                    <td>{{factura.totalservexonerado}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Gravadas </th>
+                    <td>{{factura.totalmercanciasgravadas}}</td>
+                </tr>
+                <tr>
+                    <th> Mercancías <br> Exentas </th>
+                    <td>{{factura.totalmercanciasexentas}}</td>
+               
+                </tr>
+                <tr></tr>
+                    <th> Mercancías <br> Exoneradas </th>
+                    <td>{{factura.totalmercanciaexonerada}}</td>
+                <tr>
+                    <th> Total <br> Gravado </th>
+                    <td>{{factura.totalgravado}}</td>
+                
+                </tr>
+                <tr>
+                    <th> Total <br> Exento </th>
+                    <td>{{factura.totalexento}}</td>
+               
+                </tr>
+                <tr>
+                    <th> Total <br> Exonerado </th>
+                    <td>{{factura.totalexonerado}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Venta </th>
+                    <td>{{factura.totalventa}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Total <br> Venta <br> Neta</th>
+                    <td>{{factura.totalventaneta}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Subtotal</th>
+                    <td>{{factura.subtotal}}</td>
+                    
+                </tr>
+                <tr>
+                    <th> Total <br> Impuesto </th>
+                    <td>{{factura.totalimpuesto}}</td>
+                   
+                </tr>
+                <tr>
+                    <th> Otros <br> Cargos </th>
+                    <td>{{factura.TotalOtrosCargos}}</td>
+                  
+                </tr>
+                <tr>
+                    <th> Total <br> Comprobante </th>
+                    <td>{{factura.totalcomprobante}}</td>
+                </tr>
+            
+        </tbody>
+        </table>
+    </div>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+
+<!--------------------------------TABLA PEQUEÑA 16-------------------------------->
+
+<div *ngIf="tabla == '16' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th> Proveedor </th>
+                <th> Cédula </th>
+                <th> tipo Factura</th>
+                <th> Subtotal</th>
+                <th> Servicios <br> Gravados </th>
+                <th> Servicios <br> Exentos </th>
+                <th> Servicios <br> Exonerados </th>
+                <th> Mercancías <br> Gravadas </th>
+                <th> Mercancías <br> Exentas </th>
+                <th> Mercancías <br> Exoneradas </th>
+                <th> Total <br> Gravado </th>
+                <th> Total <br> Exento </th>
+                <th> Total <br> Exonerado </th>
+                <th> Total <br> Venta </th>
+                <th> Descuentos </th>
+                <th> Total <br> Venta <br> Neta</th>
+                <th> Total <br> Impuesto </th>
+                <th> Otros <br> Cargos </th>
+                <th> Total <br> Comprobante </th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let factura of arrayComprobantes | paginate: config">
+            <tr>
+
+                <td>{{factura.proveedor_nombre}}</td>
+                <td>{{factura.cedula_proveedor}}</td>
+                <td>{{factura.tipo_factura}}</td>
+                <td>{{factura.subtotal}}</td>
+                <td>{{factura.totalservgravados}}</td>
+                <td>{{factura.totalservexentos}}</td>
+                <td>{{factura.totalservexonerado}}</td>
+                <td>{{factura.totalmercanciasgravadas}}</td>
+                <td>{{factura.totalmercanciasexentas}}</td>
+                <td>{{factura.totalmercanciaexonerada}}</td>
+                <td>{{factura.totalgravado}}</td>
+                <td>{{factura.totalexento}}</td>
+                <td>{{factura.totalexonerado}}</td>
+                <td>{{factura.totalventa}}</td>
+                <td>{{factura.totaldescuentos}}</td>
+                <td>{{factura.totalventaneta}}</td>
+                <td>{{factura.totalimpuesto}}</td>
+                <td>{{factura.TotalOtrosCargos}}</td>
+                <td>{{factura.totalcomprobante}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+<!-- --------------------------------------------------- TABLA PEQUEÑA 15 ------------------------------------------------------ -->
+
+<ng-container *ngIf="tablaPequena == true && tabla == '16'">
+    <table class="table table-responsive table-hover" *ngFor="let factura of arrayComprobantes | paginate: config">
+        <tbody>
+          
+            <tr>
+                <th>Proveedor</th>
+                <td style="width: 100px;word-break: break-all">{{factura.proveedor_nombre}}</td>
+            </tr>
+            <tr>
+                <th>Cédula</th>
+                <td style="width: 100px;word-break: break-all">{{factura.cedula_proveedor}}</td>
+            </tr>
+            <tr>
+                <th>Tipo Factura</th>
+                <td>{{factura.tipo_factura}}</td>
+            </tr>
+            <tr>
+                <th> Descuentos </th>
+                <td>{{factura.totaldescuentos}}</td>
+            </tr>
+            <tr>
+                <th> Servicios <br> Gravados </th>
+                <td>{{factura.totalservgravados}}</td>
+            </tr>
+            <tr>
+                <th> Servicios <br> Exentos </th>
+                <td>{{factura.totalservexentos}}</td>
+            </tr>
+            <tr>
+                <th> Servicios <br> Exonerados </th>
+                <td>{{factura.totalservexonerado}}</td>
+            </tr>
+            <tr>
+                <th> Mercancías <br> Gravadas </th>
+                <td>{{factura.totalmercanciasgravadas}}</td>
+            </tr>
+            <tr>
+                <th> Mercancías <br> Exentas </th>
+                <td>{{factura.totalmercanciasexentas}}</td>
+           
+            </tr>
+            <tr></tr>
+                <th> Mercancías <br> Exoneradas </th>
+                <td>{{factura.totalmercanciaexonerada}}</td>
+            <tr>
+                <th> Total <br> Gravado </th>
+                <td>{{factura.totalgravado}}</td>
+            
+            </tr>
+            <tr>
+                <th> Total <br> Exento </th>
+                <td>{{factura.totalexento}}</td>
+           
+            </tr>
+            <tr>
+                <th> Total <br> Exonerado </th>
+                <td>{{factura.totalexonerado}}</td>
+                
+            </tr>
+            <tr>
+                <th> Total <br> Venta </th>
+                <td>{{factura.totalventa}}</td>
+               
+            </tr>
+            <tr>
+                <th> Total <br> Venta <br> Neta</th>
+                <td>{{factura.totalventaneta}}</td>
+                
+            </tr>
+            <tr>
+                <th> Subtotal</th>
+                <td>{{factura.subtotal}}</td>
+                
+            </tr>
+            <tr>
+                <th> Total <br> Impuesto </th>
+                <td>{{factura.totalimpuesto}}</td>
+               
+            </tr>
+            <tr>
+                <th> Otros <br> Cargos </th>
+                <td>{{factura.TotalOtrosCargos}}</td>
+              
+            </tr>
+            <tr>
+                <th> Total <br> Comprobante </th>
+                <td>{{factura.totalcomprobante}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+
+
+<!--TABLA 17 -->
+<div *ngIf="tabla == '17' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th> Número <br> Cuenta </th>
+                <th> Fecha </th>
+                <th> Tipo <br> Movimiento</th>
+                <th> Descripción </th> 
+                <th> Monto </th> 
+            </tr>
+        </thead>
+        <tbody *ngFor="let factura of arrayComprobantes | paginate: config">
+            <tr>
+                <td>{{factura.numctabanco}}</td>
+                <td>{{factura.fecha}}</td>
+                <td>{{factura.tipomovimiento}}</td>
+                <td style="width: 250px;word-break: break-all">{{factura.descripcion}}</td>
+                <td>{{factura.monto}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+<!--FIN TABLA 17 -->
+
+<ng-container *ngIf="tablaPequena == true && tabla == '17'">
+    <table class="table table-responsive table-hover" *ngFor="let factura of arrayComprobantes | paginate: config">
+        <tbody>
+            <tr>
+                <th>Fecha</th>
+                <td>{{factura.fecha}}</td>
+            </tr>
+            <tr>
+                <th>Cuenta</th>
+                <td style="width: 50px;word-break: break-all">{{factura.numctabanco}}</td>
+            </tr>
+            <tr>
+                <th>Tipo</th>
+                <td>{{factura.tipomovimiento}}</td>
+            </tr>
+            <tr>
+                <th> Descripción </th>
+                <td style="width: 50px;word-break: break-all">{{factura.descripcion}}</td>
+            </tr>
+            <tr>
+                <th>Monto</th>
+                <td style="width: 40px;word-break: break-all">{{factura.monto}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+
+<!--TABLA 18 -->
+
+<!--TABLA 18 -->
+<div *ngIf="tabla == '18' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th> Número <br> Cuenta </th>
+                <th> Fecha </th>
+                <th> Tipo <br> Movimiento</th>
+                <th> Descripción </th> 
+                <th> Monto </th> 
+            </tr>
+        </thead>
+        <tbody *ngFor="let factura of arrayComprobantes | paginate: config">
+            <tr>
+                <td>{{factura.numctabanco}}</td>
+                <td>{{factura.fecha}}</td>
+                <td>{{factura.tipomovimiento}}</td>
+                <td style="width: 250px;word-break: break-all">{{factura.descripcion}}</td>
+                <td>{{factura.monto}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+<!--FIN TABLA 18 -->
+
+<ng-container *ngIf="tablaPequena == true && tabla == '18'">
+    <table class="table table-responsive table-hover" *ngFor="let factura of arrayComprobantes | paginate: config">
+        <tbody>
+            <tr>
+                <th>Fecha</th>
+                <td>{{factura.fecha}}</td>
+            </tr>
+            <tr>
+                <th>Cuenta</th>
+                <td style="width: 50px;word-break: break-all">{{factura.numctabanco}}</td>
+            </tr>
+            <tr>
+                <th>Tipo</th>
+                <td>{{factura.tipomovimiento}}</td>
+            </tr>
+            <tr>
+                <th> Descripción </th>
+                <td style="width: 50px;word-break: break-all">{{factura.descripcion}}</td>
+            </tr>
+            <tr>
+                <th>Monto</th>
+                <td style="width: 40px;word-break: break-all">{{factura.monto}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+
+
+
+
+<!-- ---------------------------------------------------------------------------------------------- -->
+
+<!--TABLA 19 -->
+<div *ngIf="tabla == '19' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th> Número <br> Cuenta </th>
+                <th> Fecha </th>
+                <th> Tipo <br> Movimiento</th>
+                <th> Descripción </th> 
+                <th> Débitos </th> 
+                <th> Créditos </th> 
+            </tr>
+        </thead>
+        <tbody *ngFor="let factura of arrayComprobantes | paginate: config">
+            <tr>
+                <td>{{factura.numctabanco}}</td>
+                <td>{{factura.fecha}}</td>
+                <td>{{factura.tipomovimiento}}</td>
+                <td style="width: 250px;word-break: break-all">{{factura.descripcion}}</td>
+                <td>{{factura.debito}}</td>
+                <td>{{factura.credito}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr *ngIf="mostrarTotales == true">
+    <table class="table table-responsive float-right" *ngIf="mostrarTotales == true">
+        <h3>Totales Movimientos</h3>
+        <thead>
+            <th> DÉBITOS </th>
+            <th> CRÉDITOS </th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{arrayTotales[0].debitos}}</td>
+                <td>{{arrayTotales[1].creditos}}</td>
+            </tr>    
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+<!--FIN TABLA 19 -->
+
+<ng-container *ngIf="tablaPequena == true && tabla == '19'">
+    <table class="table table-responsive table-hover" *ngFor="let factura of arrayComprobantes | paginate: config">
+        <tbody>
+            <tr>
+                <th>Fecha</th>
+                <td>{{factura.fecha}}</td>
+            </tr>
+            <tr>
+                <th>Cuenta</th>
+                <td style="width: 50px;word-break: break-all">{{factura.numctabanco}}</td>
+            </tr>
+            <tr>
+                <th>Tipo</th>
+                <td>{{factura.tipomovimiento}}</td>
+            </tr>
+            <tr>
+                <th> Descripción </th>
+                <td style="width: 50px;word-break: break-all">{{factura.descripcion}}</td>
+            </tr>
+            <tr>
+                <th>Débitos</th>
+                <td style="width: 40px;word-break: break-all">{{factura.debito}}</td>
+            </tr>
+            <tr>
+                <th>Créditos</th>
+                <td style="width: 40px;word-break: break-all">{{factura.credito}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr *ngIf="mostrarTotales == true">
+    <table class="table table-responsive float-right" *ngIf="mostrarTotales == true">
+        <h3>Totales Movimientos</h3>
+        <tbody>
+                
+                
+                <tr>
+                    <th>DÉBITOS</th>
+                    <td>{{arrayTotales[0].debitos}}</td>
+                </tr>
+                
+                <tr>
+                    <th> CRÉDITOS </th>
+                    <td>{{arrayTotales[1].creditos}}</td>
+                </tr>    
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+
+<!-- TABLA 20 -->
+
+<div *ngIf="tabla == '20' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th> Cliente</th>
+                <th> Pregunta </th>
+                <th> Requerimiento</th>
+                <th> Cantidad </th> 
+                <th> Obsservaciones </th>  
+            </tr>
+        </thead>
+        <tbody *ngFor="let requerimiento of arrayComprobantes | paginate: config">
+            <tr>
+                <td style="width: 20% ;word-break: break-all;">{{requerimiento.cliente}}</td>
+                <td style="width: 20% ;word-break: break-all;">{{requerimiento.pregunta}}</td>
+                <td style="width: 20% ;word-break: break-all;">{{requerimiento.requerimiento}}</td>
+                <td style="width: 20% ;word-break: break-all;">{{requerimiento.cantidad}}</td>
+                <td style="width: 20% ;word-break: break-all;">{{requerimiento.observaciones}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+<ng-container *ngIf="tablaPequena == true && tabla == '20'">
+    <table class="table table-responsive table-hover" *ngFor="let requerimiento of arrayComprobantes | paginate: config">
+        <tbody>
+            <tr>
+                <th>Cliente</th>
+                <td style="word-break: break-all">{{requerimiento.cliente}}</td>
+            </tr>
+            <tr>
+                <th>Requerimiento</th>
+                <td style="word-break: break-all">{{requerimiento.requerimiento}}</td>
+            </tr>
+            <tr>
+                <th> Pregunta </th>
+                <td style="word-break: break-all">{{requerimiento.pregunta}}</td>
+            </tr>
+            <tr>
+                <th>Cantidad</th>
+                <td>{{requerimiento.cantidad}}</td>
+            </tr>
+            <tr>
+                <th>Observaciones</th>
+                <td style="word-break: break-all">{{requerimiento.observaciones}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+
+<!-- TABLA 21---------------------------->
+
+<div *ngIf="tabla == '21' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th> Requerimiento</th>
+                <th> Cantidad <br> Seleccionado </th>
+                <th> % Coincidencia </th> 
+                <th> Cantidad Potencial </th> 
+            </tr>
+        </thead>
+        <tbody *ngFor="let requerimiento of arrayComprobantes | paginate: config">
+            <tr>
+                <td style="width: 50% ;word-break: break-all;">{{requerimiento.pregunta}}</td>
+                <td style="width: 25% ;word-break: break-all;">{{requerimiento.cantidadSeleccionado}}</td>
+                <td style="width: 25% ;word-break: break-all;">{{requerimiento.coincidencia}}</td>
+                <td style="width: 25% ;word-break: break-all;">{{requerimiento.cantidadPotencial}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+<ng-container *ngIf="tablaPequena == true && tabla == '21'">
+    <table class="table table-responsive table-hover" *ngFor="let requerimiento of arrayComprobantes | paginate: config">
+        <tbody>
+            <tr>
+                <th>Requerimiento</th>
+                <td style="word-break: break-all">{{requerimiento.pregunta}}</td>
+            </tr>
+            <tr>
+                <th>Cantidad <br> Seleccionado </th>
+                <td style="word-break: break-all">{{requerimiento.cantidadSeleccionado}}</td>
+            </tr>
+            <tr>
+                <th> % Coincidencia </th>
+                <td style="word-break: break-all">{{requerimiento.coincidencia}}</td>
+            </tr>
+            <tr>
+                <th> Cantidad Potencial </th>
+                <td style="word-break: break-all">{{requerimiento.cantidadPotencial}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+
+<div *ngIf="tabla == '22' && tablaPequena == false" class="table">
+    <table class="table table-responsive table-hover" *ngFor="let requerimiento of arrayComprobantes | paginate: config">
+        <div class="col-12">
+            <h3>Usuario: <span class="badge badge-secondary">{{requerimiento.usuario}}</span> </h3>
+            <h3>Cliente: <span class="badge badge-secondary">{{requerimiento.cliente}}</span> </h3>
+        </div>
+        <thead>
+            <tr>
+                <th> Pregunta</th>
+                <th> Observación </th>
+                <th> Calificación </th>
+                <th> Valor </th>
+            </tr>
+        </thead>
+        <tbody>
+           <tr *ngFor="let pregunta of requerimiento.preguntas">
+            <td> {{pregunta.pregunta}} </td>
+            <td> {{pregunta.observacion}} </td>
+            <td> {{pregunta.calificacion}} </td>
+            <td> {{pregunta.valor}} </td>
+           </tr>    
+        </tbody>
+        <tfoot>
+            <h3>Promedio: <span class="badge badge-secondary"> % {{requerimiento.promedio}}</span> </h3>
+        </tfoot>
+    </table>
+
+    <div class="row">
+        <hr>
+        <div class="col-md-12" *ngIf="mostrarTotales == true">
+        
+            <h3>Promedio Global: <span class="badge badge-secondary">{{promedioGlobal}}</span> </h3>
+        </div>
+    </div>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+<!-- TABLA 23-->
+
+<div *ngIf="tabla == '23' && tablaPequena == false" class="table">
+    <table class="table table-responsive table-hover" >
+        <thead>
+            <tr>
+                <th> Razón</th>
+                <th> # Seleccionada </th>
+                <th> % Participación </th>
+               
+            </tr>
+        </thead>
+        <tbody>
+           <tr *ngFor="let elemento of arrayComprobantes | paginate: config">
+            <td> {{elemento.razon}} </td>
+            <td> {{elemento.vecesRazon}} </td>
+            <td> {{elemento.porcentajeParticipacion}} </td>
+           </tr>    
+        </tbody>
+    </table>
+
+    <div class="row">
+        <hr>
+        <div class="col-md-12" *ngIf="mostrarTotales == true">
+        
+            <h3>Porcentaje Total: <span class="badge badge-secondary">{{promedioGlobal}}</span> </h3>
+            <h3>Total de razones seleccionadas: <span class="badge badge-secondary">{{subtotal}}</span> </h3>
+        </div>
+    </div>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+<ng-container *ngIf="tablaPequena == true && tabla == '23'">
+    <table class="table table-responsive table-hover" *ngFor="let elemento of arrayComprobantes | paginate: config">
+        <tbody>
+            <tr>
+                <th>Razón</th>
+                <td style="word-break: break-all">{{elemento.razon}}</td>
+            </tr>
+            <tr>
+                <th>Número <br> Seleccionadas </th>
+                <td style="word-break: break-all">{{elemento.vecesRazon}}</td>
+            </tr>
+            <tr>
+                <th> % Participación </th>
+                <td style="word-break: break-all">{{elemento.porcentajeParticipacion}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr *ngIf="mostrarTotales == true">
+    <table class="table table-responsive float-right" *ngIf="mostrarTotales == true">
+        <h3>Totales</h3>
+        <tbody>
+                <tr>
+                    <th>Porcentaje Total</th>
+                    <td>{{promedioGlobal}}</td>
+                </tr>
+
+                <tr>
+                    <th>Total razones seleccionadas</th>
+                    <td>{{subtotal}}</td>
+                </tr>
+        </tbody>
+    </table>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</ng-container>
+
+
+
+<div *ngIf="tabla == '24' && tablaPequena == false" class="table">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th> Factura </th>
+                <th> Fecha </th>
+                <th> Afectada </th>
+                <th> Cliente </th>
+                <th> Moneda </th>
+                <th> Monto </th>
+                <th> Saldo </th>
+                <th> Recibo </th>
+                <th> Tipo </th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let factura of arrayComprobantes | paginate: config">
+            <tr>
+                <td>{{factura.numero_interno}}</td>
+                <td>{{factura.fecha}}</td>
+                <td>{{factura.numero_interno}}</td>
+                <td>{{factura.cliente_nombre}}</td>
+                <td>{{factura.codigomoneda}}</td>
+                <td>{{factura.montototal}}</td>
+                <td>{{factura.saldoactual}}</td>
+                <td>{{factura.recibo}}</td>
+                <td>{{factura.tipo}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <div class="table">
+        <table class="table-bordered table-hover" *ngIf="mostrarTotales == true">
+            <tbody>
+                <tr>
+                    <th>Total Facturado</th>
+                    <td>{{total}}</td>
+                </tr>
+                <tr>
+                    <th>Total Pagado<br> </th>
+                    <td>{{subtotal}}</td>
+                </tr>
+                <tr>
+                    <th>Saldo Final <br> </th>
+                    <td>{{otroscargos}}</td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+

@@ -1,0 +1,130 @@
+<h1><i class="fa fa-list"></i> Receta del producto</h1>
+<hr>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-5 col-lg-4">
+            <div class="form-group">
+                <label for="txtCodigoPorducto" class="col-form-label">Código:</label>
+                <input type="text" class="form-control" name="codigo" id="txtCodigoPorducto" placeholder="Código Producto"
+                readonly>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-5">
+            <div class="form-group">
+                <label for="txtDescripcionProducto" class="col-form-label">Descripción:</label>
+                <input type="text" class="form-control col-s" id="txtDescripcionProducto" name="descripcion" placeholder="Descripción Producto" readonly>
+            </div>
+        </div>
+        <div class="col-sm-2 col-md-2 col-lg-2">
+            <div class="form-group">
+                <button type="button" class="btn btn-success" id="btnModalBuscarProducto" data-toggle="modal" data-target="#ModalBuscarProducto">Buscar</button>
+            </div>
+        </div> 
+    </div>
+</div>
+<hr>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-5">
+            <div class="form-group">
+                <label for="txtDescripcionrticulo" class="col-form-label">Descripción:</label>
+                <input list="articulos" [(ngModel)]="descripcionArticulo" name="descripcionArticulo" id="txtDescripcionrticulo" placeholder="Descripción Artículo"
+                class="form-control" (ngModelChange)="obtenerArticulos(descripcionArticulo); " 
+                >
+                <datalist id="articulos">
+                    <option *ngFor="let articulo of listaArticulos" [value]="articulo.nombre">{{articulo.nombre}}</option>
+                </datalist>
+            </div>
+            <div class="form-group">
+                <label for="txtCodigorticulo" class="col-form-label">Código:</label>
+                <input type="text" class="form-control" id="txtCodigorticulo" name="codigoArticulo" placeholder="Código Artículo"
+                readonly
+                >
+            </div>
+            <div class="form-group">
+                <label for="txtCosto" class="col-form-label">Costo:</label>
+                <input type="text" class="form-control" id="txtCosto" name="costo" placeholder="costo" placeholder="Costo"
+                readonly
+                >
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="form-group">
+                <label for="txtCantidadArticulo" class="col-form-label">Cantidad:</label>
+                <input type="text" class="form-control" id="txtCantidadArticulo" name="cantidadArticulo" placeholder="Cantidad Artículo" placeholder="Cantidad">
+            </div>
+            <div class="form-group">
+                <label for="txtPrecioArticulo" class="col-form-label">Precio:</label>
+                <input type="text" class="form-control" id="txtPrecioArticulo" name="precioArticulo" placeholder="Precio Artículo" placeholder="Precio" readonly>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-warning btn-outline" id="btnAgregarLinea">
+                    Agregar Línea
+                </button>
+             </div>
+        </div>
+    </div>    
+</div>
+<hr>
+<div class="container">
+    <h1>Detalles de la Receta</h1>
+    <br>
+    <table class="table table-striped table-hover" id="lineasReceta">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Costo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let linea of listaLineasReceta">
+                <td>{{linea.codigo}}</td>
+                <td>{{linea.descripcion}}</td>
+                <td>{{linea.cantidad}}</td>
+                <td>{{linea.costo}}</td>
+                <td>
+                   <!-- <button type="button" class="btn btn-success btn-xs mr-1"><i class="fa fa-edit"></i></button> -->
+                    <button type="button" class="btn btn-danger btn-xs" (click)="quitarLineaReceta(linea)"><i class="fa fa-remove"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <div class="col-sm-2">
+        <table class="table table-bordered">  
+            <tr>
+                <th>Costo Total</th>
+                <td>{{totalCosto}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-sm-2">
+        <button type="button" class="btn btn-success" id="btnGuardarReceta">Guardar Receta</button>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalBuscarProducto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Buscar Producto</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="query" class="col-form-label">Nombre o Código:</label>
+                <input [(ngModel)]="query" type="text" class="form-control" id="query" name="query" placeholder="Nombre o Código">
+              </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="btnBuscarProducto">Buscar</button>
+        </div>
+      </div>
+    </div>
+  </div>

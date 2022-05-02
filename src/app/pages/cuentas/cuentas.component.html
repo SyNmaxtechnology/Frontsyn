@@ -1,0 +1,211 @@
+<div class="col-12">
+    <h1>Listado de Cuentas</h1>
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalNuevaCuenta" id="nuevaCuenta">Crear</button>    
+</div>
+<br>
+<div class="col-12">
+    <form method="POST" id="form_buscar_cliente">
+        <div class="form-row" id="buscador_cliente">
+            <div class="form-group col-sm-12 col-md-10">
+                <input 
+                    [(ngModel)]="query" 
+                    name="query" 
+                    type="text" id="query" 
+                    list="cuentas" class="form-control" 
+                    placeholder="Buscar por número de cuenta"
+                    (ngModelChange) = "cuentaSeleccionada(query)"  
+                    (keyup)= "recargarCuentas(query)"  
+                >
+                <datalist id="cuentas">
+                    <option *ngFor="let cuenta of this.collection.data" [value]="cuenta.numctabanco"></option>
+                </datalist>
+            </div>
+        </div>
+    </form>
+</div>
+<br>
+<br>
+<div class="col-12" *ngIf="tablaPequena == false">
+    <table class="table table-responsive" id="tabla_detalles">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Número Cuenta</th>
+                <th>Saldo Anterior</th>
+                <th>Saldo Actual</th>
+                <th>Activo</th>
+                <th>Auditoría</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let cuenta of collection.data | paginate: config">
+            <tr>
+                <td>
+                    {{cuenta.id}}
+                </td>
+                <td>
+                    {{cuenta.numctabanco}} 
+                </td>
+                <td>
+                    {{cuenta.saldoant}}  
+                </td>
+                <td>
+                    {{cuenta.saldoact}} 
+                </td>
+                <td>
+                    {{cuenta.estado}} 
+                </td>
+                <td>
+                    <b>Creado <br> Por</b> <br>
+                    {{cuenta.usuario}}
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-xs mr-1"
+                        (click)="actualizarEstado(cuenta.estado,cuenta)"
+                    >
+                        <i class="fa fa-ban"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#ModalActualizarCuenta" 
+                    (click)="obtenerCuenta(cuenta.id)"
+                    >
+                        <i class="fa fa-pencil-square-o"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+
+<ng-container *ngIf="tablaPequena == true">
+    <div class="table-responsive"  *ngFor="let cuenta of collection.data | paginate: config">
+        <table class="table table-hover" id="tabla_detalles">
+            <tbody >
+                <tr>
+                    <th>#</th>
+                    <td>
+                        {{cuenta.id}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Número <br> Cuenta</th>
+                    <td style="max-width: auto; word-break: break-all">{{cuenta.numctabanco}}</td>
+                </tr>
+                <tr>
+                    <th>Saldo <br> Anterior</th>
+                    <td style="max-width: auto; word-break: break-all">{{cuenta.saldoant}}</td>
+                </tr>
+                <tr>
+                    <th>Saldo <br> Actual</th>
+                    <td style="max-width: auto; word-break: break-all">{{cuenta.saldoact}}</td>
+                </tr>
+                <tr>
+                    <th>Estado</th>
+                    <td>{{cuenta.estado}}</td>
+                </tr>
+                <tr>
+                    <th>Auditoría</th>
+                    <td>{{cuenta.usuario}}</td>
+                </tr>
+                <tr>
+                    <th>Acciones</th>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-xs mr-1" 
+                        (click)="actualizarEstado(cuenta.estado,cuenta)">
+                            <i class="fa fa-ban"></i>
+                        </button>
+                        <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#ModalActualizarCuenta" 
+                         
+                        >
+                            <i class="fa fa-pencil-square-o"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> 
+</ng-container>
+<!--MODAL PARA CREAR CUENTAS -->
+<div class="modal fade" id="ModalNuevaCuenta">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Nueva Cuenta</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+            <form method="POST" id="formNuevoImpuesto">
+                <div class="form-group">
+                    <label for="numctabanco" class="col-form-label">Número de cuenta:</label>
+                    <input [(ngModel)]="objCuenta.numctabanco" name="numctabanco" type="text" class="form-control" id="numctabanco"
+                    (keyup)="validarNumerosDeCuenta($event.target.value,'G')"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="decripcion" class="col-form-label">Descripcion</label>
+                    <input [(ngModel)]="objCuenta.decripcion" name="decripcion" type="text" class="form-control" id="decripcion">
+                </div>
+            </form>
+        </div>  
+        <!-- Modal footer -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancelar" data-dismiss="modal" (click)="limpiarCampos()">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="agregarCuenta" (click)="agregarCuenta(objCuenta)">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL PARA ACTUALIZAR CUENTAS  -->
+
+  <div class="modal fade" id="ModalActualizarCuenta">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Actualizar Cuenta</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+            <form method="POST" id="formNuevoImpuesto">
+                <div class="form-group">
+                    <label for="numctabancoActualizar" class="col-form-label">Número de cuenta:</label>
+                    <input [(ngModel)]="objCuenta.numctabanco" name="numctabanco" type="text" class="form-control" id="numctabancoActualizar"
+                    (keyup)="validarNumerosDeCuenta($event.target.value,'A')"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="saldoantActualizar" class="col-form-label">Saldo Anterior</label>
+                    <input [(ngModel)]="objCuenta.saldoant" name="saldoant" type="text" class="form-control" id="saldoantActualizar"
+                    (keyup)="validarNumerosDecimales($event.target.value,objCuenta.saldoant)"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="saldoactActual" class="col-form-label">Saldo Actual</label>
+                    <input [(ngModel)]="objCuenta.saldoact" name="saldoact" type="text" class="form-control" id="saldoactActual"
+                    (keyup)="validarNumerosDecimales($event.target.value,objCuenta.saldoact)"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="descripcionActualizar" class="col-form-label">Saldo Actual</label>
+                    <input [(ngModel)]="objCuenta.decripcion" name="decripcion" type="text" class="form-control" id="descripcionActualizar">
+                </div>
+            </form>
+        </div>  
+        <!-- Modal footer -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancelar" data-dismiss="modal" (click)="limpiarCampos()">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="actualizarCuenta" (click)="actualizarCuenta(objCuenta)">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+

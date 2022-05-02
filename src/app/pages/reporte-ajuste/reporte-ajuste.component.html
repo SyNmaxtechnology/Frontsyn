@@ -1,0 +1,63 @@
+
+<h1><i class="fa fa-file-text"></i>Reporte de Ajustes</h1>
+<hr>
+<div class="row" style="display: flex; align-items: stretch;">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="fechaInicio" class="col-form-label">Fecha Inicio:</label>
+            <input type="date" name="fechaInicio" id="fechaInicio" class="form-control">
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="fechaFin" class="col-form-label">Fecha Fin:</label>
+            <input  type="date" name="fechaFin" id="fechaFin" class="form-control">
+        </div>
+    </div>
+    <div class="col-md-4">
+            <div class="form-group">
+                <label for="numDocumento" class="col-form-label">Artículo:</label>
+                <input type="text" name="articulo" id="txtArticulo" class="form-control" >
+            </div>           
+        </div>
+</div>
+
+<div class="row" style="display: flex; align-items: stretch;">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="" class="col-form-label">Categoría</label>
+            <select id="selectCategoria" class="form-control" name="categoria">
+                <option value="">Seleccione</option>
+                <option *ngFor="let categoria of listaCategorias" [value]="categoria.id">{{categoria.descripcion}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="" class="col-form-label">Bodega</label>
+            <select id="selectBodega" class="form-control" name="bodega">
+                <option value="">Seleccione</option>
+                <option *ngFor="let bodega of listaBodegas" [value]="bodega.id">{{bodega.descripcion}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="" class="col-form-label">Tipo Ajuste</label>
+            <select id="selectTipoAjuste" class="form-control" name="tipoAjuste">
+                <option value="">Seleccione</option>
+                <option *ngFor="let ajuste of listaTiposAJuste" [value]="ajuste.codigo">{{ajuste.descripcion}}</option>
+                
+            </select>
+        </div>
+    </div>
+</div>
+
+<hr>
+<br>
+<div class="row" style="align-items: center;">
+    <div class="col-md-6">
+        <button type="button" class="btn btn-success mr-1" id="reporteExcel"><i class="fa fa-file-excel-o"></i>Excel</button>
+        <button type="button" class="btn btn-primary mr-1" id="reporteWeb"><i class="fa fa-search-plus"></i>Web</button>
+    </div>
+</div>

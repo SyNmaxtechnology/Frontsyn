@@ -1,0 +1,50 @@
+<h1><i class="fa fa-file-text"></i>Registro de Visitas</h1>
+<hr>
+<br>
+<div class="container">
+    <div class="form-row">
+        <div class="form-group col-md-5">
+            <div class="form-group">
+                <label for="">Cliente a visitar:</label>
+                <select 
+                    [(ngModel)]="idclienteActual" 
+                    name="idclienteActual" 
+                    id="selectClientes" 
+                    class="form-control"
+                >
+                    <option value="">Seleccione</option>
+                    <option *ngFor="let cliente of listaClientes" [value]="cliente.id">{{cliente.cliente_nombre}}</option>
+                </select> 
+            </div> 
+            <div class="form-group" *ngIf="boton === 'SALIDA'">
+                <label for="">Vendió?</label>
+                <select [(ngModel)]="venta" name="venta" class="form-control" id="venta">
+                    <option value="SI">Sí</option>
+                    <option value="NO">No</option>
+                </select>
+            </div>
+            <hr>
+            <div class="form-group" *ngIf="boton === 'SALIDA' && venta === 'NO'">
+                <label for="">Seleccione la razón</label>
+                <select [(ngModel)]="razon_noventa" name="razon_noventa" class="form-control" id="razon_noventa">
+                    <option value="">Seleccione</option>
+                    <option *ngFor="let razon of listaRazones" [value]="razon.razon"> {{razon.razon}} </option>
+                </select>
+            </div>
+         </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <button class="btn btn-success mr-1" id="btnEntrada">
+                <i class="fa fa-share">
+                    Entrada
+                </i>
+            </button>
+            <button class="btn btn-info"  id="btnSalida">
+                <i class="fa fa-reply">
+                    Salida
+                </i>
+            </button>
+        </div>
+    </div>
+</div>

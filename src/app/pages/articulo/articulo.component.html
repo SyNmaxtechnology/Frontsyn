@@ -1,0 +1,255 @@
+
+<div class="col-12">
+    <h1>Listado de Artículos</h1>
+    <button (click)="limpiarValores()" type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalNuevoArticulo">Crear</button>
+</div>
+<br>
+
+<div class="col-12">
+    <form method="POST" id="form_buscar_articulo">
+        <div class="form-row" id="buscar_articulo">
+            <div class="form-group col-sm-12 col-md-8">
+                <input [(ngModel)]="query" name="query" type="text" id="query" class="form-control" placeholder="Buscar por código o descrición" >
+            </div>
+            <div class="form-group col-md-3">
+                <button type="button" class="btn btn-primary" id="btnBuscarArticulo">Buscar</button>
+            </div>
+        </div>
+    </form>
+</div>
+<br>
+<br>
+
+<div class="col-12" *ngIf="tablaPequena == false">
+    <table class="table table-responsive" id="tabla_proveedores">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Descripción</th>
+                <th>Categoŕia</th>
+                <th>Precio <br> Unitario</th>
+                <th>Activo</th>
+                <th>Auditoría</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let articulo of collection.data | paginate: config">
+            <tr>
+                <td>{{articulo.codigobarra_producto}}</td>
+                <td>{{articulo.descripcion}}</td>
+                <td>{{articulo.categoria}}</td>
+                <td>{{articulo.precio_articulo}}</td>
+                <td>{{articulo.estado_articulo}}</td>
+                <td>{{articulo.usuario}}</td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-xs mr-1" (click)="actualizarEstado(articulo)">
+                        <i class="fa fa-ban"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#ModalActualizarArticulo" 
+                     (click)="buscarArticuloPorId(articulo.idarticulo)"
+                    >
+                        <i class="fa fa-pencil-square-o"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div>
+
+
+
+<ng-container *ngIf="tablaPequena">
+    <div class="table-responsive" *ngFor="let articulo of collection.data | paginate: config">
+        <table class="table table-hover" id="tabla_detalles">
+            <tbody >
+                <tr>
+                    <th>Código</th>
+                    <td>{{articulo.codigobarra_producto}}</td>
+                </tr>
+                <tr>
+                    <th>Descripción</th>
+                    <td>{{articulo.descripcion}}</td>
+                </tr>
+                <tr>
+                    <th>Categoría</th>
+                    <td>{{articulo.categoria}}</td>
+                </tr>
+                <tr>
+                    <th>Precio</th>
+                    <td>{{articulo.precio_articulo}}</td>
+                </tr>
+                <tr>
+                    <th>Activo</th>
+                    <td>{{articulo.estado_articulo}}</td>
+                </tr>
+                <tr>
+                    <th>Auditoría</th>
+                    <td>{{articulo.usuario}}</td>
+                </tr>
+                <tr>
+                    <th>Acciones</th>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-xs mr-1" (click)="actualizarEstado(articulo)">
+                            <i class="fa fa-ban"></i>
+                        </button>
+                        <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#ModalActualizarArticulo" 
+                         (click)="buscarArticuloPorId(articulo.idarticulo)"
+                        >
+                            <i class="fa fa-pencil-square-o"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> 
+</ng-container>
+
+
+<!-- MODAL CREAR ARTICULOS -->
+<div class="modal fade" id="ModalNuevoArticulo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nuevo Artículo</h5>
+            </div>
+            <div class="modal-body">
+                <ng-container *ngIf="listaErrores.length > 0">
+                    <div class="alert alert-danger" role="alert" *ngFor="let error of listaErrores">
+                        {{error}}
+                      </div>
+                </ng-container>
+                <form method="POST" id="formNuevoArticulo">
+                    <div class="form-group">
+                        <label for="descripcion" class="col-form-label">Descripción:</label>
+                        <input [(ngModel)]="objArticulo.descripcion" name="descripcion" type="text" class="form-control" id="descripcion">
+                    </div>
+                    <div class="form-group">
+                        <label for="codigobarra_producto" class="col-form-label">Código Barra</label>
+                        <input [(ngModel)]="objArticulo.codigobarra_producto" name="codigobarra_producto" type="text" class="form-control" id="codigo_barra">
+                    </div>
+                    <div class="form-group">
+                        <label for="precio_articulo" class="col-form-label">Precio Unitario</label>
+                        <input [(ngModel)]="objArticulo.precio_articulo" name="precio_articulo" type="number" class="form-control" id="precio_articulo">
+                    </div>
+                    <div class="form-group">
+                        <label for="costo_unitario" class="col-form-label">Costo Unitario</label>
+                        <input [(ngModel)]="objArticulo.costo_unitario" name="costo_unitario" type="number" class="form-control" id="costo_unitario">
+                    </div>
+                    <div class="form-group">
+                        <label for="unidad_medida" class="col-form-label">Unidad Medida:</label>
+                        <select [(ngModel)]="objArticulo.unidad_medida" name="unidad_medida" id="unidad_medida" class="form-control">
+                            <option value="">--Seleccione--</option>
+                            <option *ngFor="let unidad of lisaUnidadesMedida" [value]="unidad.simbolo">{{unidad.descripcion}}</option>
+                            
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="unidad_medida_comercial" class="col-form-label">Unidad Medida Comercial</label>
+                        <input [(ngModel)]="objArticulo.unidad_medida_comercial" name="unidad_medida_comercial" type="text" class="form-control" id="unidad_medida_comercial">
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo_impuesto" class="col-form-label">Impuesto:</label>
+                        <select [(ngModel)]="objArticulo.tipo_impuesto" name="tipo_impuesto"  id="tipo_impuesto" class="form-control">
+                            <option value="">--Seleccione--</option>
+                            <option *ngFor="let impuesto of listaImpuestos" [value]="impuesto.id">{{impuesto.descripcion}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="idcategoria" class="col-form-label">Categoria:</label>
+                        <select [(ngModel)]="objArticulo.idcategoria" name="idcategoria" id="idcategoria" class="form-control">
+                            <option value="">--Seleccione--</option>
+                            <option *ngFor="let categoria of listaCategorias" [value]="categoria.id">{{categoria.descripcion}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="precio_final" class="col-form-label">Precio Final</label>
+                        <input [(ngModel)]="objArticulo.precio_final" name="precio_final" type="number" class="form-control" id="precio_final" readonly>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button (click)="limpiarValores()" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="guardarArticulo">Guardar</button>
+            </div>
+        </div>
+    </div>
+    </div>
+<!-- -->
+
+
+<div class="modal fade" id="ModalActualizarArticulo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Actualizar Artículo</h5>
+            </div>
+            <div class="modal-body">
+
+                <ng-container *ngIf="listaErrores.length > 0">
+                    <div class="alert alert-danger" role="alert" *ngFor="let error of listaErrores">
+                        {{error}}
+                      </div>
+                </ng-container>
+                <form method="POST" id="formActualizarArticulo">
+                    <div class="form-group">
+                        <label for="descripcion" class="col-form-label">Descripción:</label>
+                        <input [(ngModel)]="objArticulo.descripcion" name="descripcion" type="text" class="form-control" id="descripcionActualizar">
+                    </div>
+                    <div class="form-group">
+                        <label for="codigobarra_producto" class="col-form-label">Código Barra</label>
+                        <input [(ngModel)]="objArticulo.codigobarra_producto" name="codigobarra_producto" type="text" class="form-control" id="codigo_barraActualizar">
+                    </div>
+                    <div class="form-group">
+                        <label for="precio_articulo" class="col-form-label">Precio Unitario</label>
+                        <input [(ngModel)]="objArticulo.precio_articulo" name="precio_articulo" type="number" class="form-control" id="precio_articuloActualizar">
+                    </div>
+                    <div class="form-group">
+                        <label for="costo_unitario" class="col-form-label">Costo Unitario</label>
+                        <input [(ngModel)]="objArticulo.costo_unitario" name="costo_unitario" type="number" class="form-control" id="costo_unitarioActualizar">
+                    </div>
+                    <div class="form-group">
+                        <label for="unidad_medida" class="col-form-label">Unidad Medida:</label>
+                        <select [(ngModel)]="objArticulo.unidad_medida" name="unidad_medida" id="unidad_medidaActualizar" class="form-control">
+                            <option value="">--Seleccione--</option>
+                            <option *ngFor="let unidad of lisaUnidadesMedida" [value]="unidad.simbolo">{{unidad.descripcion}}</option>
+                            
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="unidad_medida_comercial" class="col-form-label">Unidad Medida Comercial</label>
+                        <input [(ngModel)]="objArticulo.unidad_medida_comercial" name="unidad_medida_comercial" type="text" class="form-control" id="unidad_medida_comercialActualizar">
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo_impuesto" class="col-form-label">Impuesto:</label>
+                        <select [(ngModel)]="objArticulo.tipo_impuesto" name="tipo_impuesto"  id="tipo_impuestoActualizar" class="form-control">
+                            <option value="">--Seleccione--</option>
+                            <option *ngFor="let impuesto of listaImpuestos" [value]="impuesto.id">{{impuesto.descripcion}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="idcategoria" class="col-form-label">Categoria:</label>
+                        <select [(ngModel)]="objArticulo.idcategoria" name="idcategoria" id="idcategoriaActualizar" class="form-control">
+                            <option value="">--Seleccione--</option>
+                            <option *ngFor="let categoria of listaCategorias" [value]="categoria.id">{{categoria.descripcion}}</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="codigocabys" class="col-form-label">Código Cabys:</label>
+                        <input [(ngModel)]="objArticulo.codigocabys" name="codigocabys" type="number" class="form-control" id="codigocabys">
+                    </div>
+                    <div class="form-group">
+                        <label for="precio_final" class="col-form-label">Precio Final</label>
+                        <input [(ngModel)]="objArticulo.precio_final" name="precio_final" type="number" class="form-control" id="precio_finalActualizar" readonly>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="actualizarArticulo">Guardar</button>
+            </div>
+        </div>
+    </div>
+    </div>

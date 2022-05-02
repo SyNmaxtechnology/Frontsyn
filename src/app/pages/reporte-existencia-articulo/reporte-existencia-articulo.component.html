@@ -1,0 +1,39 @@
+<h1><i class="fa fa-file-text"></i>Reporte de Existencia de Artículos</h1>
+<hr>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="form-group">
+                <label for="" class="col-form-label">Artículo:</label>
+                <input type="text" name="articulo" id="txtArticulo" class="form-control">
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="form-group">
+                <label for="" class="col-form-label">Categoría:</label>
+                <select name="" id="" class="form-control" id="selectCategoria">
+                    <option value="" ></option>
+                    <option *ngFor="let categoria of listaCategorias" [value]="categoria.id">{{categoria.descripcion}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="form-group">
+                <label for="" class="col-form-label">Bodega:</label>
+                <select name="" id="" class="form-control" id="selectBodega">
+                    <option value="" ></option>
+                    <option *ngFor="let bodega of listaBodegas" [value]="bodega.id">{{bodega.descripcion}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+<br>
+<div class="row" style="align-items: center;">
+    <div class="col-md-6">
+        <button type="button" class="btn btn-success mr-1" id="reporteExcel"><i class="fa fa-file-excel-o"></i>Excel</button>
+        <button type="button" class="btn btn-primary mr-1" id="reporteWeb"><i class="fa fa-search-plus"></i>Web</button>
+    </div>
+</div>

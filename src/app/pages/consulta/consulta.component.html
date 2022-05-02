@@ -1,0 +1,712 @@
+<h1><i class="fa fa-file-text"></i>Listado de documentos procesados</h1>
+<hr>
+<br>
+<div class="container">
+    <div class="alert alert-success" *ngIf="mostrar == true">
+        Información en proceso. Por Favor espere...
+        <div class="spinner-border text-muted"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="form-group">
+                <label for="codigo" class="col-form-label">Tipo Documento</label>
+                <select [(ngModel)]="objBusquedaFacturas.tipoFactura" name="tipo_factura" class="form-control">
+                    <option value="" disabled selected>--Documento--</option>
+                    <option *ngFor="let item of tiposDocumento" [value]="item.codigo">{{item.descripcion}}</option>
+                </select>
+                
+            </div>
+            <div class="form-group">
+                <label for="codigo" class="col-form-label">Fechaa Inicio</label>
+                 <input [(ngModel)]="objBusquedaFacturas.fechaInicio" type="date" name="fechaInicio" id="fechaInicio" class="form-control">
+            
+            </div>
+            <div class="form-group">
+                <label for="codigo" class="col-form-label">Fechaa Fin</label>
+                    <input [(ngModel)]="objBusquedaFacturas.fechaFin" type="date" name="fechaFin" id="fechaFin" class="form-control">
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="form-group">
+                <label for="codigo" class="col-form-label">ID Interno</label>
+                    <input [(ngModel)]="objBusquedaFacturas.numeroInterno" type="text" name="numeroInterno" id="numeroInterno" class="form-control" placeholder="Número Interno">
+                
+            </div>
+            <div class="form-group">
+
+                <label for="codigo" class="col-form-label">Cliente:</label>
+                <input [(ngModel)]="objBusquedaFacturas.nombreCliente" type="text" name="nombreCliente" id="nombreCliente" class="form-control" placeholder="Nombre cliente">
+            </div>
+            <div class="form-group" *ngIf="filtroFactura != 'SI'">
+                <label for="codigo" class="col-form-label">ID documento</label>
+                   <input [(ngModel)]="objBusquedaFacturas.claveNumerica" type="text" name="numeroExterno" id="numeroExterno" class="form-control" placeholder="Número de documento">
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="form-group">        
+                <label for="codigo" class="col-form-label" *ngIf="filtroFactura != 'SI'">Consecutivo:</label>
+                <input *ngIf="filtroFactura != 'SI'" [(ngModel)]="objBusquedaFacturas.consecutivo" type="text" name="numeroExterno" id="numeroExterno" class="form-control" placeholder="Consecutivo documento">
+            </div>
+            <button type="button" class="btn btn-info mr-1" (click)="buscarFacturas(objBusquedaFacturas)"><i class="fa fa-search"></i></button>
+            <button type="button" class="btn btn-info mr-1" (click)="descargarReporteExcel(objBusquedaFacturas)"><i class="fa fa-file-excel-o"></i></button>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="table-responsive" *ngIf="mostrarTabla == false">
+    <table class="table table-hover" id="tabla_detalles">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Número <br> Interno</th>
+                <th>Numero <br>  Externo</th>
+                <th>Razón Social</th>
+                <th>Total</th>
+                <th *ngIf="filtroFactura != 'SI'">Estado</th>
+                <th>Anulado</th>
+                <th *ngIf="filtroFactura == '01'"> Observación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let factura of this.collection.data | paginate: config">
+            <tr>
+                <td>
+                    {{factura.fecha | date: 'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    {{factura.hora}}
+                </td>
+                <td>
+                    {{factura.numero_interno}}
+                </td>
+                <td >
+                    {{factura.num_documento}}
+                </td>
+                <td *ngIf="filtroFactura == '01' || filtroFactura == '03' || filtroFactura == '04' || filtroFactura == 'SI' || filtroFactura == '04_01'"
+                    style="word-break: break-all"
+                >
+                    {{factura.cliente_nombre}}
+                </td>
+                <td *ngIf="filtroFactura == '05' || filtroFactura == '08'"
+                    style="word-break: break-all"
+                >
+                    {{factura.proveedor_nombre}}
+                </td>
+                <td style="word-break: break-all">
+                    <span *ngIf="filtroFactura == '05' && factura.clavenumerica.substring(29,31) == '03' || filtroFactura == '03'"> - </span>{{factura.totalcomprobante}}
+                </td>
+                <td *ngIf="filtroFactura != 'SI' && filtroFactura != '05' && filtroFactura != '08'">
+                    {{factura.status_factura}}
+                </td>
+                <td *ngIf="filtroFactura == '05' || filtroFactura == '08'">
+                    {{factura.estadoHacienda}}
+                </td>
+                <td *ngIf="filtroFactura != '03' && filtroFactura != '05' && filtroFactura != '08' && filtroFactura != 'SI'">
+                    <p *ngIf="filtroFactura != '03' && filtroFactura != '05' && filtroFactura != '08' && factura.anulada == '1'; else cajaRechazado">SI</p> 
+                    <ng-template  #cajaRechazado>NO</ng-template>
+                </td>
+                <td *ngIf="filtroFactura == '05' || filtroFactura == '03' || filtroFactura == 'SI'">
+                    <p>-</p> 
+                </td>
+
+                <td *ngIf="filtroFactura == '08'">
+                    <p *ngIf="filtroFactura == '08' && factura.anulada == '1'; else cajaRechazado">SI</p> 
+                    <ng-template  #cajaRechazado>NO</ng-template>
+                </td>
+                <td *ngIf="filtroFactura == '01'">
+                    {{factura.errorEmail}} 
+                </td>                
+                <td *ngIf="filtroFactura == '03'"> <!-- NOtas de credito de anulacion de comprobante -->
+
+                    <button type="button" class="btn btn-danger btn-xs mr-1" (click)="descargarPDF(factura.id,'01')" data-toggle="tooltip" data-placement="top" title="Descargar PDF">
+                        <i class="fa fa-download"></i>
+                    </button>
+                    <!-- <button *ngIf="factura.status_factura == 'rechazado' || factura.status_factura == null" type="button" class="btn btn-default btn-xs">
+                        <i class="fa fa-mail-forward"></i>
+                    </button> -->
+
+                    <button type="button" class="btn btn-default btn-xs mr-1" data-toggle="modal" data-target="#ModalCorreos" (click)="cargarFactura(factura.id); obtenerCorreoClinente()">
+                        <i class="fa fa-envelope-o"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs" (click)="reporteFactura(factura.id)" data-toggle="modal" data-target="#ModalPreFactura">
+                        <i class="fa fa-search-plus"></i>
+                    </button>
+                </td><!-- FIN DE NOTAS DE CREDITO DE ANULACION DE COMPROBANTE -->
+                <!-- Facturas y Tiquetes -->
+                <td *ngIf="filtroFactura != 'SI' && filtroFactura != '03' && filtroFactura != '05' && filtroFactura != '08'">
+                    <button type="button" class="btn btn-danger btn-xs mr-1" (click)="descargarPDF(factura.id,'01')"
+                    data-toggle="tooltip" data-placement="top" title="Descargar PDF"
+                    >
+                        <i class="fa fa-download"></i>
+                    </button>
+                    <button *ngIf="factura.status_factura == 'aceptado' && factura.anulada == '0' " type="button" class="btn btn-default btn-xs" (click)="anularComprobante(factura.id)" data-toggle="tooltip" data-placement="top" title="Anular comprobante">
+                        <i class="fa fa-ban"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs mr-1" data-toggle="modal" data-target="#ModalCorreos" (click)="cargarFactura(factura.id); obtenerCorreoClinente()">
+                        <i class="fa fa-envelope-o"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs" (click)="reporteFactura(factura.id)" data-toggle="modal" data-target="#ModalPreFactura">
+                        <i class="fa fa-search-plus"></i>
+                    </button>
+                </td>
+                <!-- FIN Facturas y Tiquetes -->
+                <!-- OPCIONES DE PROFORMA, aqui se ver y enviar la proforma-->
+                <td *ngIf="filtroFactura == 'SI'">
+                    <button type="button" class="btn btn-default btn-xs mr-1" (click)="reporteFactura(factura.id)" data-toggle="modal" data-target="#ModalPreFactura">
+                        <i class="fa fa-search-plus"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-default btn-xs" (click)="obtenerProforma(factura.id)"
+                    data-toggle="tooltip" data-placement="top" title="Cargar Proforma"
+                    >
+                        <i class="fa fa-edit"></i>
+                    </button>
+                </td>
+
+                <td *ngIf="filtroFactura != 'SI' && filtroFactura == '05'">
+                    
+            
+                    <button type="button" data-toggle="tooltip" data-placement="top" title="Descargar PDF" class="btn btn-danger btn-xs mr-1" (click)="descargarPDF(factura.id,'01')">
+                        <i class="fa fa-download"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs" (click)="visualizarRespuestaAceptacionHacienda(factura.id)" data-toggle="modal" data-target="#modalRespuestaAceptacion">
+                        <i class="fa fa-search-plus"></i>
+                    </button>
+                </td>
+                <td *ngIf="filtroFactura != 'SI' && filtroFactura == '08'">
+                    
+            
+                    <button type="button" data-toggle="tooltip" data-placement="top" title="Descargar PDF" class="btn btn-danger btn-xs mr-1" (click)="descargarPDFCompra(factura)" >
+                        <i class="fa fa-download"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs" (click)="visualizarFacturaCompra(factura.id)" data-toggle="modal" data-target="#ModalPreFactura">
+                        <i class="fa fa-search-plus"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-default btn-xs mr-1" (click)="descargarAcuse(factura.id)"
+                    data-toggle="tooltip" data-placement="top" title="Descargar acuse comprobante"
+                    >
+                        <i class="fa fa-file-code-o"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-default btn-xs" (click)="obtenerFacturaCompra(factura.id)"
+                    data-toggle="tooltip" data-placement="top" title="Reemplazar factura de compra"
+                    *ngIf="factura.estadoHacienda == 'aceptado'"
+                    >
+                        <i class="fa fa-edit"></i>
+                    </button>
+                    <button 
+                        *ngIf="factura.estadoHacienda == 'aceptado' && factura.anulada == '0'" 
+                        type="button" class="btn btn-danger btn-xs" 
+                        (click)="anularCompra(factura.id)" 
+                        data-toggle="tooltip" 
+                        data-placement="top" 
+                        title="Anular Compra"
+                    ><i class="fa fa-ban"></i>
+                    </button>
+
+                </td>
+                <!--FIN OPCIONES DE PROFORMA, aqui se ver y enviar la proforma-->
+            </tr>
+        </tbody>
+    </table>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>   
+</div>
+
+<!-----------------------------FIN TABLA GRANDE------------------------------------------------------------>
+    <ng-container *ngIf="mostrarTabla">
+        <div class="alert alert-success" *ngIf="mostrar == true">
+            Documento en proceso. Por Favor espere...
+            <div class="spinner-border text-muted"></div>
+        </div>
+        <div class="table-responsive"  *ngFor="let factura of this.collection.data | paginate: config">
+            <table class="table table-hover" id="tabla_detalles_pequena">
+                <tbody>
+                    <tr>
+                        <th>Fecha</th>
+                        <td>
+                            {{factura.fecha | date: 'yyyy-MM-dd'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Hora</th>
+                        <td>
+                            {{factura.hora}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th># Interno</th>
+                        <td>
+                            {{factura.numero_interno}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th># Externo</th>
+                        <td>
+                            {{factura.num_documento}}
+                        </td>
+                    </tr>
+                    <tr *ngIf="filtroFactura == '01' || filtroFactura == '03' || filtroFactura == '04' || filtroFactura == 'SI' || filtroFactura == '04_01'">
+                        <th>Cédula Cliente</th>
+                        <td>
+                            {{factura.cedula_cliente}}
+                        </td>
+                    </tr>
+                       <tr *ngIf="filtroFactura == '05' || filtroFactura == '08'">
+                        <th>Cédula Proveedor</th>
+                        <td>
+                            {{factura.cedula_proveedor}}
+                        </td>
+                       </tr>
+                    <tr *ngIf="filtroFactura == '01' || filtroFactura == '03' || filtroFactura == '04' || filtroFactura == 'SI'">
+                        <th>Cliente</th>
+                        <td style="word-break: break-all">
+                            {{factura.cliente_nombre}}
+                        </td>
+                    </tr>
+
+                        <tr *ngIf="filtroFactura == '05' || filtroFactura == '08'">
+                            <th>Proveedor</th>
+                            <td style="word-break: break-all">
+                                {{factura.proveedor_nombre}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Subtotal</th>
+                            <td style="word-break: break-all">
+                                <span *ngIf="filtroFactura == '05' && factura.clavenumerica.substring(29,31) == '03' || filtroFactura == '03'"> - </span>{{factura.subtotal}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Total Impuesto</th>
+                            <td style="word-break: break-all"> 
+                                <span *ngIf="filtroFactura == '05' && factura.clavenumerica.substring(29,31) == '03' || filtroFactura == '03'"> - </span>{{factura.totalimpuesto}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Imp.Servicio</th>
+                            <td style="word-break: break-all">
+                                <span *ngIf="filtroFactura == '05' && factura.clavenumerica.substring(29,31) == '03' || filtroFactura == '03'"> - </span>{{factura.TotalOtrosCargos}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Total</th>
+                            <td style="word-break: break-all">
+                                <span *ngIf="filtroFactura == '05' && factura.clavenumerica.substring(29,31) == '03' || filtroFactura == '03'"> - </span>{{factura.totalcomprobante}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th *ngIf="filtroFactura != 'SI'">Estado</th>
+                            <td *ngIf="filtroFactura != 'SI' && filtroFactura != '05' && filtroFactura != '08'">
+                                {{factura.status_factura}}
+                            </td>
+                            <td *ngIf="filtroFactura == '05' || filtroFactura == '08'">
+                                {{factura.estadoHacienda}}
+                            </td>
+                        </tr>
+                        <tr *ngIf= "filtroFactura != '03' && filtroFactura != '05' && filtroFactura != '08'">
+                            <th>Anulado</th>
+                            
+                            <td>
+                                <p  *ngIf="factura.anulada == '1'; else cajaRechazado">SI</p> 
+                                <ng-template #cajaRechazado>NO</ng-template>
+                            </td>
+                        </tr>
+
+                        <tr *ngIf= "filtroFactura == '08'">
+                            <th>Anulado</th>
+                            
+                            <td>
+                                <p  *ngIf="factura.anulada == '1' ; else cajaRechazado">SI</p> 
+                                <ng-template #cajaRechazado>NO</ng-template>
+                            </td>
+                        </tr>
+
+                        <tr *ngIf="filtroFactura == '01'">
+                            <th>Observación</th>
+                            <td>
+                                {{factura.errorEmail}} 
+                            </td> 
+                        </tr>
+                        <tr>
+                            <th>Acciones</th>
+                            <td *ngIf="filtroFactura == '03'"> <!-- NOtas de credito de anulacion de comprobante -->
+            
+                                <button type="button" class="btn btn-danger btn-xs mr-1" (click)="descargarPDF(factura.id,'01')"
+                                data-toggle="tooltip" data-placement="top" title="Descargar PDF"
+                                >
+                                    <i class="fa fa-download"></i>
+                                </button>
+                                <!-- <button *ngIf="factura.status_factura == 'rechazado' || factura.status_factura == null" type="button" class="btn btn-default btn-xs">
+                                    <i class="fa fa-mail-forward"></i>
+                                </button> -->
+            
+                                <button type="button" class="btn btn-default btn-xs mr-1" data-toggle="modal" data-target="#ModalCorreos" (click)="cargarFactura(factura.id); obtenerCorreoClinente()">
+                                    <i class="fa fa-envelope-o"></i>
+                                </button>
+                                <button type="button" class="btn btn-default btn-xs" (click)="reporteFactura(factura.id)" data-toggle="modal" data-target="#ModalPreFactura">
+                                    <i class="fa fa-search-plus"></i>
+                                </button>
+                            </td><!-- FIN DE NOTAS DE CREDITO DE ANULACION DE COMPROBANTE -->
+                            <!-- Facturas y Tiquetes -->
+                            <td *ngIf="filtroFactura != 'SI' && filtroFactura != '03' && filtroFactura != '05' && filtroFactura != '08'">
+                                <button type="button" class="btn btn-danger btn-xs mr-1" (click)="descargarPDF(factura.id,'01')"
+                                data-toggle="tooltip" data-placement="top" title="Descargar PDF"
+                                >
+                                    <i class="fa fa-download"></i>
+                                </button>
+                                <button *ngIf="factura.status_factura == 'aceptado' && factura.anulada == '0' " type="button" class="btn btn-default btn-xs" (click)="anularComprobante(factura.id)"
+                                data-toggle="tooltip" data-placement="top" title="Anular comprobante"
+                                >
+                                    <i class="fa fa-ban"></i>
+                                </button>
+                                <button type="button" class="btn btn-default btn-xs mr-1" data-toggle="modal" data-target="#ModalCorreos" (click)="cargarFactura(factura.id); obtenerCorreoClinente()">
+                                    <i class="fa fa-envelope-o"></i>
+                                </button>
+                                <button type="button" class="btn btn-default btn-xs" (click)="reporteFactura(factura.id)" data-toggle="modal" data-target="#ModalPreFactura">
+                                    <i class="fa fa-search-plus"></i>
+                                </button>
+                            </td>
+                            <!-- FIN Facturas y Tiquetes -->
+                            <!-- OPCIONES DE PROFORMA, aqui se ver y enviar la proforma-->
+                            <td *ngIf="filtroFactura == 'SI'">
+                                <button type="button" class="btn btn-default btn-xs mr-1" (click)="reporteFactura(factura.id)" data-toggle="modal" data-target="#ModalPreFactura">
+                                    <i class="fa fa-search-plus"></i>
+                                </button>
+                                <button type="button" class="btn btn-default btn-xs" (click)="obtenerProforma(factura.id)"
+                                data-toggle="tooltip" data-placement="top" title="Cargar Proforma"
+                                >
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                            </td>
+            
+                            <td *ngIf="filtroFactura != 'SI' && filtroFactura == '05'">
+                                
+                        
+                                <button type="button" class="btn btn-danger btn-xs mr-1" (click)="descargarPDF(factura.id,'01')"
+                                data-toggle="tooltip" data-placement="top" title="Descargar PDF"
+                                >
+                                    <i class="fa fa-download"></i>
+                                </button>
+                                <button type="button" class="btn btn-default btn-xs" (click)="visualizarRespuestaAceptacionHacienda(factura.id)" data-toggle="modal" data-target="#modalRespuestaAceptacion">
+                                    <i class="fa fa-search-plus"></i>
+                                </button>
+                            </td>
+                            <td *ngIf="filtroFactura != 'SI' && filtroFactura == '08'">
+                                
+                        
+                                <button type="button" class="btn btn-danger btn-xs mr-1" (click)="descargarPDFCompra(factura)"
+                                data-toggle="tooltip" data-placement="top" title="Descargar PDF"
+                                >
+                                    <i class="fa fa-download"></i>
+                                </button>
+                                <button type="button" class="btn btn-default btn-xs" (click)="visualizarFacturaCompra(factura.id)" data-toggle="modal" data-target="#ModalPreFactura">
+                                    <i class="fa fa-search-plus"></i>
+                                </button>
+            
+                                <button type="button" class="btn btn-default btn-xs mr-1" (click)="descargarAcuse(factura.id)"
+                                data-toggle="tooltip" data-placement="top" title="Descargar acuse comprobante"
+                                >
+                                    <i class="fa fa-file-code-o"></i>
+                                </button>
+
+                                <button type="button" class="btn btn-default btn-xs" (click)="obtenerFacturaCompra(factura.id)"
+                                    data-toggle="tooltip" data-placement="top" title="Reemplazar factura de compra"
+                                    *ngIf="factura.estadoHacienda == 'aceptado'"
+                                >
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                                
+                                <button *ngIf="factura.estadoHacienda == 'aceptado' && factura.anulada == '0'" type="button" class="btn btn-danger btn-xs" (click)="anularCompra(factura.id)" data-toggle="tooltip" data-placement="top" title="Anular Compra">
+                                    <i class="fa fa-ban"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        
+                        <!--FIN OPCIONES DE PROFORMA, aqui se ver y enviar la proforma-->
+                </tbody>
+            </table>
+        <hr>
+    </div>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> 
+    </ng-container>
+
+
+
+    <!-------------------------------------------------------------------------------------------------------->
+
+   
+<!-- MODAL PARA DESCRICION TOTAL DE FACTURA JUNTO CON LAS ORDENES DE CADA FACTURA -->
+
+<div class="modal fade" id="ModalPreFactura1" tabindex="-1" role="dialog" aria-labelledby="ModalPreFactura1" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            
+        </div>
+    </div>
+</div>
+<!-- MODAL DE EJEMPLO.......................................................................-->
+
+
+
+<!--FIN MODAL DE EJEMPLO ------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------->
+<div class="modal fade" id="ModalPreFactura1" tabindex="-1" role="dialog" aria-labelledby="ModalPreFactura1" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{objFacturaResultado.tipoFactura}}</h5>
+            </div>
+            <div class="modal-body">
+
+
+                <p style="padding: 0%;">
+                    <b>Factura: </b>{{this.objFacturaResultado.id}}
+                    <p><b>clave:</b> {{this.objFacturaResultado.clave}}</p>
+                    <p><b>Consecutivo:</b> {{this.objFacturaResultado.consecutivo}}</p>
+                    <p><b>Fecha:</b> {{this.objFacturaResultado.fechaFactura | date: 'yyyy-MM-dd'}}
+                        <p><b>Tipo Cambio:</b> {{this.objFacturaResultado.tipocambio}}
+                        </p>
+
+
+
+                        <div class="table">
+
+                            <!-- tu tabla aquí siempre se verá al 100% en todas las resolcuiones-->
+                            <table class="table table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Descripcion</th>
+                                        <th>Cantidad</th>
+                                        <th>Descuento</th>
+                                        <th>Impuesto</th>
+                                        <th>Subtotal</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngFor="let linea of arrayOrdenes" id="tbody_lineas">
+                                    <tr>
+                                        <td>
+                                            {{linea.numerolineadetalle}}
+                                        </td>
+                                        <td>
+                                            {{linea.descripcioDetalle}}
+                                        </td>
+                                        <td>
+                                            {{linea.cantidad}}
+                                            <td>
+                                                {{linea.montodescuento}}
+                                            </td>
+                                            <td>
+                                                {{linea.monto}}
+                                            </td>
+                                            <td>
+                                                {{linea.subtotal}}
+                                            </td>
+                                            <td>
+                                                {{linea.montoitotallinea}}
+                                            </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                Medio Pago
+                                <select [(ngModel)]="objFacturaResultado.medioPago" class="form-control">
+                                <option *ngFor="let item of mediosPago" [ngValue]="item.id">{{item.medio}}</option>
+                            </select>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                Condicion Venta
+                                <select [(ngModel)]="objFacturaResultado.condicionVenta" class="form-control">
+                                    <option *ngFor="let item of condicionesVenta" [ngValue]="item.id">{{item.condicion}}</option>
+                        </select>
+                            </div>
+                        </div>
+
+                        <p style="padding: 0%;">
+                            <h4>Totales del comprobante</h4>
+                            <h6>Subtotal: {{this.objFacturaResultado.subtotal}}</h6>
+                            <h6>Servicios Gravados: {{this.objFacturaResultado.totalservgravados}}</h6>
+                            <h6>Servicios Exentos: {{this.objFacturaResultado.totalservexentos}}</h6>
+                            <h6>Mercancías Gravadas: {{this.objFacturaResultado.totalmercanciasgravadas}}</h6>
+                            <h6>Mercancías Exentas: {{this.objFacturaResultado.totalmercanciasexentas}}</h6>
+                            <h6>Total Gravado: {{this.objFacturaResultado.totalgravado}}</h6>
+                            <h6>Total Exento: {{this.objFacturaResultado.totalexento}}</h6>
+                            <h6>Total Exonerado: {{this.objFacturaResultado.totalexonerado}}</h6>
+                            <h6>Subtotal: {{this.objFacturaResultado.subtotal}}</h6>
+                            <h6>Descuentos: {{this.objFacturaResultado.descuentoTotal}}</h6>
+                            <h6>Impuestos: {{this.objFacturaResultado.totalimpuesto}}</h6>
+                            <h6>Otros Cargos: {{this.objFacturaResultado.totalotroscargos}}</h6>
+                            <hr>
+                            <p><b>Total Factura:</b> {{this.objFacturaResultado.totalcomprobante}}
+                            </p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!------------------------------------------------------------------------------------------->
+<!--MODAL PARA ENVIAR CORREOS A 3 DESTINATARIOS -->
+
+<div class="modal fade" id="ModalCorreos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Enviar Correos</h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="text" name="correo1" id="correo1" class="form-control" placeholder="Correo 1">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="correo2" id="correo2" class="form-control" placeholder="Correo 2">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="correo3" id="correo3" class="form-control" placeholder="Correo 3">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="enviarCorreo()">Enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DE VISTA DE RESPUESTA DE HACIENDA -->
+
+
+<div class="modal fade" id="modalRespuestaAceptacion" tabindex="-1" role="dialog" aria-labelledby="modalRespuestaAceptacion" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Respuesta mensaje de aceptación</h5>
+            </div>
+            <div class="modal-body">
+                {{datosRespuestaAceptacionHacienda}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- -->
+
+
+<div class="modal fade" id="ModalPreFactura" tabindex="-1" role="dialog" aria-labelledby="ModalPreFactura" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{objFacturaResultado.tipoFactura}}</h5>
+            </div>
+            <div class="modal-body">
+
+
+                <p style="padding: 0%;">
+
+                    <b>Factura: </b>{{this.objFacturaResultado.id}}
+                    <p><b>clave:</b> {{this.objFacturaResultado.clave}}</p>
+                    <p><b>Consecutivo:</b> {{this.objFacturaResultado.consecutivo}}</p>
+                    <p><b>Fecha:</b> {{this.objFacturaResultado.fechaFactura | date: 'yyyy-MM-dd'}}
+                        <p><b>Tipo Cambio:</b> {{this.objFacturaResultado.tipocambio}}
+                        </p>
+
+                        <p *ngIf="objFacturaResultado.tipoFactura === 'Factura Compra Electrónica'"><b>Proveedor: </b> {{objFacturaResultado.nombre}}
+
+                        <div class="table">
+
+                            <!-- tu tabla aquí siempre se verá al 100% en todas las resolcuiones-->
+                            <table class="table table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Descripcion</th>
+                                        <th>Cantidad</th>
+                                        <th>Descuento</th>
+                                        <th>Impuesto</th>
+                                        <th>Subtotal</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngFor="let linea of arrayOrdenes" id="tbody_lineas">
+                                    <tr>
+                                        <td>
+                                            {{linea.numerolineadetalle}}
+                                        </td>
+                                        <td>
+                                            {{linea.descripcioDetalle}}
+                                        </td>
+                                        <td>
+                                        {{linea.cantidad}}
+                                        <td>
+                                            {{linea.montodescuento}}
+                                        </td>
+                                        <td>
+                                            {{linea.monto}}
+                                        </td>
+                                        <td>
+                                            {{linea.subtotal}}
+                                        </td>
+                                        <td>
+                                            {{linea.montoitotallinea}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                            <div class="form-group">
+                                <label for="descripcion">Medio Pago</label>
+                                <select disabled [(ngModel)]="objFacturaResultado.medioPago" class="form-control">
+                                <option *ngFor="let item of mediosPago" [ngValue]="item.id">{{item.medio}}</option>
+                            </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="descripcion">Condicion Venta</label>
+                                <select disabled [(ngModel)]="objFacturaResultado.condicionVenta" class="form-control">
+                                    <option *ngFor="let item of condicionesVenta" [ngValue]="item.id">{{item.condicion}}</option>
+                                </select>
+                            </div>
+
+                        <p style="padding: 0%;">
+                            <h4>Totales del comprobante</h4>
+                            <h6>Subtotal: {{this.objFacturaResultado.subtotal}}</h6>
+                            <h6>Servicios Gravados: {{this.objFacturaResultado.totalservgravados}}</h6>
+                            <h6>Servicios Exentos: {{this.objFacturaResultado.totalservexentos}}</h6>
+                            <h6>Mercancías Gravadas: {{this.objFacturaResultado.totalmercanciasgravadas}}</h6>
+                            <h6>Mercancías Exentas: {{this.objFacturaResultado.totalmercanciasexentas}}</h6>
+                            <h6>Total Gravado: {{this.objFacturaResultado.totalgravado}}</h6>
+                            <h6>Total Exento: {{this.objFacturaResultado.totalexento}}</h6>
+                            <h6>Total Exonerado: {{this.objFacturaResultado.totalexonerado}}</h6>
+                            <h6>Subtotal: {{this.objFacturaResultado.subtotal}}</h6>
+                            <h6>Descuentos: {{this.objFacturaResultado.descuentoTotal}}</h6>
+                            <h6>Impuestos: {{this.objFacturaResultado.totalimpuesto}}</h6>
+                            <h6>Otros Cargos: {{this.objFacturaResultado.totalotroscargos}}</h6>
+                            <hr>
+                            <p><b>Total Factura:</b> {{this.objFacturaResultado.totalcomprobante}}
+                            </p>
+                            <p>
+                                <p>Notas:
+                                <p>{{objFacturaResultado.notas}}
+                            </p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>

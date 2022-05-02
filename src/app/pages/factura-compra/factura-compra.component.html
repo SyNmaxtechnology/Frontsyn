@@ -1,0 +1,684 @@
+<h1><i class="fa fa-file-text"></i> Crear Documento de Compra</h1>
+<hr>
+<br>
+<div class="container">
+    <!-- Stack the columns on mobile by making one full-width and the other half-width -->
+<div class="row">
+    <div class="col-12 col-md-8">
+        <div class="form-row">
+            <div class="form-group col-md-11">
+                <h3>Datos del Proveedor</h3>
+                <input type="text" name="nombreProveedor" id="nombreProveedor" readonly class="form-control col-md-11" placeholder="Proveedor">
+            </div>
+            <div class="form-group col-md-11" style="align-items:flex-start;">
+                <input type="text" name="nombreComercialProveedor" id="nombreComercialProveedor" readonly class="form-control col-md-11" placeholder="Nombre Comercial">
+            </div>
+            <div class="form-group col-md-11">
+                <input type="text" name="cedulaProveedor" id="cedulaProveedor" readonly class="form-control col-md-11" placeholder="Cédula">
+            </div>
+            <div class="form-group col-md-11">
+                <input type="text" name="correoProveedor" id="correoProveedor" readonly class="form-control col-md-11" placeholder="Correo">
+            </div>
+            <div class="form-group col-md-11">
+                <input type="text" name="telefonoProveedor" id="telefonoProveedor" readonly class="form-control col-md-11" placeholder="Teléfono">
+            </div>
+            <div class="form-group col-md-8 mt-0">
+                <button type="submit" class="btn btn-success mr-1 mb-1 funcionesProveedor" data-toggle="modal" data-target="#ModalBuscarProveedor">
+                Buscar <br> Proveedor
+            </button>
+                <button type="button" class="btn btn-danger mr-1 funcionesProveedor" id="quitarProveedor">
+                Quitar <br> Proveedor
+            </button>
+                <button type="submit" class="btn btn-primary mr-1 funcionesProveedor" data-toggle="modal" data-target="#ModalNuevoProveedor">
+                Nuevo <br> Proveedor
+            </button>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-4 col-lg-3" style="float: right;">
+        <div class="form-group mb-1">
+            Fecha: <span><input [(ngModel)]="objFactura.fecha" type="date" name="fecha" id="fecha" class="form-control"></span>
+        </div>
+        <div class="form-group mb-1">
+            Tipo Cambio: <span>{{tipoCambio}}</span>
+        </div>
+        <hr>
+        <div class="form-group mb-1" *ngIf="objFactura.condicion_venta == '02'">                
+            <label for="plazo_credito">Plazo Crédito: </label>
+            <input [(ngModel)]="objFactura.plazo_credito" type="text" name="plazo_credito" id="plazo_credito" class="form-control">
+        </div>
+        <div class="form-group mb-1">
+            <select [(ngModel)]="objFactura.condicion_venta" name="condicion_venta" class="form-control">
+                <option value="" disabled selected>--Condición Venta--</option>
+                <option *ngFor="let item of listaCondicionVenta" [value]="item.id">{{item.condicion}}</option>
+            </select>
+        </div>
+        <div class="form-group mb-1">
+            <select [(ngModel)]="objFactura.medio_pago" name="medio_pago" class="form-control">
+            <option value="" disabled selected>--Medio Pago--</option>
+            <option *ngFor="let item of listaMediosPago" [value]="item.id">{{item.medio}}</option>
+            </select>
+        </div>
+        <div class="form-group mb-1">
+            <select [(ngModel)]="objFactura.codigomoneda" name="codigomoneda" class="form-control">
+            <option value="" disabled selected>--Moneda--</option>
+            <option *ngFor="let item of listaMonedas" [value]="item.codigo">{{item.descripcion}}</option>
+            
+        </select>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-12 col-md-12">
+        <div class="form-row">
+            <div class="form-group col-md-11">
+                <label for="">Código Artículo</label>
+                <input list="encodings1" [(ngModel)]="queryCodigoArticulo" name="queryCodigoArticulo" class="col-sm-6 custom-select custom-select-sm" id="txtCodigoArticulo"
+                (ngModelChange)="cargarArticulo(queryCodigoArticulo,'02')">
+                <datalist id="encodings1">
+                    <option *ngFor="let articulo of listaArticulosCargados" [value]="articulo.codigobarra_producto+' '+articulo.descripcion"></option>
+                </datalist>
+            </div>
+        </div>
+
+
+        <div class="form-row">
+            <div class="form-group col-md-11">
+                <label for="">Descripción Artículo</label>
+                <input list="encodings" [(ngModel)]="queryArticulo" name="queryArticulo" class="col-sm-6 custom-select custom-select-sm" id="txtNombreArticulo"
+                (ngModelChange)="cargarArticulo(queryArticulo,'01')">
+                <datalist id="encodings">
+                    <option *ngFor="let articulo of listaArticulosCargados" [value]="articulo.descripcion"></option>
+                </datalist>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-5">
+                <label for="">Cantidad</label>
+                <input type="number" name="cantidadLinea" id="cantidadLinea" class="form-control" placeholder="Cantidad">
+            </div>
+            <div class="form-group col-md-5">
+                <label for="">Existencia</label>
+                <input [(ngModel)]="existencia" type="number" name="existencia" id="txtexistencia" class="form-control" placeholder="Existencia" >
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-5">
+                <label for="">Descuento</label>
+                <select class="form-control" id="descuentoLinea">
+                    <option value="" selected>--Descuento--</option>
+                    <option *ngFor="let descuento of listaDescuentos" [value]="descuento.id">{{descuento.descripcion}}</option>
+                </select>
+            </div>
+            <div class="form-group col-md-5">
+                <label for="">Precio</label>
+                <input [(ngModel)]="precio" type="number" name="precio" id="txtprecio" class="form-control" placeholder="Precio" >
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-8 mt-0">
+                <!--<button type="submit" class="btn btn-success col-md-2 mr-1" data-toggle="modal" data-target="#ModalBuscarProducto">
+                <i class="fa fa-search"></i>
+                </button>-->
+                <button type="submit" class="btn btn-success mr-1 funcionesArticulos" id="cargarArticulo">
+                Cargar <br> Artículo
+            </button>
+                <button type="submit" (click)="listaErrores=[]" class="btn btn-primary mr-1 funcionesArticulos" data-toggle="modal" data-target="#ModalNuevoArticulo">
+                    Nuevo <br> Artículo
+                </button>
+            </div>
+            </div>
+</div>
+
+<div class="form-row" *ngIf="tablaPequena == false">
+    <h2>Detalles de Comprobante</h2>
+    <table class="table table-responsive" id="tabla_detalles">
+        <thead>
+            <tr>
+                <th>Descripción</th>
+                <th>Cant</th>
+                <th>Precio</th>
+                <th>Descuento</th>
+                <th>Impuesto</th>
+                <th>Total</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let linea of listaArticulosEntrada">
+            <tr>
+                <td>
+                    {{linea.descripcioDetalle}}
+                </td>
+                <td>
+                    {{linea.cantidad}}
+                </td>
+                <td>
+                    {{linea.precio_linea}}
+                </td>
+                <td>
+                    {{linea.montodescuento}}
+                </td>
+                <td>
+                    {{linea.monto}}
+                </td>
+                <td>
+                    {{linea.montoitotallinea}}
+                </td>
+                <td><button type="button" class="btn btn-danger btn-sm mr-1" (click)="quitarOrden(linea.numerolineadetalle)">
+                        <i class="fa fa-times-circle"></i>
+                    </button>
+                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ModalActualizarArticulo" (click)="buscarProductosPorId(linea);listaErrores=[]" >
+                        <i class="fa fa-pencil-square-o"></i>
+                    </button>
+                </td>
+            </tr> 
+        </tbody>
+    </table>
+    <div class="table">
+        <table class="table-bordered">
+            <tbody>
+                <tr>
+                    <th>Subtotal</th>
+                    <td scope="row">{{subtotalComprobante}}</td>
+                </tr>
+                <tr> 
+                    <th>IVA</th>
+                    <td>{{impuestoComprobante}}</td>
+                </tr> 
+                    <tr>
+                        <th>Descuento</th>
+                        <td>{{descuentoComprobante}}</td>
+                    </tr>
+                <tr>
+                    <th>Imp. Servicio</th>
+                    <td>
+                        <div class="form-group">
+                            <select  name="impServicio" id="impServicio" class="form-control">
+                                <option value="si">Sí</option>
+                                <option selected="selected" value="no">No</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>    
+                 <tr>     
+                    <th>Total</th>
+                    <td>{{totalComprobante}}</td>         
+                </tr>
+            </tbody>
+        </table>
+        <div class="form-row" *ngIf="movimiento == 'anular'">
+            <h2 style="width: 100%;">Información de referencia</h2>
+            <div class="form-group col-sm-12 col-md-6 col-lg-6">   
+                <label for=""> Clave de referencia</label>             
+                <input [(ngModel)]="claveRef" type="text" name="claveRef" id="" class="form-control" readonly>
+            </div>
+            <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                <label for="">Fecha de referencia</label>                
+                <input [(ngModel)]="fechaRef" type="text" name="fechaRef" id="" readonly class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <br>
+            <div class="form-group">
+                <label for="txtNotas"><b>Notas: </b></label>
+                <textarea (paste)="validarTamanoMaximo($event)"  (keyup)="validarTamanoMaximo($event)" [(ngModel)]="objFactura.notas" class="form-control notas" id="txtNotas" rows="6"></textarea>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="form-group">
+            <textarea name="" id="" cols="35" rows="5" class="form-control" placeholder="Notas"></textarea>
+        </div> -->
+        <div class="alert alert-success" *ngIf="bloquearBotones == true">
+            Documento en proceso. Por Favor espere...
+            <div class="spinner-border text-muted"></div>
+        </div>
+</div>
+<!--- TABLA PEQUEÑA-->
+<ng-container *ngIf="tablaPequena">
+    <h2>Detalles de Comprobante</h2>
+    <table class="table table-responsive" id="tabla_detalles">
+        <tbody *ngFor="let linea of listaArticulosEntrada">
+            <tr>
+                <th>Descripción</th>
+                <td style="max-width: auto; word-break: break-all">
+                    {{linea.descripcioDetalle}}
+                </td>
+            </tr>
+            <tr>
+                <th>Cant</th>
+                <td>
+                    {{linea.cantidad}}
+                </td>
+            </tr>
+            <tr>
+                <th>Precio</th>
+                <td>
+                    {{linea.precio_linea}}
+                </td>
+            </tr>
+            <tr>
+                <th>Descuento</th>
+                <td>
+                    {{linea.montodescuento}}
+                </td>
+            </tr>
+            <tr>
+                <th>Impuesto</th>
+                <td>
+                    {{linea.monto}}
+                </td>
+            </tr>
+            <tr>
+                <th>Total</th>
+                <td>
+                    {{linea.montoitotallinea}}
+                </td>
+            </tr>
+            <tr>
+                <td><button type="button" class="btn btn-danger btn-sm mr-1" (click)="quitarOrden(linea.numerolineadetalle)">
+                        <i class="fa fa-times-circle"></i>
+                    </button>
+                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ModalActualizarArticulo" (click)=buscarProductosPorId(linea)>
+                        <i class="fa fa-pencil-square-o"></i>
+                    </button>
+                </td>
+            </tr> 
+        </tbody>
+    </table>
+    <div class="table">
+        <table class="table-bordered">
+            <tbody>
+                <tr>
+                    <th>Subtotal</th>
+                    <td scope="row">{{subtotalComprobante}}</td>
+                </tr>
+                <tr> 
+                    <th>IVA</th>
+                    <td>{{impuestoComprobante}}</td>
+                </tr> 
+                    <tr>
+                        <th>Descuento</th>
+                        <td>{{descuentoComprobante}}</td>
+                    </tr>
+                <tr>
+                    <th>Imp. Servicio</th>
+                    <td>
+                        <div class="form-group">
+                            <select  name="impServicio" id="impServicio" class="form-control">
+                                <option value="si">Sí</option>
+                                <option selected="selected" value="no">No</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>    
+                 <tr>     
+                    <th>Total</th>
+                    <td>{{totalComprobante}}</td>         
+                </tr>
+            </tbody>
+        </table>
+        <div class="form-row" *ngIf="movimiento == 'anular'">
+                <h2>Información de referencia</h2>
+            <div class="form-group">   
+                <label for=""> Clave de referencia</label>             
+                <input [(ngModel)]="claveRef" type="text" name="claveRef" id="" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label for="">Fecha de referencia</label>                
+                <input [(ngModel)]="fechaRef" type="text" name="fechaRef" id="" readonly class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <br>
+            <div class="form-group">
+                <label for="txtNotas"><b>Notas: </b></label>
+                <textarea (paste)="validarTamanoMaximo($event)"  (keyup)="validarTamanoMaximo($event)" [(ngModel)]="objFactura.notas" class="form-control notas" id="txtNotas" rows="6"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="alert alert-success" *ngIf="bloquearBotones == true">
+        Documento en proceso. Por Favor espere...
+        <div class="spinner-border text-muted"></div>
+    </div>
+</ng-container>
+<!--FIN DE TABLA PEQUEÑA-->
+<hr>
+<div class="form-group col-md-12 mt-0">
+    <button type="submit" class="btn btn-danger mr-1 funcionesEntrada" id="enviarCompra" [disabled]="bloquearBotones == true">
+        Enviar <br> Compra 
+    </button>
+</div>
+</div>
+
+<!-- MODAL PARA BUSCAR EL CLIENTE -->
+
+<div class="modal fade" id="ModalBuscarProveedor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Buscar Proveedor</h5>
+        </div>
+        <div class="modal-body">
+            <form method="POST" id="formBuscarProveedor">
+                <div class="form-group">
+                    <label for="cedula" class="col-form-label">Nombre o Cédula:</label>
+
+                    <input [(ngModel)]="queryProveedor" id="cedula" name="queryProveedor" class="form-control" list="proveedores" (ngModelChange)="buscarProveedores(queryProveedor)">
+                    <datalist id="proveedores">
+                        <option *ngFor="let proveedor of listaProveedores" [value]="proveedor.proveedor_nombre">
+                        </option>
+                    </datalist>
+                    
+                   <!-- <button type="button" class="btn btn-primary mt-1" id="buscarProveedor">Buscar</button> -->
+                </div>
+                <div class="form-group">
+                    <label for="nombreProveedorBusqueda" class="col-form-label">Nombre:</label>
+                    <input [(ngModel)]="nombreProveedorBusqueda" name="nombreProveedorBusqueda" type="text" class="form-control" id="nombreProveedorBusqueda" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="cedulaProveedorBusqueda" class="col-form-label">Cédula:</label>
+                    <input [(ngModel)]="cedulaProveedorBusqueda" name="cedulaProveedorBusqueda" type="text" class="form-control" id="cedulaProveedorBusqueda" readonly>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="cargarProveedor">Cargar</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<!--CIERRE DE MODAL DE BUSCAR CLIENTES-->
+
+
+
+<!--MODAL DE CREAR NUEVOS CLIENTES-->
+
+
+<div class="modal fade" id="ModalNuevoProveedor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Nuevo Proveedor</h5>
+        </div>
+        <div class="modal-body">
+            <form method="POST" id="formNuevoProveedor">
+                <div class="form-group">
+                    <label for="proveedor_nombre" class="col-form-label">Nombre:</label>
+                    <input [(ngModel)]="objProveedor.proveedor_nombre" name="proveedor_nombre" type="text" class="form-control" id="proveedor_nombre">
+                </div>
+                <div class="form-group">
+                    <label for="proveedor_nombre_comercial" class="col-form-label">Nombre Comercial</label>
+                    <input [(ngModel)]="objProveedor.proveedor_nombre_comercial" name="proveedor_nombre_comercial" type="text" class="form-control" id="proveedor_nombre_comercial">
+                </div>
+
+                <div class="form-group">
+                    <label for="proveedor_tipo_identificacion" class="col-form-label">Tipo Identificación:</label>
+                    <select [(ngModel)]="tipoCedula"  name="tipoCedula" id="tipoCedula" class="form-control">
+                        <option value="">--Seleccione--</option>
+                        <option *ngFor= "let cedula of listaTipoCedulas" [value]="cedula.codigo">{{cedula.descripcion}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cedula_proveedor" class="col-form-label">Cédula</label>
+                    <input [(ngModel)]="objProveedor.cedula_proveedor" name="cedula_proveedor" type="number" class="form-control" id="cedula_proveedor">
+                </div>
+                <!-- <div class="form-group">
+                    <label for="codigo_actividad" class="col-form-label">Código Actividad</label><br>
+                    <input [(ngModel)]="cedulaProveedorBusqueda" name="cedulaProveedorBusqueda" type="number" class="form-control mr-1 mb-2" style="width: 50%;" placeholder="Cédula del proveedor"> 
+                    <button type="button" class="btn btn-success btn-sm mb-2"><i class="fa fa-search" id="buscarActividad"></i></button>
+                    
+                    <input [(ngModel)]="objProveedor.codigo_actividad" name="codigo_actividad" type="number" class="form-control mb-2" id="codigo_actividad" placeholder="Codigo de actividad">
+
+                    <input [(ngModel)]="descripcionActividad" name="descripcionActividad" type="text" class="form-control" id="descripcionActividad" placeholder="Descripcion de la actividad">
+                    
+                </div>-->
+                <div class="form-group" id="divIdentificacionExtranjero" style="display: none;">
+                    <label for="identificacion_extranjero" class="col-form-label">Identificación extranjero</label>
+                    <input [(ngModel)]="objProveedor.identificacion_extranjero" name="identificacion_extranjero" type="number" class="form-control" id="identificacion_extranjero">
+                </div>
+                <div class="form-group">
+                    <label for="codigoProvincia" class="col-form-label">Provincia:</label>
+                    <select [(ngModel)]="codigoProvincia" name="codigoProvincia" id="codigoProvincia" class="form-control">
+                    <option value="" disabled selected>--Seleccione--</option>
+                    <option *ngFor= "let provincia of provincias" [value]="provincia.provincia">{{provincia.nPro}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="codigoCanton" class="col-form-label">Cantón</label>
+                    <select [(ngModel)]="codigoCanton" name="codigoCanton" id="codigoCanton" class="form-control">
+                        <option value="" disabled selected>--Seleccione--</option>
+                        <option *ngFor= "let canton of cantones" [value]="canton.canton">{{canton.nCan}}</option>
+                </select>
+                </div>
+                <div class="form-group">
+                    <label for="codigoDistrito" class="col-form-label">Distrito</label>
+                    <select [(ngModel)]="codigoDistrito" name="codigoDistrito" id="codigoDistrito" class="form-control">
+                <option value="" disabled selected>--Seleccione--</option>
+                <option *ngFor= "let distrito of distritos" [value]="distrito.distrito">{{distrito.nDis}}</option>
+                </select>
+                </div>
+                <div class="form-group">
+                    <label for="codigoBarrio" class="col-form-label">Barrio</label>
+                    <select [(ngModel)]="codigoBarrio" name="codigoBarrio" id="codigoBarrio" class="form-control">
+                        <option value="" disabled selected>--Seleccione--</option>
+                        <option *ngFor= "let barrio of barrios" [value]="barrio.CodNew">{{barrio.nHac}}</option>
+            </select>
+                </div>
+                <div class="form-group">
+                    <label for="otras_senas" class="col-form-label">Otras Señas</label>
+                    <input [(ngModel)]="objProveedor.otras_senas" name="otras_senas" type="text" class="form-control" id="otras_senas">
+                </div>
+                <div class="form-group" id="divOtrasSenasExtranjero" style="display: none;">
+                    <label for="otras_senas_extranjero" class="col-form-label">Otras Señas Extranjero</label>
+                    <input [(ngModel)]="objProveedor.otras_senas_extranjero" name="otras_senas_extranjero" type="text" class="form-control" id="otras_senas_extranjero">
+                </div>
+                <div class="form-group">
+                    <label for="proveedor_telefono_codigopais" class="col-form-label">Código País</label>
+                    <input [(ngModel)]="objProveedor.proveedor_telefono_codigopais" name="proveedor_telefono_codigopais" type="number" class="form-control" id="proveedor_telefono_codigopais">
+                </div>
+                <div class="form-group">
+                    <label for="proveedor_telefono_numtelefono" class="col-form-label">Teléfono</label>
+                    <input [(ngModel)]="objProveedor.proveedor_telefono_numtelefono" name="proveedor_telefono_numtelefono" type="number" class="form-control" id="proveedor_telefono_numtelefono">
+                </div>
+
+                <div class="form-group">
+                    <label for="proveedor_fax_codigopais" class="col-form-label">Código País</label>
+                    <input [(ngModel)]="objProveedor.proveedor_fax_codigopais" name="proveedor_fax_codigopais" type="number" class="form-control" id="proveedor_fax_codigopais">
+                </div>
+                <div class="form-group">
+                    <label for="proveedor_fax_numtelefono" class="col-form-label">Fax</label>
+                    <input [(ngModel)]="objProveedor.proveedor_fax_numtelefono" name="proveedor_fax_numtelefono" type="number" class="form-control" id="proveedor_fax_numtelefono">
+                </div>
+                <div class="form-group">
+                    <label for="proveedor_correo" class="col-form-label">Correo</label>
+                    <input [(ngModel)]="objProveedor.proveedor_correo" name="proveedor_correo" type="email" class="form-control" id="proveedor_correo">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="guardarProveedor">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<!--CIERRE MODAL DE CREAR CLIENTES DESDE EL MODULO DE FACTURA-->
+
+
+<!--MODAL DE BUSCAR PRODUCTOS-->
+
+<div class="modal fade" id="ModalBuscarArticulo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Buscar Artículo</h5>
+        </div>
+        <div class="modal-body">
+            <form method="POST" id="formBuscarArticulo">
+                <div class="form-group">
+                    <label for="query" class="col-form-label">Descripción o Código:</label>
+                    <input name="query" type="text" class="form-control" id="query">
+                    <button type="submit" class="btn btn-primary mt-1">Buscar</button>
+                </div>
+                <div class="form-group">
+                    <label for="descripcion" class="col-form-label">Descripción:</label>
+                    <input name="descripcion" type="text" class="form-control" id="descripcion" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="codigo" class="col-form-label">Código:</label>
+                    <input name="codigo" type="text" class="form-control" id="codigo" readonly>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary">Cargar</button>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<!--FIN DE MODAL DE BUSCAR PRODUCTOS-->
+
+
+<!-- MODAL DE CREAR PRODUCTOS -->
+
+<div class="modal fade" id="ModalNuevoArticulo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Nuevo Artículo</h5>
+        </div>
+        <div class="modal-body">
+            <ng-container *ngIf="listaErrores.length > 0">
+                <div class="alert alert-danger" role="alert" *ngFor="let error of listaErrores">
+                    {{error}}
+                  </div>
+            </ng-container>
+            <form method="POST" id="formNuevoArticulo">
+                <div class="form-group">
+                    <label for="descripcion" class="col-form-label">Descripción:</label>
+                    <input [(ngModel)]="objArticulo.descripcion" name="descripcion" type="text" class="form-control" id="descripcion">
+                </div>
+                <div class="form-group">
+                    <label for="codigobarra_producto" class="col-form-label">Código Barra</label>
+                    <input [(ngModel)]="objArticulo.codigobarra_producto" name="codigobarra_producto" type="text" class="form-control" id="codigo_barra">
+                </div>
+                <div class="form-group">
+                    <label for="precio_articulo" class="col-form-label">Precio Unitario</label>
+                    <input [(ngModel)]="objArticulo.precio_articulo" name="precio_articulo" type="number" class="form-control" id="precio_articulo">
+                </div>
+                <div class="form-group">
+                    <label for="costo_unitario" class="col-form-label">Costo Unitario</label>
+                    <input [(ngModel)]="objArticulo.costo_unitario" name="costo_unitario" type="number" class="form-control" id="costo_unitario">
+                </div>
+                <div class="form-group">
+                    <label for="unidad_medida" class="col-form-label">Unidad Medida:</label>
+                    <select [(ngModel)]="objArticulo.unidad_medida" name="unidad_medida" id="unidad_medida" class="form-control">
+                        <option value="">--Seleccione--</option>
+                        <option *ngFor="let unidad of lisaUnidadesMedida" [value]="unidad.simbolo">{{unidad.descripcion}}</option>
+                        
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="unidad_medida_comercial" class="col-form-label">Unidad Medida Comercial</label>
+                    <input [(ngModel)]="objArticulo.unidad_medida_comercial" name="unidad_medida_comercial" type="text" class="form-control" id="unidad_medida_comercial">
+                </div>
+                <div class="form-group">
+                    <label for="tipo_impuesto" class="col-form-label">Impuesto:</label>
+                    <select [(ngModel)]="objArticulo.tipo_impuesto" name="tipo_impuesto" id="tipo_impuesto" class="form-control">
+                        <option value="">--Seleccione--</option>
+                        <option *ngFor="let impuesto of listaImpuestos" [value]="impuesto.id">{{impuesto.descripcion}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="idcategoria" class="col-form-label">Categoria:</label>
+                    <select [(ngModel)]="objArticulo.idcategoria" name="idcategoria" id="idcategoria" class="form-control">
+                        <option value="">--Seleccione--</option>
+                        <option *ngFor="let categoria of listaCategorias" [value]="categoria.id">{{categoria.descripcion}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="precio_final" class="col-form-label">Precio Final</label>
+                    <input [(ngModel)]="objArticulo.precio_final" name="precio_final" type="number" class="form-control" id="precio_final" readonly>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="guardarArticulo">Guardar</button>
+        </div>
+    </div>
+</div>
+</div>
+
+        <!-- FIN MODAL DE CREAR PRODUCTOS-->
+
+
+        <!-- MODAL BUSCAR ACTIVIDAD DEL PROVEEDOR -->
+
+        
+        <!--  fin modal actividad proveedor-->
+
+
+<!--MODAL DE ACTUALIZAR ARTICULOS-->
+
+<div class="modal fade" id="ModalActualizarArticulo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Actualizar Línea</h5>
+            </div>
+            <div class="modal-body">
+                <ng-container *ngIf="listaErrores.length > 0">
+                    <div class="alert alert-danger" role="alert" *ngFor="let error of listaErrores">
+                        {{error}}
+                      </div>
+                </ng-container>
+                <form method="POST" id="formActualizarArticulo">
+                    <div class="form-group">
+                        <label for="descripcion" class="col-form-label">Descripción:</label>
+                        <input [(ngModel)]="objArticulo.descripcion" name="descripcion" type="text" class="form-control" id="descripcionActualizar" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="codigobarra_producto" class="col-form-label">Código Barra</label>
+                        <input [(ngModel)]="objArticulo.codigobarra_producto" name="codigobarra_producto" type="text" class="form-control" id="codigo_barraActualizar" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="idcategoria" class="col-form-label">Categoria:</label>
+                        <select [(ngModel)]="objArticulo.idcategoria" name="idcategoria" id="idcategoria" class="form-control">
+                            <option value="">--Seleccione--</option>
+                            <option *ngFor="let categoria of listaCategorias" [value]="categoria.id">{{categoria.descripcion}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="codigocabys" class="col-form-label">Código Cabys</label>
+                        <input [(ngModel)]="objArticulo.codigocabys" name="codigocabys" type="text" class="form-control" id="codigocabys">
+                    </div>
+                    <div class="form-group">
+                        <label for="precio_articulo" class="col-form-label">Precio Unitario</label>
+                        <input [(ngModel)]="objArticulo.precio_articulo" name="precio_articulo" type="number" class="form-control" id="precio_articuloActualizar">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtcantidadLinea" class="col-form-label">Cantidad:</label>
+                        <input [(ngModel)]="cantidadLinea" name="cantidadLinea" type="number" class="form-control" id="txtcantidadLinea" (keyup)="(cantidadLinea)">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" [disabled]>Cancelar</button>
+                <button type="button" class="btn btn-primary" id="actualizarArticulo" [disabled]>Guardar</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+<!---->
