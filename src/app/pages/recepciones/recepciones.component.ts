@@ -123,7 +123,7 @@ export class RecepcionesComponent implements OnInit {
 
     if(factura.marcado){
       factura.estadoDoc='1';
-      factura.condicionDoc='1';
+      factura.condicionDoc='01';
       console.log("factura.estadoDoc", factura.estadoDoc);
       console.log("factura.condicionDoc",factura.condicionDoc);
       if(factura.estadoDoc.length === 0 || factura.condicionDoc.length === 0 ){
