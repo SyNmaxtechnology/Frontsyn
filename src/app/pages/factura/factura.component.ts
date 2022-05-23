@@ -1306,7 +1306,8 @@ export class FacturaComponent implements OnInit {
 
       this.facturaService.obtenerEstadoAutorizadoCliente(Number(this.objDataCliente.id))
         .toPromise().then(response  => {
-          const {estado} = JSON.parse(response);
+          //const {estado} = JSON.parse(response); CAMBIO SYN SOLICITADO RELLACSA
+          const estado = '1';
 
           if(parseInt(estado) === 0){
             Swal.fire('Nueva Proforma','El cliente actual sobrepasa el disponible','warning');
